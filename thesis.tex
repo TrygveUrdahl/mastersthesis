@@ -1,0 +1,47 @@
+\documentclass[british,titlepage]{ntnuthesis}
+\usepackage{todonotes}
+\usepackage{siunitx}
+\usepackage{hhline}
+
+\emergencystretch=1em % Avoids overfull bibliography
+
+\title{X-Ray Tomography with Generative Adversarial Networks}
+\shorttitle{X-Ray Tomography GAN}
+\author{Trygve Scheline Urdahl}
+\shortauthor{T.S. Urdahl}
+\date{\today}
+
+\addbibresource{thesis.bib}
+
+
+% Update glossaries (in terminal):
+% pdflatex thesis.tex
+% makeglossaries thesis
+% pdflatex thesis.tex
+\input{glossary.tex} % add glossary and acronym lists before document
+
+\begin{document}
+
+\input{chapters/0a-abstract.tex}
+
+\tableofcontents
+\listoffigures
+\listoftables
+% \lstlistoflistings % NB: Caused paragraph indents to disappear, changed the .cls file at bottom. Commented out some lines. 
+
+\printglossary[type=\acronymtype,nonumberlist,style=super] % Print acronyms nogroupskip
+\printglossary                    % Print glossary
+% \addcontentsline{toc}{chapter}{Acronyms} % Should not be needed?
+
+\input{chapters/1-introduction.tex}
+
+
+
+\chapter*{\bibname}
+\printbibliography[heading=none]
+
+
+\appendix
+
+
+\end{document}
