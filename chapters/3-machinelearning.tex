@@ -1,8 +1,16 @@
-\chapter{Neural Networks}
+\chapter{Machine Learning}
 \label{sec:ml}
+The scientific field of \acrfull{ml} if often seen as a part of the greater field of \acrfull{ai}\cite[3]{Alpaydin10}, and the term was coined by Arthur Samuel in \citeyear{samuelmachinelearning} \cite{samuelmachinelearning}. An \acrshort{ml} algorithm builds a model based on a dataset, with the goal of making predictions or classifications without being explicitly programmed how to do so. 
 
+Some problems can easily be solved by programming an explicit algorithm (e.g. sorting a list, or \acrshort{fbp} reconstruction), however there are many cases where an exact algorithm simply does not exist (e.g. telling spam emails from legitimate emails) \cite[1]{Alpaydin10}. Often we have access to a large amount of sample data (e.g. emails where some have been manually flagged as spam) pertaining to the issue, however what is lacking is a suitable algorithm to parse all the data. This is where \acrshort{ml} comes in: an \acrshort{ml} model can be trained to discern differences in a dataset without being explicitly told what to look for. So long as there is a sufficient amount of data to train the model with, it may be able to find a pattern in the data and thereby augment or enhance the data, or predict or classify new data \cite[2-4]{Alpaydin10}. 
+
+There are many different \acrshort{ml} algorithms, however in this thesis only the class of neural networks will be discussed. 
 
 \section{Components of a Neural Network}
+Neural networks were initially designed to simulate the human brain and how it learns and adapts to new information \cite{McCulloch1943}. Because of this, the basic building block of a neural network is called a neuron. Several neurons builds up a layer, and several layers build up a neural network. Neurons in different layers have connections to each other (i.e. neurons in layer 1 are connected to neurons in layer 2), and these connections have weights. The value of a neuron is the sum of all the connections into it, thus a weighted sum of the values of the neurons in the previous layer. Note that this describes a simple \acrfull{ann}, and other types of neural networks may contain other types of layers. 
+
+\missingfigure[]{Neural network figure: input layer (2), 1 hidden layer (3), output layer (1) (ANN).}
+
 Input layer, hidden layers, output layer. 
 
 Terms:
@@ -46,4 +54,4 @@ MSE, MAE, LogCosh, VGG, Adversarial,
 
 
 \subsubsection{ADAM}
-
+Article: \cite{kingma2015adam}
