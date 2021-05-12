@@ -7,20 +7,54 @@ Some problems can easily be solved by programming an explicit algorithm (e.g. so
 There are many different \acrshort{ml} algorithms, however in this thesis only the class of neural networks will be discussed. 
 
 \section{Components of a Neural Network}
-Neural networks were initially designed to simulate the human brain and how it learns and adapts to new information \cite{McCulloch1943}. Because of this, the basic building block of a neural network is called a neuron. Several neurons builds up a layer, and several layers build up a neural network. Neurons in different layers have connections to each other (i.e. neurons in layer 1 are connected to neurons in layer 2), and these connections have weights. The value of a neuron is the sum of all the connections into it, thus a weighted sum of the values of the neurons in the previous layer. Note that this describes a simple \acrfull{ann}, and other types of neural networks may contain other types of layers. 
+Neural networks were initially designed to simulate the human brain and how it learns and adapts to new information \cite{McCulloch1943}. Because of this, the basic building block of a neural network is called a neuron. Several neurons builds up a layer, and several layers build up a neural network. Neurons in different layers have connections to each other (i.e. neurons in layer 1 are connected to neurons in layer 2), and these connections have weights and biases. A simple schematic of this can be seen in \cref{fig:neuralnetwork}. The value of a neuron is a real number, and can be given as \cite[81]{Wang2003}
+\begin{equation}
+    \label{eq:neuron}
+    Y_{k} = \sigma\left(\sum_{j=0}^{m}w_{kj}x_j + \lambda \right),
+\end{equation}
+where $k$ refers to which neuron it is, $m$ is the number of inputs to the neuron, $w_{kj}$ is the weight of connection $j$, $x_j$ is the output value of neuron $j$ from the previous layer, $\lambda$ is a bias, and $\sigma$ is the activation (or transfer) function, which will be defined later. It is thus a weighted sum of the values of the neurons in the previous layer. Note that this describes a simple \acrfull{ann}, and other types of neural networks may contain other types of layers. \todo[]{Cite sources for this paragraph}
 
-\missingfigure[]{Neural network figure: input layer (2), 1 hidden layer (3), output layer (1) (ANN).}
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.8\textwidth]{figures/neuralnetwork.pdf}
+    \caption[Neural network example]{A simple schematic of a neural network. Each circle represents a neuron, the solid arrows represent connections between neurons, and the dotted arrows represent input and output channels. The dimensions of the network parameters are denoted as $W_n$, where $n$ refers to the input layer of the parameters. This network speifically is a fully connected \acrlong{ann}. }
+    \label{fig:neuralnetwork}
+\end{figure}
 
-Input layer, hidden layers, output layer. 
+The activation function, also known as the transfer function, is denoted as $\sigma$. Its purpose is to bound the value of a neuron so that the network is not crippled by divergent neurons \cite[81]{Wang2003}. There are many different activation functions, and some examples are presented in \cref{tab:activationfunctions} and plotted in \cref{fig:activationfunctions}. Furthermore, the activation function is used to introduce nonlinearity to the network\footnote{For this reason, the identity activation function $f(x)=x$ generally performs poorly.}, and it can be shown that a two-layer deep neural network with a nonlinear activation function is a universal function approximator \cite{Cybenko1989}. 
 
-Terms:
-\begin{itemize}
-    \item Layer.
-    \item Neuron (perceptron).
-    \item Activation function.
-    \item Feature map.
-    \item 
-\end{itemize}
+\begin{table}[htbp]
+    \centering
+    \caption[Activation functions]{Overview of some of the commonly used activation functions in neural networks. }
+    \label{tab:activationfunctions}
+    \begin{tabular}{ll}
+    \hline
+    Name & Function, $f(x)$ \\
+    \hhline{==}
+    Identity & $x$ \\
+    Logistic/soft step & $\frac{1}{1+e^{-x}}$  \\
+    Rectified Linear Unit (ReLU) & $\max\left(0, x\right)$ \\
+    tanh & $\frac{e^x - e^{-x}}{e^x + e^{-x}}$ \\
+    Softplus & $\ln\left(1+e^x\right)$ \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.8\textwidth]{figures/activationfunctions.pdf}
+    \caption[Activation functions]{Plot showing a selection of activation functions for $x\in[-2,2]$. }
+    \label{fig:activationfunctions}
+\end{figure}
+
+The output of a neural network can be defined to be any shape. Depicted in \cref{fig:neuralnetwork} the output is a singular value, however it could just as well have been defined as a vector of two values. If the output is a singular value it can for instance be interpreted as a probability, however if it is a vector of length $n$ it can be seen as $n$ probabilites of different events. The output of a neural network is often called a feature map, because it can be seen as a mapping of the features of the input data. 
+
+As an example, if a neural network is trained with a dataset containing images of handwritten digits $0-9$, an output with a size of $10$ could contain probabilities of a given image containing a specific digit where each output value is the probability of one digit. One well-known dataset that is often used for this exact problem is the MNIST dataset \cite{mnist}.
+
+
+\section{Hyperparameters}
+\todo[inline]{Maybe own section on hyperparameters? If not, make subsection}
+
 
 \section{Neural Network Types}
 
