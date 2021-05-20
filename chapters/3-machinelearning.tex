@@ -32,9 +32,9 @@ The activation function, also known as the transfer function, is denoted as $\si
     Name & Function, $f(x)$ \\
     \hhline{==}
     Identity & $x$ \\
-    Logistic/soft step & $\frac{1}{1+e^{-x}}$  \\
     Rectified Linear Unit (ReLU) & $\max\left(0, x\right)$ \\
     Leaky Rectified Linear Unit (LReLU) & $\max\left(\alpha x, x\right), \alpha\in[0,1]$ \\
+    Logistic/soft step & $\frac{1}{1+e^{-x}}$  \\
     tanh & $\frac{e^x - e^{-x}}{e^x + e^{-x}}$ \\
     Softplus & $\ln\left(1+e^x\right)$ \\
     \hline
@@ -47,12 +47,11 @@ The activation function, also known as the transfer function, is denoted as $\si
     \caption[Activation functions]{Plot showing a selection of activation functions for $x\in[-2,2]$. Note that identity, ReLU, and LReLU are overlapping for $x\in[0,-2]$. }
     \label{fig:activationfunctions}
 \end{figure}
+\todo[]{Change order of activation functions to be same in table and plot. }
 
 The output of a neural network can be defined to be any shape. Depicted in \cref{fig:neuralnetwork} the output is a singular value, however it could just as well have been defined as a vector of two values. If the output is a singular value it can for instance be interpreted as a probability, however if it is a vector of length $n$ it can be seen as $n$ probabilites of different events. The output of a neural network is often called a feature map, because it can be seen as a mapping of the features of the input data. 
 
 As an example, if a neural network is trained with a dataset containing images of handwritten digits $0-9$, an output with a size of $10$ could contain probabilities of a given image containing a specific digit where each output value is the probability of one digit. One well-known dataset that is often used for this exact problem is the MNIST dataset \cite{mnist}.
-
-\todo[inline]{Maybe own section on hyperparameters? If not, make subsection}
 
 
 \section{Neural Network Types}
@@ -70,8 +69,8 @@ Convolutional kernels. Useful for image processing. Extract spatial information,
 Downscaling and upscaling between layers, and skip connections (for U-net, but not actually in encoder-decoder networks). % https://www.researchgate.net/post/Are_U-net_and_encoder-decoder_network_the_same 
 
 \subsection{Generative Adversarial Network}
-Learn probability distribution and generate random sample from learned distributiom. 
-GAN based on game theory instead of optimization. 
+Learn probability distribution and generate random sample from learned distribution. 
+GAN based on game theory instead of optimization. \cite{goodfellow2014gan,goodfellow2020gan}. 
 
 \section{Training a Neural Network}
 The process of tuning all the parameters (i.e. weights and biases) of a neural network is called training. During training, input data from a training dataset is forwards propagated through the network, and the resulting feature map is compared to an expected feature map (e.g. manually labeled data)\footnote{This is what is called supervised learning, as opposed to unsupervised learning where there is no ground truth answer to compare to. }. The difference in these feature maps is calcuated using some loss function, and the loss is then backwards propagated through the network to update each and every parameter to reduce the loss. 
@@ -91,7 +90,7 @@ During training, the parameters of the neural network are automatically changed,
 The process of choosing these hyperparameters is not an exact science, and there is much research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
 
 \subsection{Loss Functions}
-MSE, MAE, LogCosh, VGG, Adversarial, 
+MSE, MAE, LogCosh, VGG, Adversarial, Binary cross-entropy(?)
 
 
 \subsection{Backpropagation}
