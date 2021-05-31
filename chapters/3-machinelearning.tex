@@ -5,14 +5,16 @@ The scientific field of \acrfull{ml} if often seen as a part of the greater fiel
 Some problems can easily be solved by programming an explicit algorithm (e.g. sorting a list, or \acrshort{fbp} reconstruction), however there are many cases where an exact algorithm simply does not exist (e.g. telling spam emails from legitimate emails) \cite[1]{Alpaydin10}. Often we have access to a large amount of sample data (e.g. emails where some have been manually flagged as spam) pertaining to the issue, however what is lacking is a suitable algorithm to parse and classify all the data. This is where \acrshort{ml} comes in: an \acrshort{ml} model can be trained to discern differences in a dataset without being explicitly told what to look for. So long as there is a sufficient amount of data to train the model with, it may be able to find a pattern in the data and thereby augment or enhance the data, or predict or classify new data \cite[2-4]{Alpaydin10}. 
 
 There are many different \acrshort{ml} algorithms, however in this thesis only the class of neural networks will be discussed and the focus will be on supervised learning. 
+\todo[inline]{This chapter contains ...}
 
 \section{Components of a Neural Network}
+\label{sec:ml:componentsofaneuralnetwork}
 Neural networks were initially designed to simulate the human brain and how it learns and adapts to new information \cite{McCulloch1943}. Because of this, the basic building block of a neural network is called a neuron. Several neurons builds up a layer, and several layers build up a neural network. Neurons in different layers have connections to each other (i.e. neurons in layer 1 are connected to neurons in layer 2), and these connections have weights and biases. A simple schematic of this can be seen in \cref{fig:neuralnetwork}. The value of a neuron is a real number, and can be given as \cite[81]{Wang2003}
 \begin{equation}
     \label{eq:neuron}
     Y_{k} = \sigma\left(\sum_{j=0}^{m}w_{kj}x_j + \lambda \right),
 \end{equation}
-where $k$ refers to which neuron it is, $m$ is the number of inputs to the neuron, $w_{kj}$ is the weight of connection $j$, $x_j$ is the output value of neuron $j$ into neuron $k$, $\lambda$ is a bias term, and $\sigma$ is the activation (or transfer) function, which will be introduced later. It is thus a weighted sum of the values of the neurons in the previous layer (or more precisely, of all the input neurons to a given neuron, which often is the previous layer). Note that this describes a simple \acrfull{ann}, and other types of neural networks may contain other types of layers. \todo[]{Cite sources for this paragraph}
+where $k$ refers to which neuron it is, $m$ is the number of inputs to the neuron, $w_{kj}$ is the weight of connection $j$, $x_j$ is the output value of neuron $j$ into neuron $k$, $\lambda$ is a bias term, and $\sigma$ is the activation (or transfer) function, which will be introduced later. It is thus a weighted sum of the values of the neurons in the previous layer (or more precisely, of all the input neurons to a given neuron, which often is the previous layer). Note that this describes a simple fully connected feedforward \acrfull{ann}, and other types of neural networks may contain other types of layers \cite{oshea2015introduction}.
 
 \begin{figure}[htbp]  
     \centering
@@ -49,21 +51,25 @@ The activation function, also known as the transfer function, is denoted as $\si
 \end{figure}
 \todo[]{Change order of activation functions to be same in table and plot. }
 
-The output of a neural network can be defined to be any shape. Depicted in \cref{fig:neuralnetwork} the output is a singular value, however it could just as well have been defined as a vector of two values. If the output is a singular value it can for instance be interpreted as a probability, however if it is a vector of length $n$ it can be seen as $n$ probabilites of different events. The output of a neural network is often called a feature map, because it can be seen as a mapping of the features of the input data. 
+The output of a neural network can be defined to be any shape. Depicted in \cref{fig:neuralnetwork} the output is a singular value, however it could just as well have been defined as a vector of two values. If the output is a singular value it can for instance be interpreted as a probability, however if it is a vector of length $n$ it can be seen as $n$ probabilites of different events or features. The output of a neural network is often called a feature map, because it can be seen as a mapping of the features of the input data. 
 
 As an example, if a neural network is trained with a dataset containing images of handwritten digits $0-9$, an output with a size of $10$ could contain probabilities of a given image containing a specific digit where each output value is the probability of one digit. One well-known dataset that is often used for this exact problem is the MNIST dataset \cite{mnist}.
 
 
 \section{Neural Network Types}
-
+There are many different types of neural networks that are suited for different problems. Here, a selection of types that lead up to the \acrfull{gan} structure used in this thesis will be introduced. 
 
 \subsection{Artificial Neural Network}
-Linear function $ax+b$, and a non-linear activation function $\sigma$. 
+The \acrfull{ann} is the simplest type of a neural network, and it is the architecture that was described in \cref{sec:ml:componentsofaneuralnetwork}. It consists of neurons that build up layers. A simple example of a fully connected feedforward \acrshort{ann} can be seen in \cref{fig:neuralnetwork}. 
 
-Affine transformations and pointwise nonlinearities which are smooth Lipschitz functions (such as sigmoid, tanh, elu, softplus, etc.). 
+% Affine transformations and pointwise nonlinearities which are smooth Lipschitz functions (such as sigmoid, tanh, elu, softplus, etc.). 
 
 \subsection{Convolutional Neural Network}
-Convolutional kernels. Useful for image processing. Extract spatial information, context. Fewer parameters to train
+A \acrfull{cnn} builds upon the structure of the \acrshort{ann}, however it adds a new type of layer: the convolutional layer. Instead of containing a set of neurons, this layer contains one (or more) convolutional kernel(s), and performs a convolution of the input to the layer with the kernel(s). This type of network was first introduced in \citeyear{lecun1999object}, and has shown to work very well for many different image related tasks \cite{lecun1999object,alexnet}. Because of the nature of the convolutions, it allows the network to utilize 2D information by performing 2D convolutions\footnote{Likewise higher-dimensional information may be used by performing higher-dimensional convolutions \cite{8353466}}. This has been shown to perform exceptionally well in image processing tasks \cite{alexnet,oshea2015introduction}. 
+
+% Reduce number of trainable parameters, zero-padding, kernel size, stride, number of kernels per layer
+\todo[inline]{More on convolution}
+\missingfigure{Convolution visualisation}
 
 \subsection{Encoder-Decoder Network}
 Downscaling and upscaling between layers, and skip connections (for U-net, but not actually in encoder-decoder networks). % https://www.researchgate.net/post/Are_U-net_and_encoder-decoder_network_the_same 
@@ -78,7 +84,7 @@ The process of tuning all the parameters (i.e. weights and biases) of a neural n
 Generally, the entire training dataset is repeatedly passed through the network multiple times. Each full runthrough of the training dataset is called an epoch of training. This however can often introduce a problem: the training dataset can typically not fully fit in the computer memory at once. Therefore it is divided into mini batches, and after each mini batch the weights are adjusted. The propagation of one mini batch is often called one iteration, and thus one epoch consists of several iterations. The size of a mini batch is a tunable parameter, however typically it is in the range of $32-512$ (e.g. 128 in the well-known article by A. Krizhevsky et al. \cite{alexnet})\footnote{There is ongoing research into techniques to increase the batch size by several orders of magnitude as larger batches allow for easier parallelization, however large batch sizes have been shown to cause instability during training \cite{you2017large}. }. The size of a mini batch can sometimes also be refered to as the batch size. 
 
 \subsection{Hyperparameters}
-During training, the parameters of the neural network are automatically changed, however there are some parameters that are set manually beforehand. These are called hyperparameters. Some typical hyperparameters are:
+During training, the parameters of the neural network are automatically changed, however there are some parameters that are set manually beforehand. These are called hyperparameters \cite{claesen2015hyperparameter}. Some typical hyperparameters are:
 \begin{itemize}
     \item Number of layers (i.e. depth of network).
     \item Size of layers.
@@ -87,11 +93,50 @@ During training, the parameters of the neural network are automatically changed,
     \item Mini batch size.
 \end{itemize}
 
-The process of choosing these hyperparameters is not an exact science, and there is much research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
+The process of choosing these hyperparameters is not an exact science, and there is research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
 
 \subsection{Loss Functions}
-MSE, MAE, LogCosh, VGG, Adversarial, Binary cross-entropy(?)
+To properly quantify the error, or loss, of a neural network one needs to define some metric. These are called loss functions. Depending on the problem type, diferent loss functions may perform better than others, however there are some standard loss functions often used. Some of these as well as some specific ones used in this thesis will be presented here.
 
+Perhaps the most commonly used loss function is the \acrfull{mse}. It is closely related to the L2-norm, and it can be defined as
+\begin{equation}
+    \label{eq:mse}
+    L_{\text{MSE}} = \frac{1}{N} \sum_{i=1}^N(Y_i - \hat{Y}_i)^2,
+\end{equation}
+where $Y$ is the correct (labeled) value and $\hat{Y}$ is the predicted value. This often performs well, however in cases such as image processing or image superresolution it has shown to cause blurring \cite{7797130}.
+
+Another similar loss function is the \acrfull{mae}, which is closely related to the L1-norm. It can be defined as
+\begin{equation}
+    \label{eq:mae}
+    L_{\text{MAE}} = \frac{1}{N} \sum_{i=1}^N |Y_i - \hat{Y}_i|,
+\end{equation}
+with $Y$ and $\hat{Y}_i$ being the same as previously defined. This loss function does not over-penalize larger errors, and therefore may have different convergence properties than \acrshort{mse} \cite{7797130}. It has been shown to perform better than \acrshort{mse} in some image processing cases \cite{7797130,10.1002/mp.13713}.
+
+A more recently introduced loss function is the log-cosh loss function, defined as \cite{chen2019log}
+\begin{equation}
+    \label{eq:logcosh}
+    L_{\text{Log-cosh}} = \frac{1}{a} \sum_{i=1}^N \log ( \cosh ( a ( Y_i - \hat{Y}_i))),
+\end{equation}
+where $Y$ and $\hat{Y}$ are as previously defined, $\log$ is the logarithm, $\cosh$ is the hyperbolic cosine function, and $a$ is some positive hyperparameter $a \in \mathbb{R}^+$. It behaves similar to \acrshort{mse} around the origin, and similar to \acrshort{mae} at other points. It has been shown to perform well in image processing related tasks \cite{7797130}.
+% MSE, MAE, LogCosh, VGG, Adversarial
+
+All the aforementioned loss functions rely on pixel-wise losses. Another type of loss functions that has shown to perform well in image processing related tasks is the use of a feature space based loss \cite{vggloss}. Specifically, this loss is based on measuring the difference in the feature space of the inferrence of a pre-trained network. Here, the pre-trained VGG network is used to measure a visual loss \cite{simonyan2015deep}. This specific loss function is termed visual loss, or VGG loss, and is defined as \cite{vggloss,liu2020tomogan}
+\begin{equation}
+    \label{eq:vgg}
+    L_{\text{VGG}} = \sum_{i=1}^{N} \sum_{j=1}^{W_f} \sum_{k=1}^{H_f} \left(V_{\theta_{\text{VGG}}} (Y_i)_{j,k} - V_{\theta_{\text{VGG}}} (\hat{Y}_i)_{j,k} \right)^2,
+\end{equation}
+where $Y$ and $\hat{Y}$ are as previously defined, $V_{\theta_{\text{VGG}}}(Y)$ is the VGG feature map representation of image $Y$, and $W_f$ and $H_f$ are the dimensions of the feature maps extracted by the pre-trained VGG network. The VGG network is trained with natural images, specifically the ImageNet dataset \cite{deng2009imagenet}, however it has been shown to work well as a feature extractor for \acrshort{ct} images \cite{8340157}. 
+
+\todo[inline]{Adversarial loss}
+
+\subsubsection{Weighted loss}
+In practise it is common to use a weighted sum of different loss functions. 
+An example containing \acrshort{mse}, log-cosh, and VGG loss can be given as
+\begin{equation}
+    \label{eq:weightedloss}
+    L_{\text{Total}} = \lambda_{\text{MSE}}L_{\text{MSE}} + \lambda_{\text{Log-cosh}}L_{\text{Log-cosh}} + \lambda_{\text{VGG}}L_{\text{VGG}},
+\end{equation}
+where $\lambda_N$ is a hyperparameter controlling the weight of $L_N$. 
 
 \subsection{Backpropagation}
 
