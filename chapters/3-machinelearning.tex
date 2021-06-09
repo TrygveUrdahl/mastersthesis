@@ -19,7 +19,7 @@ where $k$ refers to which neuron it is, $m$ is the number of inputs to the neuro
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.8\textwidth]{figures/neuralnetwork.pdf}
-    \caption[Neural network example]{A simple schematic of a neural network. Each circle represents a neuron, the solid arrows represent connections between neurons, and the dotted arrows represent input and output channels. The dimensions of the network parameters are denoted as $W_n$, where $n$ refers to the output layer of the parameters. This network speifically is a fully connected feedforward \acrlong{ann} with one hidden layer. }
+    \caption[Neural network example]{A simple schematic of a neural network. Each circle represents a neuron, the solid arrows represent connections between neurons, and the dotted arrows represent input and output channels. The dimensions of the network parameters are denoted as $W_n$, where $n$ refers to the layer the parameters input into. This network specifically is a fully connected feedforward \acrlong{ann} with one hidden layer. }
     \label{fig:neuralnetwork}
 \end{figure}
 
@@ -59,24 +59,49 @@ As an example, if a neural network is trained with a dataset containing images o
 \section{Neural Network Types}
 There are many different types of neural networks that are suited for different problems. Here, a selection of types that lead up to the \acrfull{gan} structure used in this thesis will be introduced. 
 
-\subsection{Artificial Neural Network}
-The \acrfull{ann} is the simplest type of a neural network, and it is the architecture that was described in \cref{sec:ml:componentsofaneuralnetwork}. It consists of neurons that build up layers. A simple example of a fully connected feedforward \acrshort{ann} can be seen in \cref{fig:neuralnetwork}. 
-
-% Affine transformations and pointwise nonlinearities which are smooth Lipschitz functions (such as sigmoid, tanh, elu, softplus, etc.). 
-
 \subsection{Convolutional Neural Network}
-A \acrfull{cnn} builds upon the structure of the \acrshort{ann}, however it adds a new type of layer: the convolutional layer. Instead of containing a set of neurons, this layer contains one (or more) convolutional kernel(s), and performs a convolution of the input to the layer with the kernel(s). This type of network was first introduced in \citeyear{lecun1999object}, and has shown to work very well for many different image related tasks \cite{lecun1999object,alexnet}. Because of the nature of the convolutions, it allows the network to utilize 2D information by performing 2D convolutions\footnote{Likewise higher-dimensional information may be used by performing higher-dimensional convolutions \cite{8353466}}. This has been shown to perform exceptionally well in image processing tasks \cite{alexnet,oshea2015introduction}. 
+A \acrfull{cnn} builds upon the structure of the \acrshort{ann}, however it adds a new type of layer: the convolutional layer. Instead of containing a set of neurons, this layer contains one (or more) convolutional kernel(s), and performs a convolution of the input to the layer with the kernel(s). This type of network was first introduced in \citeyear{lecun1999object}, and has shown to work very well for many different image related tasks \cite{lecun1999object,alexnet}. Because of the nature of the convolutions, it allows the network to utilize 2D information by performing 2D convolutions\footnote{Likewise higher-dimensional information may be used by performing higher-dimensional convolutions \cite{8353466}. }. This has been shown to perform exceptionally well in image processing tasks \cite{alexnet,oshea2015introduction}. 
 
-% Reduce number of trainable parameters, zero-padding, kernel size, stride, number of kernels per layer
-\todo[inline]{More on convolution}
-\missingfigure{Convolution visualisation}
+The convolution operator is defined as 
+\begin{equation}
+    \label{eq:convolution}
+    g(x,y) = \omega \ast f(x,y) = \sum_{dx=-a}^{a}\sum_{dy=-b}^{b} \omega(dx,dy)f(x+dx,y+dy),
+\end{equation}
+where $g(x,y)$ is the convoluted matrix, $f(x,y)$ is the original matrix, and $\omega$ is a convolution kernel of dimension $(2a+1,2b+1)$\footnote{The dimensions of the kernel are typically square and odd, such as $(3,3)$ or $(5,5)$, giving $dx,dy\in[-1,1]$ or $dx,dy\in[-2,2]$. }. For simplicity, kernel dimensions will be refered to as $(a,b)$ where $a$ and $b$ simply represent the kernel dimensions, and not the half-dimension as would correspond to \cref{eq:convolution}. 
+
+A visualisation of what the convolution of a matrix (which could represent an image) with a given kernel can be seen in \cref{fig:convolution}. Here, the kernel dimensions are $(3,3)$. The output matrix has reduced dimensions corresponding to the kernel dimensions. The reduction can be given as 
+\begin{equation}
+    \left( x_o,y_o \right) = \left( x_i - \left(a - 1\right), x_i - \left( b - 1 \right) \right),
+\end{equation}
+where $(x_o,y_o)$ are the output dimensions, $(x_i,y_i)$ are the input dimensions, and $(a,b)$ are the kernel dimensions. In some situations it may not be wanted to reduce the dimensions of the input, and padding the input with zeroes on all sides can be used to combat this. This technique is called zero-padding \cite{oshea2015introduction}. 
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.85\textwidth]{figures/convolution.pdf}
+    \caption[Convolution example]{An example showing how a convolution works. This figure depicts: a) an input matrix of dimension $(9,9)$ (e.g. an image), b) a $(3,3)$ convolutional kernel, and c) the resulting convolution of dimension $(7,7)$. This convolution also has a stride of 1. Note that the output dimension is smaller than the input dimension. }
+    \label{fig:convolution}
+\end{figure}
+
+The stride of a convolution is how far the kernel shifts \cite{oshea2015introduction}. In the example given in \cref{fig:convolution}, the stride is 1. If the stride were set to 2, the kernel would shift two units in the matrix for each output. This would mean less overlap between each value in the output, but also further reduction of the output dimensions. 
+
+The part of the convolution that a \acrshort{cnn} learns is the values in the convolutional kernel. Each layer of the \acrshort{cnn} may have several kernels that are applied in parallel (e.g. 32 kernels applied to the same input). Each kernel is often called a filter. One of the advantages of using convolution in neural networks is the reduction in the number of trainable parameters: a typical convolutional kernel contains $9-49$ parameters (for kernels of dimensions $(3,3)$ to $(7,7)$), however a fully connected feedforward network may have several thousands parameters for each layer\footnote{Consider an image of dimension $(100,100)$. In a fully connected \acrshort{ann} there would have to be $100 \cdot 100 = 10^4$ connections from each neuron in one layer to the next layer for a total of $10^{8}$ connections, where each connection has a trainable parameter. In comparison, if using a \acrshort{cnn} with 32 kernels of dimension $(3,3)$ there are only a total of $32 \cdot 3 \cdot 3 = 288$ trainable parameters. }. 
+\todo[inline]{Write about overfitting? Reduce number of trainable parameters helps avoid overfitting. }
 
 \subsection{Encoder-Decoder Network}
-Downscaling and upscaling between layers, and skip connections (for U-net, but not actually in encoder-decoder networks). % https://www.researchgate.net/post/Are_U-net_and_encoder-decoder_network_the_same 
+An encoder-decoder network is a type of \acrshort{ann} that learns to copy its input to its output \cite{https://doi.org/10.1002/aic.690370209}. It consists of two parts (as the name suggests): an encoder, and a decoder. The task of the encoder is to take the input and encode it into a feature map. The decoder then takes the resulting feature map and decodes it into an output similar to the original input. A schematic of this structure can be seen in \cref{fig:encoderdecoder}. The encoders goal is to extract the relevant information from the input, ignoring any signal noise or unwanted data. The decoder then recreates something similar to the original data from the "denoised" feature map. It is common to use \acrshort{cnn}s as both encoder and decoder, where consecutive layers in the encoder reduce the dimensions of the feature maps and consecutive layers in the decoder increase the dimensions of the feature maps. Encoder-decoder networks have been shown to perform well in many different tasks, such as image segmentation \cite{7803544} and PET image reconstruction \cite{HAGGSTROM2019253}.  
+
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.7\textwidth]{figures/encoderdecoder.pdf}
+    \caption[Encoder-decoder network]{A simple schematic of the overall structure of an encoder-decoder network. It consists of two separable networks, the encoder and the decoder, working together. The input and output layers are of the same dimensions. }
+    \label{fig:encoderdecoder}
+\end{figure}
+
+In an encoder-decoder network, the encoder and decoder are two separate networks that can work independently of each other. Another similar network structure that builds upon the encoder-decoder is the U-net convolutional network \cite{unet}. It also contains an encoder and a decoder part, however the two networks are not separable as there are skip-connections between layers in the encoder and layers in the decoder. In a normal encoder-decoder network there is first one mapping from the input $X$ to the feature map $L$, $X \mapsto L$, and then a mapping from the feature map $L$ to the output $Y$, $L \mapsto Y$. These two mappings are not dependent on each other. In the U-net architecture however,  the mapping in the decoder also depends on the input $X$, making it $[X+L] \mapsto Y$. 
+
 
 \subsection{Generative Adversarial Network}
-Learn probability distribution and generate random sample from learned distribution. 
-GAN based on game theory instead of optimization. \cite{goodfellow2014gan,goodfellow2020gan}. 
+\todo[inline]{Learn probability distribution and generate random sample from learned distribution. GAN based on game theory instead of optimization. \cite{goodfellow2014gan,goodfellow2020gan}. }
+
 
 \section{Training a Neural Network}
 The process of tuning all the parameters (i.e. weights and biases) of a neural network is called training. During training, input data from a training dataset is forwards propagated through the network, and the resulting feature map is compared to an expected feature map (e.g. manually labeled data)\footnote{This is what is called supervised learning, as opposed to unsupervised learning where there is no ground truth answer to compare to. }. The difference in these feature maps is calcuated using some loss function, and the loss is then backwards propagated through the network to update each and every parameter to reduce the loss. 
@@ -96,7 +121,7 @@ During training, the parameters of the neural network are automatically changed,
 The process of choosing these hyperparameters is not an exact science, and there is research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
 
 \subsection{Loss Functions}
-To properly quantify the error, or loss, of a neural network one needs to define some metric. These are called loss functions. Depending on the problem type, diferent loss functions may perform better than others, however there are some standard loss functions often used. Some of these as well as some specific ones used in this thesis will be presented here.
+To properly quantify the error, or loss, of a neural network one needs to define some metric. These are called loss functions. Depending on the problem type diferent loss functions may perform better than others, however there are some standard loss functions often used. Some of these, as well as some specific ones used in this thesis, will be presented here. 
 
 Perhaps the most commonly used loss function is the \acrfull{mse}. It is closely related to the L2-norm, and it can be defined as
 \begin{equation}
@@ -107,27 +132,35 @@ where $Y$ is the correct (labeled) value and $\hat{Y}$ is the predicted value. T
 
 Another similar loss function is the \acrfull{mae}, which is closely related to the L1-norm. It can be defined as
 \begin{equation}
-    \label{eq:mae}
+    \label{eq:lossmae}
     L_{\text{MAE}} = \frac{1}{N} \sum_{i=1}^N |Y_i - \hat{Y}_i|,
 \end{equation}
-with $Y$ and $\hat{Y}_i$ being the same as previously defined. This loss function does not over-penalize larger errors, and therefore may have different convergence properties than \acrshort{mse} \cite{7797130}. It has been shown to perform better than \acrshort{mse} in some image processing cases \cite{7797130,10.1002/mp.13713}.
+with $Y$ and $\hat{Y}_i$ being the same as previously defined. This loss function does not over-penalize larger errors, and therefore may have different convergence properties than \acrshort{mse} \cite{7797130}. It has been shown to perform better than \acrshort{mse} in some image processing cases \cite{7797130,10.1002/mp.13713}. 
+
+\todo[inline]{Write something about general norms for loss functions? }
 
 A more recently introduced loss function is the log-cosh loss function, defined as \cite{chen2019log}
 \begin{equation}
-    \label{eq:logcosh}
+    \label{eq:losslogcosh}
     L_{\text{Log-cosh}} = \frac{1}{a} \sum_{i=1}^N \log ( \cosh ( a ( Y_i - \hat{Y}_i))),
 \end{equation}
 where $Y$ and $\hat{Y}$ are as previously defined, $\log$ is the logarithm, $\cosh$ is the hyperbolic cosine function, and $a$ is some positive hyperparameter $a \in \mathbb{R}^+$. It behaves similar to \acrshort{mse} around the origin, and similar to \acrshort{mae} at other points. It has been shown to perform well in image processing related tasks \cite{7797130}.
 % MSE, MAE, LogCosh, VGG, Adversarial
-
+\todo[inline]{Wasserstein distance (for WGAN?)}
 All the aforementioned loss functions rely on pixel-wise losses. Another type of loss functions that has shown to perform well in image processing related tasks is the use of a feature space based loss \cite{vggloss}. Specifically, this loss is based on measuring the difference in the feature space of the inferrence of a pre-trained network. Here, the pre-trained VGG network is used to measure a visual loss \cite{simonyan2015deep}. This specific loss function is termed visual loss, or VGG loss, and is defined as \cite{vggloss,liu2020tomogan}
 \begin{equation}
-    \label{eq:vgg}
+    \label{eq:lossvgg}
     L_{\text{VGG}} = \sum_{i=1}^{N} \sum_{j=1}^{W_f} \sum_{k=1}^{H_f} \left(V_{\theta_{\text{VGG}}} (Y_i)_{j,k} - V_{\theta_{\text{VGG}}} (\hat{Y}_i)_{j,k} \right)^2,
 \end{equation}
 where $Y$ and $\hat{Y}$ are as previously defined, $V_{\theta_{\text{VGG}}}(Y)$ is the VGG feature map representation of image $Y$, and $W_f$ and $H_f$ are the dimensions of the feature maps extracted by the pre-trained VGG network. The VGG network is trained with natural images, specifically the ImageNet dataset \cite{deng2009imagenet}, however it has been shown to work well as a feature extractor for \acrshort{ct} images \cite{8340157}. 
 
-\todo[inline]{Adversarial loss}
+Specific to \acrshort{gan}s is the adversarial loss. It is a measure of how well the generating network is able to produce samples that a discriminating network is unable to distinguish from real samples. It can be written as \cite{liu2020tomogan}
+\begin{equation}
+    \label{eq:lossadv}
+    L_{\text{Adv}} = -\frac{1}{N} \sum_{i=1}^{N} D\left(  \hat{Y}_i \right),
+\end{equation}
+where $\hat{Y}_i$ is the generated guess from the generating network, and $D$ is the discriminating network giving a binary classification $D\left(\hat{Y}_i \right) \in [0,1]$ depending on whether it believes the given image is a real or generated one. Minimizing this loss ensures that the generating network produces samples that have a similar feature space (when extracted by the discriminating network) to real samples, and this process is the basis of \acrshort{gan}s. 
+
 
 \subsubsection{Weighted loss}
 In practise it is common to use a weighted sum of different loss functions. 
