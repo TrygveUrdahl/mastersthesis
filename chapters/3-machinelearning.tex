@@ -86,6 +86,7 @@ The part of the convolution that a \acrshort{cnn} learns is the values in the co
 \todo[inline]{Write about overfitting? Reduce number of trainable parameters helps avoid overfitting. }
 
 \subsection{Encoder-Decoder Network}
+\label{sec:ml:types:encoderdecoder}
 An encoder-decoder network is a type of \acrshort{ann} that learns to copy its input to its output \cite{https://doi.org/10.1002/aic.690370209}. It consists of two parts (as the name suggests): an encoder, and a decoder. The task of the encoder is to take the input and encode it into a feature map. The decoder then takes the resulting feature map and decodes it into an output similar to the original input. A schematic of this structure can be seen in \cref{fig:encoderdecoder}. The encoder's goal is to extract the relevant information from the input, ignoring any signal noise or unwanted data. The decoder then recreates something similar to the original data from the "denoised" feature map. It is common to use \acrshort{cnn}s as both encoder and decoder, where consecutive layers in the encoder reduce the dimensions of the feature maps and consecutive layers in the decoder increase the dimensions of the feature maps. Encoder-decoder networks have been shown to perform well in many different tasks, such as image segmentation \cite{7803544} and PET image reconstruction \cite{HAGGSTROM2019253}.  
 
 \begin{figure}[htbp]  
@@ -125,6 +126,7 @@ During training, the parameters of the neural network are automatically changed,
 The process of choosing these hyperparameters is not an exact science, and there is research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
 
 \subsection{Loss Functions}
+\label{sec:ml:training:lossfunctions}
 To properly quantify the error, or loss, of a neural network one needs to define some metric. These are called loss functions. Depending on the problem type diferent loss functions may perform better than others, however there are some standard loss functions often used. Some of these, as well as some specific ones used in this thesis, will be presented here. The losses are calculated on a per-pixel basis and summed unless otherwise stated. 
 
 Perhaps the most commonly used loss function is the \acrfull{mse}. It is closely related to the L2-norm, and it can be defined as
