@@ -1,5 +1,37 @@
 \chapter{Results and Discussion}
 \label{sec:results}
+
+\section{Effect of Pre-processing Images}
+\todo[inline]{Compare tomo\_00058 denoising with and without cropping. Without cropping similar results to early stages of denoising cropped (i.e. poor and not converged). }
+
+\section{Hyperparameter and Loss Function Changes}
+\todo[inline]{Show difference in tomo\_00058 denoising for different loss functions / weights (and hyperparameters?)}
+
+\todo[inline]{Line plot of gt, ns, MSE denoising, Log-cosh denoising. Multiple lines around the images?}
+
+\todo[inline]{SSIM and MSE evolution of arbitrary slice. }
+
+\section{Different Amounts of Noise}
+\todo[inline]{Different levels of noise / projection subsamplings (8,16,32,48). }
+\todo[inline]{Plot of the images with zoomed in ROIs. }
+\todo[inline]{Plot showing improvement in SSIM for different levels of noise. }
+\todo[inline]{Line plot for different levels of noise? }
+
+\section{Loss Function Evolution}
+\todo[inline]{Plot how loss functions evolve through training of tomo\_00058 with good hyperparameters. }
+
+\section{TomoGAN Compared to PICCS}
+\todo[]{Change section name?}
+\todo[inline]{Axial, sagittal, coronal plots for different depth parameters. }
+\todo[inline]{Maybe make 3D model plot of this dataset. }
+\todo[inline]{Line plot comparing GT, FDK?, PICCS, denoised. }
+\todo[inline]{Histogram. Looks like peaks roughly align, sharper peaks. Looks like it is performing segmentation? }
+\todo[inline]{}
+
+\section{Attempted Shale Denoising}
+\todo[inline]{Include this?}
+\todo[inline]{Shows limitations of method: requires a high-quality similar dataset (i.e. some ground truth) to work properly. Any given trained network doesn't work for all other dataset. }
+
 Plot types: 
 \begin{itemize}
     \item \acrshort{ssim} and \acrshort{mse} changes during training.
@@ -8,6 +40,6 @@ Plot types:
     \item Histograms of gt, ns, denoised
     \item Zoomed in region of interest.
     \item Axial, sagittal, and coronal plots of (at least Kim Robert's dataset) different depth parameters.
-    \item Compare denoising of different subsamplings (8, 16, 32, 48) (and poisson noise / shot noise?)
+    \item Compare denoising of different subsamplings (8, 16, 32, 48)
     \item Activation plot of network layers.
 \end{itemize}

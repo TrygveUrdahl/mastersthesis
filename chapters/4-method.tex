@@ -5,9 +5,29 @@ In this chapter, the specific neural network used to denoise \acrshort{ct} image
 
 \section{TomoGAN}
 \label{sec:method:tomogan}
-\todo[inline]{GAN where input is not random, but noisy image. U-net structure (encoder-decoder). Extract feature map of noisy image where noise is removed, and generate image from noiseless feature map. }
-TomoGAN \cite{liu2020tomogan}
+The denoising \acrshort{gan} network used in this thesis is called TomoGAN \cite{liu2020tomogan}. It is a \acrshort{gan} network where the generator is based on the U-net model \cite{unet}, and the input to the \acrshort{gan} is not some random noise but rather a noisy image. There are some key differences in the generator from the U-net model, namely \cite{liu2020tomogan}:
+\begin{itemize}
+    \item There are three (instead of four) down- and up sampling layers.
+    \item All convolutions have zero-padding to keep image dimensions unchanged during convolutions.
+    \item The generator input is a stack of $d$ adjacent slices where eight $1\times1$ convolutions are applied. 
+\end{itemize}
+In the down sampling part of the generator, three sets of two $3\times3$ convolutional layers with ReLU activation functions extract feature maps. Between each set of convolutional layers there is a $2\times2$ max pooling layer, for a total down sampling of $8$ leading to a feature map of size $1/8$ of the original image in either dimension (e.g. images of dimensions $1024\times1024$ will result in a feature map of dimensions $128\times128$). The number of channels in a convolutional layer changes throughout the network begining with $8$ channels, and the feature map after the down sampling process has $128$ channels. 
 
+The up sampling part of the generator is symmetric to the down sampling part, containing three sets of two $3\times3$ convolutional layers. The max pooling layers are replaced by bi-linear interpolation layers that instead of reducing the size of the feature map, increase it. Again, all the convolutional kernels have kernels of size $3\times3$ and use ReLU activation functions. At each of the three sets of convolutional layers, the feature maps from the corresponding set in the down sampling section are concatenated to the feature maps outputted from the previous set of convolutional layers\footnote{These skip-connection, as they are often called, are what make this structure a U-net style network and not simply an encoder-decoder network \cite{unet}. }. Finally, a $1\times1$ convolutional layer with a ReLU activation function followed by a $1\times1$ convolutional layer with a linear activation function is used to combine all the channels into a final output image. 
+
+\missingfigure{TODO: TomoGAN network structure. }
+
+The discriminator network used to help train TomoGAN consists of six 2D $3\times3$ convolutional layers with leaky ReLU activation functions, as well as two fully connected layers. \todo[]{Write about Wasserstein distance and its use as loss function? }
+
+No changes have been made to the structure of the TomoGAN network in this thesis, however some changes have been made to the loss function used to train the network. The original TomoGAN network, as given in \cite{liu2020tomogan}, was trained using a loss function comprising of an \acrshort{mse} loss, a feature based (VGG) loss, and an adversarial loss, given as 
+\begin{equation}
+    L_{\text{Total}} = \lambda_{\text{MSE}}L_{\text{MSE}} + \lambda_{\text{VGG}}L_{\text{VGG}} + \lambda_{\text{Adv}}L_{\text{Adv}}.
+\end{equation}
+Based on articles citing the log-cosh loss function as a good candidate for image processing \cite{7797130,chen2019log} it was added as an additional term to the total loss, giving the overall loss function
+\begin{equation}
+    L_{\text{Total}} = \lambda_{\text{MSE}}L_{\text{MSE}} + \lambda_{\text{Log-cosh}}L_{\text{Log-cosh}} + \lambda_{\text{VGG}}L_{\text{VGG}} + \lambda_{\text{Adv}}L_{\text{Adv}}.
+\end{equation}
+The weights for the different loss functions were mostly unchanged, with only $\lambda_\text{MSE}$ being slightly reduced to account for the fact that $L_\text{Log-cosh}$ covers a similar role (as they have similar activations). 
 
 \section{Image Comparison Metrics}
 \label{sec:method:metrics}
@@ -40,7 +60,7 @@ where $x$ and $y$ are the two images to compare, $\mu$ is the mean pixel value o
 A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, while others are collected in-house. This section will give a description of each used dataset. 
 
 \subsection{TomoBank}
-TomoBank is an x-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples. Some of these datasets have been used in this thesis.
+TomoBank is an x-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
 
 \todo[inline]{Paragraph about tomo\_00058 linking it to the table. }
 
@@ -67,13 +87,32 @@ All datasets used from TomoBank were reconstructed using \acrshort{fbp} from the
 
 \subsection{In-house}
 \todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018}
-\todo[inline]{Kim-Roberts dataset}
+\todo[inline]{Kim-Robert's dataset}
 
 \section{Compiling a Dataset for Training}
 \label{sec:method:compilingdataset}
-In this section, an explanation of how to compile a set of images into a suitable dataset for training the TomoGAN network will be given. % All these steps can be considered pre-processing. 
+In this section, an explanation of how to compile a set of images into a suitable dataset for training the TomoGAN network, or to denoise with an already trained network, will be given. 
 
-\todo[inline]{Flowchart not done yet, finish it. }
+The process of preparing a dataset for either training or inferrence (i.e. denoising using an already trained network) consists of a few steps. A flowchart visualizing this process can be seen in \cref{fig:compilingdatasetflowchart}. The detailed steps are as follows:
+
+\begin{enumerate}
+    \item Begin with a full stack of reconstructed images. If the dataset is ment to be used to train the network, both a set of high-quality (HQ) reconstructions as well as a corresponding set (of the same dataset) of low-quality (LQ) reconstructions are needed. They must be sorted the same way so that image 0 of the HQ dataset corresponds to image 0 of  the LQ dataset. If it is a datset that is to be denoised, only the low-quality dataset is needed. 
+    \item The images must then be cropped to remove unnecessary empty space and to help the network more easily focus on the important parts of the image. For a dataset that has not been properly cropped, the network may struggle to converge to a good solution, yielding poor results. This cropping step is done by visually inspecting the dataset and cropping an appropriate part of the images. If the dimension of the images is very large, it may be too large to properly fit in memory during training or denoising. The images must then be resized to an appropriate smaller size. 
+    \item Once the images are cropped, they must be converted to the datatype uint8, as that is best suited for use in the network\footnote{Using uint8 instead of e.g. float32 reduces the memory footprint drastically, and the hardware used to perform the caluclations needed to train a neural network is often optimized for this type of calculations using uint8. }. This process consists of several steps. For each image in the dataset do the following:
+    \begin{enumerate}
+        \item First, find the minimum and maximum pixel values of an image. This can be the absolute minimum and maximum, but ideally it should be a lower and upper percentile of the pixel values to avoid singular extreme pixel values causing a loss of dynamic range in the image, as the pixel values will be limited to 256 distinct values. 
+        \item Once the minimum and maximum values are determined, the image pixel values should be clipped to the previosly determined minimum and maximum values. This is necessary when the minimum and maximum values are percentiles to ensure all pixel values are within the new value range set by the percentiles.
+        \item After clipping the pixel values, all pixel values can be scaled linearly between 0 and 255 according to the formula 
+        \begin{equation}
+            \label{eq:scaleimages}
+            \hat{x} = 255 \cdot \frac{x - I_{min}}{I_{max} - I_{min}},
+        \end{equation}
+        where $\hat{x}$ is the updated scaled pixel value, $x$ is the old pixel value, and $I$ is the whole image.
+    \end{enumerate}
+    \item Once all images are scaled and converted to uint8, they can be filled into an HDF5-file containing one dataset for the HQ images, and if the dataset is to be used to train the network, one datset for the LQ images. The dimensions of the datasets should be $(N,H,W)$, where $N$ is the number of images, and $(H,W)$ are the dimensions of the images. 
+    \item When the dataset is to be used to train the network, both the HQ and the LQ datasets must be split into two datasets: one for training, and one for testing during training. About $15\%$ of the total dataset should be set aside for testing. 
+\end{enumerate}
+
 
 \begin{figure}[htbp]  
     \centering
@@ -81,5 +120,3 @@ In this section, an explanation of how to compile a set of images into a suitabl
     \caption[Dataset creation flowchart]{Flowchart showing the process of compiling a dataset for training the TomoGAN denoising network. }
     \label{fig:compilingdatasetflowchart}
 \end{figure}
-
-\todo[inline]{Making a dataset: scaling, cropping, sorting, selecting only good images (e.g. ignore empty from top of stack). }

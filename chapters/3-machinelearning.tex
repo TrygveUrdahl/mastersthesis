@@ -66,23 +66,27 @@ The convolution operator is defined as
     \label{eq:convolution}
     g(x,y) = \omega \ast f(x,y) = \sum_{dx=-a}^{a}\sum_{dy=-b}^{b} \omega(dx,dy)f(x+dx,y+dy),
 \end{equation}
-where $g(x,y)$ is the convoluted matrix, $f(x,y)$ is the original matrix, and $\omega$ is a convolution kernel of dimension $(2a+1,2b+1)$\footnote{The dimensions of the kernel are typically square and odd, such as $(3,3)$ or $(5,5)$, giving $dx,dy\in[-1,1]$ or $dx,dy\in[-2,2]$. }. For simplicity, kernel dimensions will be refered to as $(a,b)$ where $a$ and $b$ simply represent the kernel dimensions, and not the half-dimension as would correspond to \cref{eq:convolution}. 
+where $g(x,y)$ is the convoluted matrix, $f(x,y)$ is the original matrix, and $\omega$ is a convolution kernel of dimension $(2a+1,2b+1)$\footnote{The dimensions of the kernel are typically square and odd, such as $3\times3$ or $5\times5$, giving $dx,dy\in[-1,1]$ or $dx,dy\in[-2,2]$. }. For simplicity, kernel dimensions will be refered to as $a\times b$ where $a$ and $b$ simply represent the kernel dimensions, and not the half-dimension as would correspond to \cref{eq:convolution}. 
 
-A visualisation of what the convolution of a matrix (which could represent an image) with a given kernel can be seen in \cref{fig:convolution}. Here, the kernel dimensions are $(3,3)$. The output matrix has reduced dimensions corresponding to the kernel dimensions. The reduction can be given as 
+A visualization of what the convolution of a matrix (which could represent an image) with a given kernel can be seen in \cref{fig:convolution}. Here, the kernel dimensions are $3\times3$. The output matrix has reduced dimensions corresponding to the kernel dimensions. The reduction can be given as 
 \begin{equation}
     \left( x_o,y_o \right) = \left( x_i - \left(a - 1\right), x_i - \left( b - 1 \right) \right),
 \end{equation}
-where $(x_o,y_o)$ are the output dimensions, $(x_i,y_i)$ are the input dimensions, and $(a,b)$ are the kernel dimensions. In some situations it may not be wanted to reduce the dimensions of the input, and padding the input with zeroes on all sides can be used to combat this. This technique is called zero-padding \cite{oshea2015introduction}. 
+where $(x_o,y_o)$ are the output dimensions, $(x_i,y_i)$ are the input dimensions, and $a$ and $b$ are the kernel dimensions. In some situations it may not be wanted to reduce the dimensions of the input, and padding the input with zeroes on all sides can be used to combat this. This technique is called zero-padding \cite{oshea2015introduction}. 
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.85\textwidth]{figures/convolution.pdf}
-    \caption[Convolution example]{An example showing how a convolution works. This figure depicts: a) an input matrix of dimension $(9,9)$ (e.g. an image), b) a $(3,3)$ convolutional kernel, and c) the resulting convolution of dimension $(7,7)$. This convolution also has a stride of 1. Note that the output dimension is smaller than the input dimension. }
+    \caption[Convolution example]{An example showing how a convolution works. This figure depicts: a) an input matrix of dimension $(9,9)$ (e.g. an image), b) a $3\times3$ convolutional kernel, and c) the resulting convolution of dimension $(7,7)$. This convolution also has a stride of 1. Note that the output dimension is smaller than the input dimension. }
     \label{fig:convolution}
 \end{figure}
 
+Multiple convolutional kernels can be used in parallel in each convolutional layer. The number of kernels is then refered to as the number of channels. 
+
 The stride of a convolution is how far the kernel shifts \cite{oshea2015introduction}. In the example given in \cref{fig:convolution}, the stride is 1. If the stride were set to 2, the kernel would shift two units in the matrix for each output. This would mean less overlap between each value in the output, but also further reduction of the output dimensions. 
 
-The part of the convolution that a \acrshort{cnn} learns is the values in the convolutional kernel. Each layer of the \acrshort{cnn} may have several kernels that are applied in parallel (e.g. 32 kernels applied to the same input). Each kernel is often called a filter. One of the advantages of using convolution in neural networks is the reduction in the number of trainable parameters: a typical convolutional kernel contains $9-49$ parameters (for kernels of dimensions $(3,3)$ to $(7,7)$), however a fully connected feedforward network may have several thousands parameters for each layer\footnote{Consider an image of dimension $(100,100)$. In a fully connected \acrshort{ann} there would have to be $100 \cdot 100 = 10^4$ connections from each neuron in one layer to the next layer for a total of $10^{8}$ connections, where each connection has a trainable parameter. In comparison, if using a \acrshort{cnn} with 32 kernels of dimension $(3,3)$ there are only a total of $32 \cdot 3 \cdot 3 = 288$ trainable parameters. }. 
+Often, pooling layers are included in \acrshort{cnn}s. These layers are used to down sample the feature maps after a convolutional layer by applying some pooling function (e.g. max, average, sum) to an area of the feature map, reducing the dimension. This can for instance be a $2\times2$ max pooling layer that looks at a $2\times2$ section of a feature map and replaces it with a single value corresponding to the maximum value of the original section. Pooling layers reduce the dimensions of the feature map corresponding to the size of the pooling (e.g. a $2\times2$ pooling layer reduces both dimensions of a feature map by a factor of $2$). 
+
+The part of the convolution that a \acrshort{cnn} learns is the values in the convolutional kernel. Each layer of the \acrshort{cnn} may have several kernels that are applied in parallel (e.g. 32 kernels applied to the same input). Each kernel is often called a filter. One of the advantages of using convolution in neural networks is the reduction in the number of trainable parameters: a typical convolutional kernel contains $9-49$ parameters (for kernels of dimensions $3\times3$ to $7\times7$, however a fully connected feedforward network may have several thousands parameters for each layer\footnote{Consider an image of dimension $100\times100$. In a fully connected \acrshort{ann} there would have to be $100 \cdot 100 = 10^4$ connections from each neuron in one layer to the next layer for a total of $10^{8}$ connections, where each connection has a trainable parameter. In comparison, if using a \acrshort{cnn} with 32 channels (or kernels) of dimension $3\times3$ there are only a total of $32 \cdot 3 \cdot 3 = 288$ trainable parameters. }. 
 \todo[inline]{Write about overfitting? Reduce number of trainable parameters helps avoid overfitting. }
 
 \subsection{Encoder-Decoder Network}
@@ -96,7 +100,7 @@ An encoder-decoder network is a type of \acrshort{ann} that learns to copy its i
     \label{fig:encoderdecoder}
 \end{figure}
 
-In an encoder-decoder network, the encoder and decoder are two separate networks that can work independently of each other. Another similar network structure that builds upon the encoder-decoder is the U-net convolutional network \cite{unet}. It also contains an encoder and a decoder part, however the two networks are not separable as there are skip-connections between layers in the encoder and layers in the decoder. In a normal encoder-decoder network there is first one mapping from the input $X$ to the feature map $L$, $X \mapsto L$, and then a mapping from the feature map $L$ to the output $Y$, $L \mapsto Y$. These two mappings are not dependent on each other. In the U-net architecture however,  the mapping in the decoder also depends on the input $X$, making it $[X+L] \mapsto Y$. 
+In an encoder-decoder network, the encoder and decoder are two separate networks that can work independently of each other. Another similar network structure that builds upon the encoder-decoder is the U-net convolutional network, originally proposed for biomedical image segmentation \cite{unet}. It also contains an encoder and a decoder part, however the two networks are not separable as there are skip-connections between layers in the encoder and layers in the decoder. In a normal encoder-decoder network there is first one mapping from the input $X$ to the feature map $L$, $X \mapsto L$, and then a mapping from the feature map $L$ to the output $Y$, $L \mapsto Y$. These two mappings are not dependent on each other. In the U-net architecture however,  the mapping in the decoder also depends on the input $X$, making it $[X+L] \mapsto Y$. 
 
 
 \subsection{Generative Adversarial Network}
@@ -122,6 +126,9 @@ During training, the parameters of the neural network are automatically changed,
     \item Number of iterations to train the network (i.e. number of epochs).
     \item Mini batch size.
 \end{itemize}
+
+
+\missingfigure{TomoGAN network structure}
 
 The process of choosing these hyperparameters is not an exact science, and there is research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
 
