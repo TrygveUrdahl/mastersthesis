@@ -87,7 +87,7 @@ where $\bm{C}_h$ is a 1D convolution operation that convolves each detector row 
 
 Direct algorithms, such as \acrshort{fbp}, have the advantage of most often being computationally efficient, as well as producing accurate results when enough projections are available \cite{jimaging4110128}. The issue with these techniques arises when a limited number of projections are available, as they are generally highly prone to noise leading to insufficient image quality for proper analysis \cite{jimaging4110128}. This is where the use for iterative reconstruction algorithms arises.
 
-\todo[inline]{FDK?}
+\todo[inline]{FDK? Same as FBP just for circular cone-beam projections instead of parallel \cite{Feldkamp:84}. }
 \subsection{Iterative Reconstruction}
 Iterative tomographic reconstruction algorithms are based on iteratively solving the linear system given in \cref{eq:projectiondata}. A common method used is to try and find reconstructed images that minimize the $l^2$-norm of the residual error (i.e. the difference between the acquired sinograms, and the Radon transform of the reconstructed image\footnote{Calculating the inverse Radon transform is an ill-posed problem and is challenging, however calculating the Radon transform itself is an easy task. }) as well as an additional term $g$ that penalizes images that do not confine to some prior knowledge or assumption of the imaged object. This process can be written as \cite{jimaging4110128}
 \begin{equation}
@@ -100,7 +100,7 @@ A large drawback with iterative reconstruction is its (often) large computatinal
 
 Because of these limitations and drawbacks, direct reconstruction algorithms are still often preferred in many fields \cite{Pan_2009}. 
 
-\todo[inline]{PICCS?}
+\todo[inline]{PICCS \cite{piccs}}
 
 \subsection{Other Methods}
 In addition to direct and iterative reconstruction techniques, \acrshort{ml} has been used to make an iterative-like reconstruction algorithm \cite{GANrec}. One method, termed GANrec, is based on a \acrshort{gan} (which will be introduced in \cref{sec:ml:types:gan}) and is an \acrshort{ml} method that does not require training of the network before reconstruction, instead using the training process as the reconstruction process. 
