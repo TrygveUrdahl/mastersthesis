@@ -127,7 +127,7 @@ The process of preparing a dataset for either training or inferrence (i.e. denoi
         where $\hat{x}$ is the updated scaled pixel value, $x$ is the old pixel value, and $I$ is the whole image.
     \end{enumerate}
     \item Once all images are scaled and converted to uint8, they can be filled into an HDF5-file containing one dataset for the HQ images, and if the dataset is to be used to train the network, one datset for the LQ images. The dimensions of the datasets should be $(N,H,W)$, where $N$ is the number of images, and $(H,W)$ are the dimensions of the images. 
-    \item When the dataset is to be used to train the network, both the HQ and the LQ datasets must be split into two datasets: one for training, and one for testing during training. About $15\%$ of the total dataset should be set aside for testing. 
+    \item When the dataset is to be used to train the network, both the HQ and the LQ datasets must be split into two datasets: one for training, and one for testing during training. About $15\%$ of the total dataset should be set aside for testing. If the depth parameter of TomoGAN is to be used, both the training and test datasets need to be sorted (i.e. adjacent slices are adjacent in the dataset). 
 \end{enumerate}
 
 

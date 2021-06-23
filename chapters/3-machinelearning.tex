@@ -127,9 +127,6 @@ During training, the parameters of the neural network are automatically changed,
     \item Mini batch size.
 \end{itemize}
 
-
-\missingfigure{TomoGAN network structure}
-
 The process of choosing these hyperparameters is not an exact science, and there is research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
 
 \subsection{Loss Functions}
@@ -141,7 +138,7 @@ Perhaps the most commonly used loss function is the \acrfull{mse}. It is closely
     \label{eq:lossmse}
     L_{\text{MSE}} = \frac{1}{N} \sum_{i=1}^N(Y_i - \hat{Y}_i)^2,
 \end{equation}
-where $Y$ is the correct (labeled) value,  $\hat{Y}$ is the predicted value, and $N$ is the number of samples. This often performs well, however in cases such as image processing or image superresolution it has shown to cause blurring \cite{7797130}.
+where $Y$ is the correct (labeled) value,  $\hat{Y}$ is the predicted value, and $N$ is the number of samples. This often performs well, however in cases such as image processing or image super resolution it has shown to cause blurring \cite{7797130}.
 
 Another similar loss function is the \acrfull{mae}, which is closely related to the L1-norm. It can be defined as
 \begin{equation}
@@ -168,12 +165,12 @@ All the aforementioned loss functions rely on pixel-wise losses. Another type of
 \end{equation}
 where $Y$ and $\hat{Y}$ are as previously defined, $V_{\theta_{\text{VGG}}}(Y)$ is the VGG feature map representation of image $Y$, and $W_f$ and $H_f$ are the dimensions of the feature maps extracted by the pre-trained VGG network. The VGG network is trained with natural images, specifically the ImageNet dataset \cite{deng2009imagenet}, however it has been shown to work well as a feature extractor for \acrshort{ct} images \cite{8340157}. 
 
-Specific to \acrshort{gan}s is the adversarial loss. It is a measure of how well the generating network is able to produce samples that a discriminating network is unable to distinguish from real samples. It can be written as \cite{liu2020tomogan}
+Specific to \acrshort{gan}s is the adversarial loss. It is a measure of how well the generator network is able to produce samples that the discriminator network is unable to distinguish from real samples. It can be written as \cite{liu2020tomogan}
 \begin{equation}
     \label{eq:lossadv}
     L_{\text{Adv}} = -\frac{1}{N} \sum_{i=1}^{N} D\left(  \hat{Y}_i \right),
 \end{equation}
-where $\hat{Y}_i$ is the generated guess from the generating network, and $D$ is the discriminating network giving a binary classification $D\left(\hat{Y}_i \right) \in [0,1]$ depending on whether it believes the given image is a real or generated one. Minimizing this loss ensures that the generating network produces samples that have a similar feature map (when extracted by the discriminating network) to real samples, and this process is the basis of \acrshort{gan}s. 
+where $\hat{Y}_i$ is the generated guess from the generator network, and $D$ is the discriminator network giving a binary classification $D\left(\hat{Y}_i \right) \in [0,1]$ depending on whether it believes the given image is a real or generated one. Minimizing this loss ensures that the generator network produces samples that have a similar feature map (when extracted by the discriminator network) to real samples, and this process is the basis of \acrshort{gan}s. 
 
 
 \subsubsection{Weighted loss}
