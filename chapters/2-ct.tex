@@ -9,7 +9,7 @@ X-ray \acrshort{ct} imaging is based on interaction between X-rays and matter. T
     \label{eq:beerlambert}
     I = I_0 \rm{e}^{-\int_{l_0}^{l}\mu\left(x,y,E\right)dl},
 \end{equation}
-where $I_0$ and $I$ is the incident and the attenuated X-ray beam intensities at positions $l_0$ and $l$ respectively, and $\mu$ is the attenuation coefficient of the traversed matter. The integral in the exponent is the path of the beam through the sample. The attenuation coefficient is dependent on energy ($E$), and typical X-ray \acrshort{ct} systems span a range of wavelengths (i.e. energies). 
+where $I_0$ and $I$ are the incident and the attenuated X-ray beam intensities at positions $l_0$ and $l$ respectively, and $\mu$ is the attenuation coefficient of the traversed matter. The integral in the exponent is the path of the beam through the sample. The attenuation coefficient is dependent on energy ($E$), and typical X-ray \acrshort{ct} systems span a range of wavelengths (i.e. energies). 
 Because of this, \cref{eq:beerlambert} must be modified to also account for the polychromatic nature of the X-ray source. 
 
 The total incident radiation can be determined by integrating over all photon energies, 
@@ -28,7 +28,7 @@ This can be solved for the attenuation coefficient projection, giving \cite{doi:
     \label{eq:ctattenuationcoefficient}
     \int_{l_0}^{l} \mu_m\left(x,y\right)dl = -\ln\left[\frac{\int S\left(E\right) D\left(E\right)\rm{e}^{-\int_{l_0}^{l}\mu\left(x,y,E\right)dl} dE }{ \int S\left(E\right) D\left(E\right) dE }\right].
 \end{equation}
-The attenuated radiation $I_0$ can be related to the attenuation coefficient projection $\mu_m$ of a path through the sample by use of this equation. When the attenuation coefficient projections are known, the sample itself can be reconstructed using a reconstruction algorithm if a sufficient number of projections are available. 
+The attenuated intensity $I$ can be related to the attenuation coefficient projection $\mu_m$ of a path through the sample by use of this equation. When the attenuation coefficient projections are known, the sample itself can be reconstructed using a reconstruction algorithm if a sufficient number of projections are available. 
 
 \subsection{Noise}
 Assuming a sufficient number of projections of the attenuation coefficient are available, the primary sources of noise in \acrshort{ct} measurements are quantum noise and electronic noise \cite{boas2012ct}. 
@@ -46,14 +46,14 @@ Electronic noise is related to the electronics of the X-ray detector, and it is 
 \end{equation}
 which corresponds to a normal distribution $\mathcal{N}\left(\mu,\sigma\right)$ with mean signal value $\mu=0$ and standard deviation $\sigma$. 
 
-If an insufficient number of projections of the attenuation coefficient are available, it is known as a missing wedge problem. Missing wedge measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to noise artefacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). Several different methods of reducing this artefacting have been tried, including different reconstruction algorithms \cite{10.1111/jmi.12313} and \acrshort{ml} based approaches \cite{liu2020tomogan}. Missing wedge artefacting will be refered to as noise in this thesis. 
+If an insufficient number of projections of the attenuation coefficient are available, it is known as a missing wedge problem. Missing wedge measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to noise artefacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). Several different methods of reducing this artefacting have been tried, including different reconstruction algorithms \cite{10.1111/jmi.12313} and \acrshort{ml} based approaches \cite{liu2020tomogan,GANrec}. Missing wedge artefacting will be refered to as noise in this thesis. 
 
 A comparison of quantum noise and missing wedge artefacting on a dataset imaging glass beads can be seen in \cref{fig:noisecomparison}. 
 
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.9\textwidth]{figures/noisecomparison.pdf}
-    \caption[Reconstruction noise comparison]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and a missing wedge reconstruction. Images d), e), and f) are zoomed in \acrshort{roi}s of images a), b), and c) respectively. The \acrshort{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram, and the missing wedge problem is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction. The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \acrshort{fbp} from TomoPy \cite{TomoBank}. }
+    \caption[Reconstruction noise comparison]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and a missing wedge reconstruction. Images d), e), and f) are zoomed in \acrshort{roi}s of images a), b), and c) respectively. The \acrshort{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the missing wedge problem is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction. The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \acrshort{fbp} from TomoPy \cite{TomoBank}. }
     \label{fig:noisecomparison}
 \end{figure}
 

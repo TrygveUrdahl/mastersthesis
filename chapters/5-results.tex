@@ -35,7 +35,6 @@
 \todo[inline]{Line plot for different levels of noise? }
 
 \cref{tab:missingwedgessim}, and \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised,fig:differentnoiselineplot1,fig:differentnoiselineplot2}. 
-\todo[inline]{Keep one of \cref{tab:missingwedgessim,tab:missingwedgessim2}, which one is better? }
 
 \begin{figure}
   \begin{subfigure}[t]{\textwidth}
@@ -106,35 +105,17 @@
   \label{fig:tomo00058missingwedgecomparisondenoised}
 \end{figure}
 
+
 \begin{table}[htbp]
   \centering
   \caption[SSIM for different levels of simulated missing wedge noise and corresponding values after denoising]{Overview of \acrshort{ssim} for different levels of simulated missing wedge noise on the tomo\_00058 dataset. The missing wedge noise was simulated by subsampling the number of projections by a factor as given in the subsampling factor column, which results in a number of projections as given in \cref{tab:projectionsubsampling}. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
   \label{tab:missingwedgessim}
   \begin{tabular}{lllll}
   \hline
-  Subsampling factor & \multicolumn{2}{c}{Noisy values} & \multicolumn{2}{c}{Denoised values} \\
-  \hhline{=====}
-  {} & \acrshort{ssim} & \acrshort{mse} & \acrshort{ssim} & \acrshort{mse} \\
-  \hline
-  $1$  & $1.0$ & $0.0$ & $-$ & $-$ \\
-  $8$  & $0.492$ & $148.3$ & $0.842$ & $33.3$ \\
-  $16$ & $0.335$ & $348.5$ & $0.816$ & $74.9$ \\
-  $32$ & $0.233$ & $704.4$ & $0.789$ & $210.8$ \\
-  $48$ & $0.193$ & $976.6$ & $0.657$ & $2362.6$ \\
-  \hline
-  \end{tabular}
-\end{table}
-
-\begin{table}[htbp]
-  \centering
-  \caption[SSIM for different levels of simulated missing wedge noise and corresponding values after denoising]{Overview of \acrshort{ssim} for different levels of simulated missing wedge noise on the tomo\_00058 dataset. The missing wedge noise was simulated by subsampling the number of projections by a factor as given in the subsampling factor column, which results in a number of projections as given in \cref{tab:projectionsubsampling}. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
-  \label{tab:missingwedgessim2}
-  \begin{tabular}{lllll}
-  \hline
-  Subsampling factor & \multicolumn{2}{c}{\acrshort{ssim}} & \multicolumn{2}{c}{\acrshort{mse}}  \\
-  \hhline{=====}
+  \multirow{2}{*}{Subsampling factor} & \multicolumn{2}{c}{\acrshort{ssim}} & \multicolumn{2}{c}{\acrshort{mse}}  \\
   {} & Noisy & Denoised & Noisy & Denoised \\
-  \hline 
+  \hhline{=====}
+  %\hline 
   $1$  & $1.0$ & $-$ & $0.0$ & $-$ \\
   $8$  & $0.492$ & $0.842$ & $148.3$ & $33.3$ \\
   $16$ & $0.335$ & $0.816$ & $348.5$ & $74.9$ \\
@@ -161,6 +142,14 @@
 \section{Loss Function Evolution}
 \todo[inline]{Plot how loss functions evolve through training of tomo\_00058 with good hyperparameters. }
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.85\textwidth]{figures/losstomo00058ns32itd4mse035logcosh3depth1.pdf}
+  \caption[Loss function evolution]{Loss function evolution. } 
+  \label{fig:losstomo00058noadv}
+\end{figure}
+
+
 \section{TomoGAN Compared to PICCS}
 \todo[]{Change section name?}
 \todo[inline]{Axial, sagittal, coronal plots for different depth parameters. }
@@ -174,13 +163,13 @@
     \begin{subfigure}[t]{.45\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertgt.png}
-      \caption{High-quality. }
+      \caption{High-quality FDK. }
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{.45\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertFDK.png}
-      \caption{FDK.}
+      \caption{Low-quality FDK.}
     \end{subfigure}
   
     \medskip
@@ -188,7 +177,7 @@
     \begin{subfigure}[t]{.45\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertPICCS.png}
-      \caption{PICCS. }
+      \caption{\acrshort{piccs}. }
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{.45\textwidth}
@@ -203,42 +192,42 @@
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.85\textwidth]{figures/kimroberthq-x475y620s250.pdf}
-  \caption[High-quality]{View of the high-quality reconstruction. The red horizontal line in \textbf{(a)} corresponds to the sagittal view in \textbf{(b)}, and the red vertical line corresponds to the coronal view in \textbf{(c)}. Three \acrshort{roi}s have been marked in \textbf{(b)} and \textbf{(c)}, and can be seen in \textbf{(d)}-\textbf{(f)}. }
+  \includegraphics[width=.9\textwidth]{figures/kimroberthq-x475y620s250.pdf}
+  \caption[High-quality]{View of the high-quality FDK reconstruction. The red horizontal line in \textbf{(a)} corresponds to the sagittal view in \textbf{(b)}, and the red vertical line corresponds to the coronal view in \textbf{(c)}. Three \acrshort{roi}s have been marked in \textbf{(b)} and \textbf{(c)}, and can be seen in \textbf{(d)}-\textbf{(f)}. }
   \label{fig:sideplothq}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.85\textwidth]{figures/kimrobertfdk-x475y620s250.pdf}
-  \caption[FDK]{View of the FDK reconstruction. Figure elements are as in \cref{fig:sideplothq}. }
+  \includegraphics[width=.9\textwidth]{figures/kimrobertfdk-x475y620s250.pdf}
+  \caption[FDK]{View of the low-quality FDK reconstruction. Figure elements are as in \cref{fig:sideplothq}.} 
   \label{fig:sideplotfdk}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.85\textwidth]{figures/kimrobertpiccs-x475y620s250.pdf}
-  \caption[PICCS]{View of the PICCS reconstruction. Figure elements are as in \cref{fig:sideplothq}. }
+  \includegraphics[width=.9\textwidth]{figures/kimrobertpiccs-x475y620s250.pdf}
+  \caption[PICCS]{View of the \acrshort{piccs} reconstruction. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotpiccs}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.85\textwidth]{figures/kimrobertdepth1-x475y620s250.pdf}
+  \includegraphics[width=.9\textwidth]{figures/kimrobertdepth1-x475y620s250.pdf}
   \caption[Depth=1]{View of the denoised FDK reconstruction with a depth of 1. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotdepth1}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.85\textwidth]{figures/kimrobertdepth3-x475y620s250.pdf}
+  \includegraphics[width=.9\textwidth]{figures/kimrobertdepth3-x475y620s250.pdf}
   \caption[Depth=3]{View of the denoised FDK reconstruction with a depth of 3. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotdepth3}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.85\textwidth]{figures/kimrobertdepth5-x475y620s250.pdf}
+  \includegraphics[width=.9\textwidth]{figures/kimrobertdepth5-x475y620s250.pdf}
   \caption[Depth=5]{View of the denoised FDK reconstruction with a depth of 5. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotdepth5}
 \end{figure}
@@ -265,17 +254,58 @@
 \end{figure}
 
 \section{Attempted Shale Denoising}
-\todo[inline]{Include this?}
 \todo[inline]{Shows limitations of method: requires a high-quality similar dataset (i.e. some ground truth) to work properly. Any given trained network doesn't work for all other dataset. }
+\cref{fig:shale}
 
-Plot types: 
-\begin{itemize}
-    \item \acrshort{ssim} and \acrshort{mse} changes during training.
-    \item Loss function evolution.
-    \item Line plot of gt, ns, and different loss functions?
-    \item Histograms of gt, ns, denoised
-    \item Zoomed in region of interest.
-    \item Axial, sagittal, and coronal plots of (at least Kim Robert's dataset) different depth parameters.
-    \item Compare denoising of different subsamplings (8, 16, 32, 48)
-    \item Activation plot of network layers.
-\end{itemize}
+\begin{figure}
+  \begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=.45\textwidth]{figures/shale/shale_ns/0.png}
+    \caption{Original image. }
+  \end{subfigure}
+
+  \medskip
+
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/shale/shale_dn_tomo00058/0.png}
+    \caption{tomo\_00058. }
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/shale/shale_dn_tomo00001/0.png}
+    \caption{tomo\_00001. }
+  \end{subfigure}
+
+  \medskip
+
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/shale/shale_dn_tomo00002/0.png}
+    \caption{tomo\_00002. }
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{.45\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/shale/shale_dn_tomo00002min7/0.png}
+    \caption{tomo\_00002min7. }
+  \end{subfigure}
+  \caption[Attempted shale denoising]{Attempted shale denoising. }
+  \label{fig:shale}
+\end{figure}
+
+
+
+
+%Plot types: 
+%\begin{itemize}
+%    \item \acrshort{ssim} and \acrshort{mse} changes during training.
+%    \item Loss function evolution.
+%    \item Line plot of gt, ns, and different loss functions?
+%    \item Histograms of gt, ns, denoised
+%    \item Zoomed in region of interest.
+%    \item Axial, sagittal, and coronal plots of (at least Kim Robert's dataset) different depth parameters.
+%    \item Compare denoising of different subsamplings (8, 16, 32, 48)
+%    \item Activation plot of network layers.
+%\end{itemize}
