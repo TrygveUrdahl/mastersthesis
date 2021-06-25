@@ -1,11 +1,18 @@
 \chapter{Results and Discussion}
 \label{sec:results}
+This chapter will present the results of denoising the different datasets. The effect of the pre-processing steps introduced in \cref{sec:method:compilingdataset}, how the changes in loss function by including a log-cosh term affect the denoising, and the importance of the depth parameter in TomoGAN will be presented and discussed. Furthermore, some of the limitations of this method will be explored and discussed. 
 
 \section{Effect of Pre-processing Images}
 \todo[inline]{Compare tomo\_00058 denoising with and without cropping. Without cropping similar results to early stages of denoising cropped (i.e. poor and not converged). }
+Attempting to denoise tomo\_00058 without performing cropping of the reconstructed images yielded poor results, as can be seen in \cref{fig:uncroppeddenoising}. The network does not seem to have managed to converge properly, and the results look to simply be bluring the images. The use of an \acrshort{mse} based loss function may be part of the cause of the blurring, as this loss has been shown to cause blurring in image processing related tasks such as this. 
 
-\cref{fig:uncroppeddenoising,fig:croppeddenoising}.
+When the images are all cropped, with no other changes being made, the network instantly performs much better. This can be seen in \cref{fig:croppeddenoising}. While there is some clear artefacting from the denoising (especially when looking at shapes that are different from the norm, such as non-circular shapes), when comparing the \acrshort{hq} and denoised images it is evident that a majority of the features have been preserved with the noise being drastically reduced. 
 
+Comparing the non-cropped denoising with an early-iteration cropped denoising (i.e. not yet converged), as seen in \cref{fig:croppednoncroppedearly}, the results are somewhat similar indicating that the non-cropped denoising may have struggled to converge properly. 
+
+This denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for 100000 iterations with a mini batch size of 16. 
+
+\todo[inline]{Include histogram in this section? }
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/uncroppeddenoising.pdf}
@@ -20,6 +27,12 @@
   \label{fig:croppeddenoising}
 \end{figure}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/croppednoncroppedearly.pdf}
+  \caption[Non-cropped image denoising compared to non-converged cropped image denoising]{Non-cropped image denoising compared to non-converged cropped image denoising. The cropped denoising is after merely $500$ iterations of the same denoising as in \cref{fig:croppeddenoising}. The non-cropped denoising has been cropped after denoising for easier comparison. The two images are of different slices of the same dataset. }
+  \label{fig:croppednoncroppedearly}
+\end{figure}
 
 \section{Hyperparameter and Loss Function Changes}
 \todo[inline]{Show difference in tomo\_00058 denoising for different loss functions / weights (and hyperparameters?)}
@@ -29,12 +42,19 @@
 \todo[inline]{SSIM and MSE evolution of arbitrary slice. }
 
 \section{Different Amounts of Noise}
-\todo[inline]{Different levels of noise / projection subsamplings (8,16,32,48). }
-\todo[inline]{Plot of the images with zoomed in ROIs. }
-\todo[inline]{Plot showing improvement in SSIM for different levels of noise. }
-\todo[inline]{Line plot for different levels of noise? }
+To explore how much noise the denoising method is able to remove, the tomo\_00058 dataset was recreated with four different levels of missing wedge noise. By using subsampling factors of $8$, $16$, $32$, and $48$ (where the resulting number of projections can be seen in \cref{tab:projectionsubsampling}), four datasets with different levels of noise were simulated. They can be seen alongside the \acrshort{hq} reconstruction in \cref{fig:tomo00058missingwedgecomparison}. 
 
-\cref{tab:missingwedgessim}, and \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised,fig:differentnoiselineplot1,fig:differentnoiselineplot2}. 
+Once again the TomoGAN network was used with a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial components, a depth of 1 was used, and the network was trained for 100000 iterations with a mini batch size of 16. The resulting denoised images can be seen in \cref{fig:tomo00058missingwedgecomparisondenoised}. 
+
+It is evident that a subsampling factor of 48, corresponding to merely 31 projections, leads to too much noise to recover any usable denoised image. This is further confirmed by looking at plots of the pixel values along two different lines on the denoised images and comparing them with the noisy and the \acrshort{hq} image, as can be seen in \cref{fig:differentnoiselineplot1,fig:differentnoiselineplot2}. For the other three datasets the denoising seems to result in images sufficiently similar to the \acrshort{hq} image, especially for subsampling factors $8$ and $16$. 
+
+\cref{tab:missingwedgessim} contains \acrshort{ssim} and \acrshort{mse} values for the noisy and denoised images shown in \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised}. We see here that for subsampling factors $8$, $16$, and $32$, the \acrshort{mse} is improved by denoising, however for subsampling factor $48$ it is drastically worsened. All denoisings achieve, to varying degrees, \acrshort{ssim} improvements. The fact that the poor denoising of the subsampling factor of $48$ achieves an improvement in \acrshort{ssim} from $0.193$ to $0.657$ indicates that \acrshort{ssim} is not a perfect image comparison metric. 
+
+It is worth noting that a subsampling factor of $32$ corresponds to $46$ projections, which is similar to the $64$ projections used in the noisiest simulated dataset in the original article by Liu et al. \cite{liu2020tomogan}. The achieved \acrshort{ssim} score on a real dataset of $0.789$ in this thesis is similar to their results on a simulated phantom. 
+
+\todo[inline]{Plot showing improvement in SSIM for different levels of noise. }
+
+
 
 \begin{figure}
   \begin{subfigure}[t]{\textwidth}
@@ -112,7 +132,7 @@
   \label{tab:missingwedgessim}
   \begin{tabular}{lllll}
   \hline
-  \multirow{2}{*}{Subsampling factor} & \multicolumn{2}{c}{\acrshort{ssim}} & \multicolumn{2}{c}{\acrshort{mse}}  \\
+  \multirow{2}{*}{Subsampling Factor} & \multicolumn{2}{c}{\acrshort{ssim}} & \multicolumn{2}{c}{\acrshort{mse}}  \\
   {} & Noisy & Denoised & Noisy & Denoised \\
   \hhline{=====}
   %\hline 

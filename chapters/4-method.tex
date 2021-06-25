@@ -5,7 +5,7 @@ In this chapter, the specific neural network used to denoise \acrshort{ct} image
 
 \section{TomoGAN}
 \label{sec:method:tomogan}
-The denoising \acrshort{gan} network used in this thesis is called TomoGAN \cite{liu2020tomogan}. It is a \acrshort{gan} network where the generator is based on the U-net model \cite{unet}, and the input to the \acrshort{gan} is not some random noise but rather a noisy image. There are some key differences in the generator from the U-net model, namely \cite{liu2020tomogan}:
+The denoising neural network used in this thesis is called TomoGAN \cite{liu2020tomogan}. It is a \acrshort{gan} where the generator is based on the U-net model \cite{unet}, and the input to the \acrshort{gan} is not some random noise but rather some noisy image. There are some key differences in the generator from the U-net model, namely \cite{liu2020tomogan}:
 \begin{itemize}
     \item There are three (instead of four) down- and up sampling layers.
     \item All convolutions have zero-padding to keep image dimensions unchanged during convolutions.
@@ -31,11 +31,11 @@ The weights for the different loss functions were mostly unchanged, with only $\
 
 \section{Image Comparison Metrics}
 \label{sec:method:metrics}
-To properly quantify the performance of the denoising algorithm, some metrics must be defined. While there are some standards to doing this, not all methods perform equally well. 
+To properly quantify the performance of the denoising method, some metrics must be defined. While there are some standards to doing this, not all methods perform equally well. 
 
 \subsection{Mean Squared Error}
 \label{sec:method:metrics:mse}
-The most commonly used full-reference image quality metric is the \acrfull{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is very easy to calculate and physically understand, a low (i.e. good) \acrshort{mse} does not necessarily correspond to a visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \acrfull{psnr}, which is another very commonly used metric, does not correspond to visual similarity. The \acrshort{psnr} can be defined from the \acrshort{mse}, and is given as \cite{477498}
+The most commonly used full-reference image quality metric is the \acrfull{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is very easy to calculate and physically understand, a low (i.e. good) \acrshort{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \acrfull{psnr}, which is another very commonly used metric, does not correspond to visual similarity. The \acrshort{psnr} can be defined from the \acrshort{mse}, and is given as \cite{477498}
 \begin{equation}
     \label{eq:psnr}
     \text{PSNR} = 10 \cdot \log_{10} \left( \frac{\text{MAX}_Y}{MSE^2} \right),
@@ -60,9 +60,9 @@ where $x$ and $y$ are the two images to compare, $\mu$ is the mean pixel value o
 A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is \todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
 
 \subsection{TomoBank}
-TomoBank is an x-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
+TomoBank is an X-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
 
-\todo[inline]{Paragraph about tomo\_00058 linking it to the table. }
+The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset can be seen in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate missing wedge noise can be seen in \cref{tab:projectionsubsampling}. 
 
 \begin{table}[htbp]
     \centering
@@ -73,7 +73,9 @@ TomoBank is an x-ray tomography data bank providing experimental and simulated d
     Instrument & APS 2-BM-A fast tomo \\
     Scan Range & 180 degree \\
     Number of Projections & 1500 \\
-    Pixel size & \SI{0.65}{\micro \meter} \\
+    Energy & \SI{27.4}{\kilo \electronvolt}\\
+    Exposure Time & \SI{1}{\milli \second}\\
+    Pixel Size & \SI{0.65}{\micro \meter} \\
     Detector Dimension x & 2560 \\
     Detector Dimension y & 2160 \\
     \hline
@@ -82,11 +84,11 @@ TomoBank is an x-ray tomography data bank providing experimental and simulated d
 
 \begin{table}[htbp]
     \centering
-    \caption[Projection subsampling overview tomo\_00058]{Overview of the number of projections in different subsamplings of tomo\_00058. }
+    \caption[Projection subsampling overview tomo\_00058]{Overview of the number of projections for different subsampling factors of tomo\_00058. }
     \label{tab:projectionsubsampling}
     \begin{tabular}{ll}
     \hline
-    Subsampling factor & Projections \\
+    Subsampling Factor & Projections \\
     \hhline{==}
     $1$ & $1500$ \\
     $8$ & $187$ \\
@@ -97,13 +99,14 @@ TomoBank is an x-ray tomography data bank providing experimental and simulated d
     \end{tabular}
 \end{table}
 
-% \cite{datasetshale}. 
+Two datasets of shale from TomoBank were also used, namely tomo\_00001 and tomo\_00002 \cite{datasetshale}. These datasets are two shale samples collected from the North Sea and from the Upper Barnett Formation in Texas. They are both imaged at the Advanced Photon Source (APS) of Argonne National Laboratory, USA. These datasets are only used to train a network for denoising of another shale sample, the ASM\_ID16B shale sample. 
+
 All datasets used from TomoBank were reconstructed using \acrshort{fbp} from the TomoPy library \cite{tomopy}. 
 
 
 \todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018, not in-house}
 \subsection{In-house}
-An in-house captured dataset imaging a sample of soda lime glass spheres in a capillary tube containing a potassium iodide (KI) doped water solution has been used. The soda lime glass spheres have diameters in the \SIrange{1250}{1650}{\micro \meter} range, the capillary tube has an inner diameter of \SI{2.5}{\milli \meter} and an outer diameter of \SI{4.0}{\milli \meter}, and the potassium iodide doped water has a concentration of \SI{0.5}{\molar} KI. The sample was imaged twice: one \acrlong{hq} imaging, and one fast \acrlong{lq} imaging. The technical information of the two imagings of the in-house dataset can be seen in \cref{tab:inhousehq,tab:inhouselq}.
+An in-house captured dataset imaging a sample of soda lime glass spheres in a capillary tube containing a potassium iodide (KI) doped water solution has been used. The soda lime glass spheres have diameters in the \SIrange{1250}{1650}{\micro \meter} range, the capillary tube has an inner diameter of \SI{2.5}{\milli \meter} and an outer diameter of \SI{4.0}{\milli \meter}, and the potassium iodide doped water has a concentration of \SI{0.5}{\molar} KI. The sample was imaged twice: one slow \acrlong{hq} imaging, and one fast \acrlong{lq} imaging. The technical information of the two imagings of the in-house dataset can be seen in \cref{tab:inhousehq,tab:inhouselq}.
 
 For the sake of simplicity, the two datasets will be refered to as the \acrfull{ihhq} and the \acrfull{ihlq} datasets. 
 
@@ -120,15 +123,15 @@ Because the used \acrshort{ct} instrument has a conical beam, the \acrshort{fdk}
     Voltage & \SI{170}{\kilo \volt}\\
     Current & \SI{45}{\micro \ampere}\\
     Gain & \SI{17}{\deci \bel}\\
-    Exposure time & \SI{1000}{\milli \second}\\
-    Pixel size & \SI{7.06}{\micro \meter} \\
+    Exposure Time & \SI{1000}{\milli \second}\\
+    Pixel Size & \SI{7.06}{\micro \meter} \\
     \hline
     \end{tabular}
 \end{table}
 
 \begin{table}[htbp]
     \centering
-    \caption[Technical information of the IHLQ dataset]{Overview of technical information of the fast scan of the in-house dataset. This dataset is referd to as the \acrshort{ihlq} dataset. }
+    \caption[Technical information of the IHLQ dataset]{Overview of technical information of the fast scan of the in-house dataset. This dataset is refered to as the \acrshort{ihlq} dataset. }
     \label{tab:inhouselq}
     \begin{tabular}{ll}
     \hline
@@ -137,8 +140,8 @@ Because the used \acrshort{ct} instrument has a conical beam, the \acrshort{fdk}
     Voltage & \SI{170}{\kilo \volt}\\
     Current & \SI{65}{\micro \ampere}\\
     Gain & \SI{24}{\deci \bel}\\
-    Exposure time & \SI{134}{\milli \second}\\
-    Pixel size & \SI{7.06}{\micro \meter} \\
+    Exposure Time & \SI{134}{\milli \second}\\
+    Pixel Size & \SI{7.06}{\micro \meter} \\
     \hline
     \end{tabular}
 \end{table}
@@ -150,7 +153,7 @@ In this section, an explanation of how to compile a set of images into a suitabl
 The process of preparing a dataset for either training or inferrence (i.e. denoising using an already trained network) consists of a few steps. A flowchart visualizing this process can be seen in \cref{fig:compilingdatasetflowchart}. The detailed steps are as follows:
 
 \begin{enumerate}
-    \item Begin with a full stack of reconstructed images. If the dataset is ment to be used to train the network, both a set of high-quality (HQ) reconstructions as well as a corresponding set (of the same dataset) of low-quality (LQ) reconstructions are needed. They must be sorted the same way so that image 0 of the HQ dataset corresponds to image 0 of  the LQ dataset. If it is a datset that is to be denoised, only the low-quality dataset is needed. 
+    \item Begin with a full stack of reconstructed images. If the dataset is ment to be used to train the network, both a set of \acrfull{hq} reconstructions as well as a corresponding set (of the same dataset) of \acrfull{lq} reconstructions are needed. They must be sorted the same way so that image 0 of the \acrshort{hq} dataset corresponds to image 0 of the \acrshort{lq} dataset. If it is a datset that is to be denoised, only the \acrshort{lq} dataset is needed. 
     \item The images must then be cropped to remove unnecessary empty space and to help the network more easily focus on the important parts of the image. For a dataset that has not been properly cropped, the network may struggle to converge to a good solution, yielding poor results. This cropping step is done by visually inspecting the dataset and cropping an appropriate part of the images. If the dimension of the images is very large, it may be too large to properly fit in memory during training or denoising. The images must then be resized to an appropriate smaller size. 
     \item Once the images are cropped, they must be converted to the datatype uint8, as that is best suited for use in the network\footnote{Using uint8 instead of e.g. float32 reduces the memory footprint drastically, and the hardware used to perform the caluclations needed to train a neural network is often optimized for this type of calculations using uint8. }. This process consists of several steps. For each image in the dataset do the following:
     \begin{enumerate}
@@ -163,8 +166,8 @@ The process of preparing a dataset for either training or inferrence (i.e. denoi
         \end{equation}
         where $\hat{x}$ is the updated scaled pixel value, $x$ is the old pixel value, and $I$ is the whole image.
     \end{enumerate}
-    \item Once all images are scaled and converted to uint8, they can be filled into an HDF5-file containing one dataset for the HQ images, and if the dataset is to be used to train the network, one datset for the LQ images. The dimensions of the datasets should be $(N,H,W)$, where $N$ is the number of images, and $(H,W)$ are the dimensions of the images. 
-    \item When the dataset is to be used to train the network, both the HQ and the LQ datasets must be split into two datasets: one for training, and one for testing during training. About $15\%$ of the total dataset should be set aside for testing. If the depth parameter of TomoGAN is to be used, both the training and test datasets need to be sorted (i.e. adjacent slices are adjacent in the dataset). 
+    \item Once all images are scaled and converted to uint8, they can be filled into an HDF5-file containing one dataset for the \acrshort{hq} images, and if the dataset is to be used to train the network, one datset for the \acrshort{lq} images. The dimensions of the datasets should be $(N,H,W)$, where $N$ is the number of images, and $(H,W)$ are the dimensions of the images. 
+    \item When the dataset is to be used to train the network, both the \acrshort{hq} and the \acrshort{lq} datasets must be split into two datasets: one for training, and one for testing during training. About $15\%$ of the total dataset should be set aside for testing. If the depth parameter of TomoGAN is to be used, both the training and test datasets need to be sorted (i.e. adjacent slices are adjacent in the dataset). 
 \end{enumerate}
 
 

@@ -5,7 +5,8 @@ The scientific field of \acrfull{ml} if often seen as a part of the greater fiel
 Some problems can easily be solved by programming an explicit algorithm (e.g. sorting a list, or \acrshort{fbp} reconstruction), however there are many cases where an exact algorithm simply does not exist (e.g. telling spam emails from legitimate emails) \cite[1]{Alpaydin10}. Often we have access to a large amount of sample data (e.g. emails where some have been manually flagged as spam) pertaining to the issue, however what is lacking is a suitable algorithm to parse and classify all the data. This is where \acrshort{ml} comes in: an \acrshort{ml} model can be trained to discern differences in a dataset without being explicitly told what to look for. So long as there is a sufficient amount of data to train the model with, it may be able to find a pattern in the data and thereby augment or enhance the data, or predict or classify new data \cite[2-4]{Alpaydin10}. 
 
 There are many different \acrshort{ml} algorithms, however in this thesis only the class of neural networks will be discussed and the focus will be on supervised learning. 
-\todo[inline]{This chapter contains ...}
+
+This chapter contains a brief introduction to neural networks and their basic components, an explanation of what a \acrlong{cnn} is and what exactly the convolution operator does, a description of endocer-decoder networks, and an introduction to \acrlong{gan}s. It then covers the basics of how a neural network is trained and gives an overview of some common loss functions used for this process. 
 
 \section{Components of a Neural Network}
 \label{sec:ml:componentsofaneuralnetwork}
@@ -66,7 +67,7 @@ The convolution operator is defined as
     \label{eq:convolution}
     g(x,y) = \omega \ast f(x,y) = \sum_{dx=-a}^{a}\sum_{dy=-b}^{b} \omega(dx,dy)f(x+dx,y+dy),
 \end{equation}
-where $g(x,y)$ is the convoluted matrix, $f(x,y)$ is the original matrix, and $\omega$ is a convolution kernel of dimension $(2a+1,2b+1)$\footnote{The dimensions of the kernel are typically square and odd, such as $3\times3$ or $5\times5$, giving $dx,dy\in[-1,1]$ or $dx,dy\in[-2,2]$. }. For simplicity, kernel dimensions will be refered to as $a\times b$ where $a$ and $b$ simply represent the kernel dimensions, and not the half-dimension as would correspond to \cref{eq:convolution}. 
+where $g(x,y)$ is the convoluted matrix, $f(x,y)$ is the original matrix, and $\omega$ is a convolution kernel of dimension $(2a+1,2b+1)$\footnote{The dimensions of the kernel are typically square and odd, such as $3\times3$ or $5\times5$, giving $dx,dy\in[-1,1]$ or $dx,dy\in[-2,2]$. }. For the sake of simplicity, kernel dimensions will be refered to as $a\times b$ where $a$ and $b$ simply represent the kernel dimensions, and not the half-dimension as would correspond to \cref{eq:convolution}. 
 
 A visualization of what the convolution of a matrix (which could represent an image) with a given kernel can be seen in \cref{fig:convolution}. Here, the kernel dimensions are $3\times3$. The output matrix has reduced dimensions corresponding to the kernel dimensions. The reduction can be given as 
 \begin{equation}
@@ -86,7 +87,7 @@ The stride of a convolution is how far the kernel shifts \cite{oshea2015introduc
 
 Often, pooling layers are included in \acrshort{cnn}s. These layers are used to down sample the feature maps after a convolutional layer by applying some pooling function (e.g. max, average, sum) to an area of the feature map, reducing the dimension. This can for instance be a $2\times2$ max pooling layer that looks at a $2\times2$ section of a feature map and replaces it with a single value corresponding to the maximum value of the original section. Pooling layers reduce the dimensions of the feature map corresponding to the size of the pooling (e.g. a $2\times2$ pooling layer reduces both dimensions of a feature map by a factor of $2$). 
 
-The part of the convolution that a \acrshort{cnn} learns is the values in the convolutional kernel. Each layer of the \acrshort{cnn} may have several kernels that are applied in parallel (e.g. 32 kernels applied to the same input). Each kernel is often called a filter. One of the advantages of using convolution in neural networks is the reduction in the number of trainable parameters: a typical convolutional kernel contains $9-49$ parameters (for kernels of dimensions $3\times3$ to $7\times7$, however a fully connected feedforward network may have several thousands parameters for each layer\footnote{Consider an image of dimension $100\times100$. In a fully connected \acrshort{ann} there would have to be $100 \cdot 100 = 10^4$ connections from each neuron in one layer to the next layer for a total of $10^{8}$ connections, where each connection has a trainable parameter. In comparison, if using a \acrshort{cnn} with 32 channels (or kernels) of dimension $3\times3$ there are only a total of $32 \cdot 3 \cdot 3 = 288$ trainable parameters. }. 
+The part of the convolution that a \acrshort{cnn} learns is the values in the convolutional kernel. Each layer of the \acrshort{cnn} may have several kernels that are applied in parallel (e.g. 32 kernels applied to the same input). Each kernel is often called a filter. One of the advantages of using convolution in neural networks is the reduction in the number of trainable parameters: a typical convolutional kernel contains $9-49$ parameters (for kernels of dimensions $3\times3$ to $7\times7$), however a fully connected feedforward network may have several thousand parameters for each layer\footnote{Consider an image of dimension $100\times100$. In a fully connected \acrshort{ann} there would have to be $100 \cdot 100 = 10^4$ connections from each neuron in one layer to the next layer for a total of $10^{8}$ connections, where each connection has a trainable parameter. In comparison, if using a \acrshort{cnn} with 32 channels (or kernels) of dimension $3\times3$ there are only a total of $32 \cdot 3 \cdot 3 = 288$ trainable parameters. }. 
 \todo[inline]{Write about overfitting? Reduce number of trainable parameters helps avoid overfitting. }
 
 \subsection{Encoder-Decoder Network}
@@ -109,7 +110,7 @@ In an encoder-decoder network, the encoder and decoder are two separate networks
 
 The two networks play a game, in the sense of game theory, where they try to minimize their own cost, or error rates, while at the same time maximizing the other network's cost \cite{goodfellow2020gan}. \acrshort{gan}s are designed to reach a Nash equilibrium at which neither of the two networks can reduce its costs without changing the other network's parameters \cite{liu2020tomogan}. As opposed to normal neural networks that are based on optimization to reduce their error rates, \acrshort{gan}s are based on game theory \cite{goodfellow2020gan}. 
 
-To generate random samples from the distribution of the training data, a fully trained \acrshort{gan} is given random noise as input and then maps that to a random sample, such as in \cite{zhangsagan}. This allows the network to generate new samples that are similar, but not equal, to the training data. Another common use case for \acrshort{gan}s is to instead of feeding the network random noise as input, feeding it some data that needs augmentation. This has been used to denoise images and for image super-resolution \cite{8710893,Ledig_2017_CVPR}. 
+To generate random samples from the distribution of the training data, a fully trained \acrshort{gan} is given random noise as input and then maps that to a random sample, such as in \cite{zhangsagan}. This allows the network to generate new samples that are similar, but not equal, to the training data. Another common use case for \acrshort{gan}s is to instead of feeding the network random noise as input, feeding it some data that needs augmentation. This has been used to denoise images and has been shown to be a good method for image super-resolution \cite{8710893,Ledig_2017_CVPR}. 
 
 
 \section{Training a Neural Network}
@@ -183,10 +184,12 @@ An example containing \acrshort{mse}, log-cosh, and VGG loss can be given as
 where $\lambda_N$ is a hyperparameter controlling the weight of $L_N$. 
 
 \subsection{Backpropagation}
-\todo[inline]{}
+Backpropagation is the name given to the process of calculating the needed updates to the parameters of a neural network to reduce the error rate, or loss, of the network. It consists of calculating the partial derivatives of the loss function for each parameter of the network, and then updating them accordingly \cite{Rumelhart1986}. 
+
+The process of passing an input through a network to get some result (i.e. inferrence) can be seen as forwards propagating through the network. When updating the parameters of the network, a backpropagation algorithm begins by calculating the error of the neurons in the final layer of the network, and then working its way backwards layer by layer. For each parameter, its contribution to the total loss of the network is calculated, and the gradient of this contribution is calculated. The backpropagation scheme itself does not update the parameters, but rather it finds what part of the loss corresponds to what parameter. An optimizer is then applied to update the parameters.
 
 \subsection{Optimizers}
-\todo[inline]{}
+To calculate the updates to all parameters, some optimizing method must be used. Two of the most common ones will be briefly introduced here.
 
 \subsubsection{Stochastic Gradient Descent}
 The simplest type of optimizer that is often used in training neural networks is the \acrfull{sgd}. It is an iterative method for optimizing an objective function that has suitable smoothness properties (e.g. differentiability) \cite{stochasticgradientdescent}. It looks at the error in the feature map of the training network (when compared to the labeled ground truth), and calculates an approximation of the gradient needed to update all the weights in the network to reduce the error. Because of the use of mini batches during training of neural networks, the \acrshort{sgd} method only looks at a randomly selected subset of the whole training data and it is therefore called a stochastic method. The learning rate of \acrshort{sgd} is the step size used when updating the weights based on the calculated gradient.
