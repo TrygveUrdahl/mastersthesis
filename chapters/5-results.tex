@@ -128,14 +128,14 @@
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot1.pdf}
-  \caption[Line plot of denoising of different levels of noise]{The plots show pixel values for 150 pixels on a horizontal line, as shown by the red line on the \acrlong{hq} image above, for denoising of four different levels of missing wedge noise. \acrshort{hq} corresponds to the \acrlong{hq} image, NS to the missing wedge noise image, and \acrshort{dn} to the \acrfull{dn} image. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
+  \caption[Line plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 150 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \acrlong{hq} image above, for denoising of four different levels of missing wedge noise. \acrshort{hq} corresponds to the \acrlong{hq} image, NS to the missing wedge noise image, and \acrshort{dn} to the \acrfull{dn} image. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
   \label{fig:differentnoiselineplot1}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot2.pdf}
-  \caption[Line plot of denoising of different levels of noise]{The plots show pixel values for 400 pixels on a horizontal line, as shown by the red line on the \acrshort{hq} image above, for denoising of four different levels of missing wedge noise. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
+  \caption[Line plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 400 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \acrshort{hq} image above, for denoising of four different levels of missing wedge noise. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
   \label{fig:differentnoiselineplot2}
 \end{figure}
 
@@ -163,13 +163,13 @@
     \begin{subfigure}[t]{.45\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertgt.png}
-      \caption{\acrlong{hq} FDK. }
+      \caption{\acrlong{ihhq} \acrshort{fdk}. }
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{.45\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertFDK.png}
-      \caption{\acrlong{lq} FDK.}
+      \caption{\acrlong{ihlq} \acrshort{fdk}.}
     \end{subfigure}
   
     \medskip
@@ -177,15 +177,15 @@
     \begin{subfigure}[t]{.45\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertPICCS.png}
-      \caption{\acrshort{piccs}. }
+      \caption{\acrlong{ihlq} \acrshort{piccs}. }
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{.45\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertdepth1dn.png}
-      \caption{\acrlong{dn} \acrlong{lq} FDK. }
+      \caption{\acrlong{dn} \acrlong{ihlq} \acrshort{fdk}. }
     \end{subfigure}
-    \caption[Comparison of different reconstructions]{Comparison of different reconstructions. }
+    \caption[Comparison of different reconstructions of IHHQ and IHLQ]{Comparison of different reconstructions of the \acrshort{ihhq} and the \acrshort{ihlq} dataset. }
     \label{fig:kimrobertcomparison}
 \end{figure}
 \todo[]{Remove \cref{fig:kimrobertcomparison}? May not be needed, as this is basically showed in other figures. }
@@ -193,63 +193,63 @@
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/kimroberthq-x475y620s250.pdf}
-  \caption[High-quality]{View of the \acrshort{hq} FDK reconstruction. The red horizontal line in \textbf{(a)} corresponds to the sagittal view in \textbf{(b)}, and the red vertical line corresponds to the coronal view in \textbf{(c)}. Three \acrshort{roi}s have been marked in \textbf{(b)} and \textbf{(c)}, and can be seen in \textbf{(d)}-\textbf{(f)}. The scale bar for \textbf{(b)} applies to \textbf{(c)}, and the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}. }
+  \caption[View of IHHQ]{View of the \acrshort{ihhq} \acrshort{fdk} reconstruction. The red horizontal line in \textbf{(a)} corresponds to the sagittal view in \textbf{(b)}, and the red vertical line corresponds to the coronal view in \textbf{(c)}. Three \acrshort{roi}s have been marked in \textbf{(b)} and \textbf{(c)}, and can be seen in \textbf{(d)}-\textbf{(f)}. The scale bar for \textbf{(b)} applies to \textbf{(c)}, and the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}. }
   \label{fig:sideplothq}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/kimrobertfdk-x475y620s250.pdf}
-  \caption[FDK]{View of the \acrshort{lq} FDK reconstruction. Figure elements are as in \cref{fig:sideplothq}.} 
+  \caption[View of IHLQ FDK]{View of the \acrshort{ihlq} \acrshort{fdk} reconstruction. Figure elements are as in \cref{fig:sideplothq}.} 
   \label{fig:sideplotfdk}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/kimrobertpiccs-x475y620s250.pdf}
-  \caption[PICCS]{View of the \acrshort{piccs} reconstruction. Figure elements are as in \cref{fig:sideplothq}. }
+  \caption[View of IHLQ PICCS]{View of the \acrshort{ihlq} \acrshort{piccs} reconstruction. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotpiccs}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/kimrobertdepth1-x475y620s250.pdf}
-  \caption[Depth=1]{View of the denoised \acrshort{lq} FDK reconstruction with a depth of 1. Figure elements are as in \cref{fig:sideplothq}. }
+  \caption[View of IHLQ FDK denoised with a depth of 1]{View of the denoised \acrshort{ihlq} \acrshort{fdk} reconstruction with a denoising depth of 1. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotdepth1}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/kimrobertdepth3-x475y620s250.pdf}
-  \caption[Depth=3]{View of the denoised \acrshort{lq} FDK reconstruction with a depth of 3. Figure elements are as in \cref{fig:sideplothq}. }
+  \caption[View of IHLQ FDK denoised with a depth of 3]{View of the denoised \acrshort{ihlq} \acrshort{fdk} reconstruction with a denoising depth of 3. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotdepth3}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/kimrobertdepth5-x475y620s250.pdf}
-  \caption[Depth=5]{View of the denoised \acrshort{lq} FDK reconstruction with a depth of 5. Figure elements are as in \cref{fig:sideplothq}. }
+  \caption[View of IHLQ FDK denoised with a depth of 5]{View of the denoised \acrshort{ihlq} \acrshort{fdk} reconstruction with a denoising depth of 5. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotdepth5}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/kimrobertdepth7-x475y620s250.pdf}
-  \caption[Depth=7]{View of the denoised \acrshort{lq} FDK reconstruction with a depth of 7. Figure elements are as in \cref{fig:sideplothq}. }
+  \caption[View of IHLQ FDK denoised with a depth of 7]{View of the denoised \acrshort{ihlq} \acrshort{fdk} reconstruction with a denoising depth of 7. Figure elements are as in \cref{fig:sideplothq}. }
   \label{fig:sideplotdepth7}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/kimrobertline.pdf}
-  \caption[Line plot]{The plot shows pixel values for 620 pixels on a horizontal line, as shown by the red line on the \acrshort{hq} image above. The denoised values are from denoising the FDK reconstruction with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
+  \caption[Line plot of IHHQ and IHLQ, noisy and denoised]{The plot shows pixel values for 620 pixels on a horizontal line, as shown by the red line on the \acrshort{hq} image above, on the \acrshort{ihhq} and \acrshort{ihlq} dataset, both noisy and denoised. The denoised values are from denoising the \acrshort{ihlq} \acrshort{fdk} reconstruction with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
   \label{fig:kimrobertline}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/kimroberthist.pdf}
-  \caption[Histogram]{Histograms of different reconstructions, including a denoising of the FDK reconstruction. The denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. Note that the ordinate has been cropped to a max value of $20000$. }
+  \caption[Histograms of IHHQ and IHLQ, noisy and denoised]{Histograms of the \acrshort{ihhq} and \acrshort{ihlq} \acrshort{fdk} dataset, both noisy and denoised. The denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. Note that the ordinate has been cropped to a max value of $20000$. }
   \label{fig:kimroberthist}
 \end{figure}
 

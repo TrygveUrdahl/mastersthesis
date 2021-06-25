@@ -57,7 +57,7 @@ where $x$ and $y$ are the two images to compare, $\mu$ is the mean pixel value o
 
 \section{Datasets}
 \label{sec:method:datasets}
-A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, while others are collected in-house. This section will give a description of each used dataset. 
+A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is \todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
 
 \subsection{TomoBank}
 TomoBank is an x-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
@@ -73,7 +73,6 @@ TomoBank is an x-ray tomography data bank providing experimental and simulated d
     Instrument & APS 2-BM-A fast tomo \\
     Scan Range & 180 degree \\
     Number of Projections & 1500 \\
-    Sample Detector Distance & \SI{60}{\milli \meter} \\
     Pixel size & \SI{0.65}{\micro \meter} \\
     Detector Dimension x & 2560 \\
     Detector Dimension y & 2160 \\
@@ -102,9 +101,47 @@ TomoBank is an x-ray tomography data bank providing experimental and simulated d
 All datasets used from TomoBank were reconstructed using \acrshort{fbp} from the TomoPy library \cite{tomopy}. 
 
 
+\todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018, not in-house}
 \subsection{In-house}
-\todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018}
-\todo[inline]{Kim-Robert's dataset}
+An in-house captured dataset imaging a sample of soda lime glass spheres in a capillary tube containing a potassium iodide (KI) doped water solution has been used. The soda lime glass spheres have diameters in the \SIrange{1250}{1650}{\micro \meter} range, the capillary tube has an inner diameter of \SI{2.5}{\milli \meter} and an outer diameter of \SI{4.0}{\milli \meter}, and the potassium iodide doped water has a concentration of \SI{0.5}{\molar} KI. The sample was imaged twice: one \acrlong{hq} imaging, and one fast \acrlong{lq} imaging. The technical information of the two imagings of the in-house dataset can be seen in \cref{tab:inhousehq,tab:inhouselq}.
+
+For the sake of simplicity, the two datasets will be refered to as the \acrfull{ihhq} and the \acrfull{ihlq} datasets. 
+
+Because the used \acrshort{ct} instrument has a conical beam, the \acrshort{fdk} reconstruction algorithm was used to reconstruct these datasets. A \acrshort{piccs} reconstruction of the \acrshort{ihlq} dataset is also included as an alternative denoising method for comparison. 
+
+\begin{table}[htbp]
+    \centering
+    \caption[Technical information of the IHHQ dataset]{Overview of technical information of the \acrlong{hq} imaging of the in-house dataset. This dataset is refered to as the \acrshort{ihhq} dataset. }
+    \label{tab:inhousehq}
+    \begin{tabular}{ll}
+    \hline
+    Instrument & Nikon XT H 225 ST \\
+    Number of Projections & 1570 \\
+    Voltage & \SI{170}{\kilo \volt}\\
+    Current & \SI{45}{\micro \ampere}\\
+    Gain & \SI{17}{\deci \bel}\\
+    Exposure time & \SI{1000}{\milli \second}\\
+    Pixel size & \SI{7.06}{\micro \meter} \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption[Technical information of the IHLQ dataset]{Overview of technical information of the fast scan of the in-house dataset. This dataset is referd to as the \acrshort{ihlq} dataset. }
+    \label{tab:inhouselq}
+    \begin{tabular}{ll}
+    \hline
+    Instrument & Nikon XT H 225 ST \\
+    Number of Projections & 150 \\
+    Voltage & \SI{170}{\kilo \volt}\\
+    Current & \SI{65}{\micro \ampere}\\
+    Gain & \SI{24}{\deci \bel}\\
+    Exposure time & \SI{134}{\milli \second}\\
+    Pixel size & \SI{7.06}{\micro \meter} \\
+    \hline
+    \end{tabular}
+\end{table}
 
 \section{Compiling a Dataset for Training}
 \label{sec:method:compilingdataset}
