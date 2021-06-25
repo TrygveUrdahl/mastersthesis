@@ -48,7 +48,7 @@ which corresponds to a normal distribution $\mathcal{N}\left(\mu,\sigma\right)$ 
 
 If an insufficient number of projections of the attenuation coefficient are available, it is known as a missing wedge problem. Missing wedge measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to noise artefacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). Several different methods of reducing this artefacting have been tried, including different reconstruction algorithms \cite{10.1111/jmi.12313} and \acrshort{ml} based approaches \cite{liu2020tomogan,GANrec}. Missing wedge artefacting will be refered to as noise in this thesis. 
 
-A comparison of quantum noise and missing wedge artefacting on a dataset imaging glass beads can be seen in \cref{fig:noisecomparison}. 
+A comparison of quantum noise and missing wedge noise on a dataset imaging glass beads can be seen in \cref{fig:noisecomparison}. 
 
 \begin{figure}[htbp]  
     \centering
@@ -100,7 +100,8 @@ A large drawback with iterative reconstruction is its (often) large computatinal
 
 Because of these limitations and drawbacks, direct reconstruction algorithms are still often preferred in many fields \cite{Pan_2009}. 
 
-\todo[inline]{PICCS \cite{piccs}}
+Another iterative reconstruction algorithm is known as \acrfull{piccs} \cite{piccs}. It is used to better reconstruct datasets that are limited in the number of projections available when multiple imagings have been done for several time frames (known as dynamic \acrshort{ct} imaging). By reconstructing a prior image from the union of interleaved datasets from several time frames, the \acrshort{piccs} reconstruction algorithm utilizes the spatial-temporal correlations in the imaging to make assumptions on the imaged object. The prior image is used as a constrain on the reconstruction of the missing wedge reconstructions. 
+
 
 \subsection{Other Methods}
 In addition to direct and iterative reconstruction techniques, \acrshort{ml} has been used to make an iterative-like reconstruction algorithm \cite{GANrec}. One method, termed GANrec, is based on a \acrshort{gan} (which will be introduced in \cref{sec:ml:types:gan}) and is an \acrshort{ml} method that does not require training of the network before reconstruction, instead using the training process as the reconstruction process. 
