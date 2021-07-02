@@ -1,18 +1,16 @@
 \chapter{Results and Discussion}
 \label{sec:results}
-This chapter will present the results of denoising the different datasets. The effect of the pre-processing steps introduced in \cref{sec:method:compilingdataset}, how the changes in loss function by including a log-cosh term affect the denoising, and the importance of the depth parameter in TomoGAN will be presented and discussed. Furthermore, some of the limitations of this method will be explored and discussed. 
+This chapter will present the results of denoising the different datasets, and discus the quality of the results. The effect of the pre-processing steps introduced in \cref{sec:method:compilingdataset}, how the changes in loss function by including a log-cosh term affect the denoising, and the importance of the depth parameter in TomoGAN will be presented and discussed. Furthermore, some of the limitations of this method will be explored and discussed. 
 
 \section{Effect of Pre-processing Images}
-\todo[inline]{Compare tomo\_00058 denoising with and without cropping. Without cropping similar results to early stages of denoising cropped (i.e. poor and not converged). }
 Attempting to denoise tomo\_00058 without performing cropping of the reconstructed images yielded poor results, as can be seen in \cref{fig:uncroppeddenoising}. The network does not seem to have managed to converge properly, and the results look to simply be bluring the images. The use of an \acrshort{mse} based loss function may be part of the cause of the blurring, as this loss has been shown to cause blurring in image processing related tasks such as this. 
 
-When the images are all cropped, with no other changes being made, the network instantly performs much better. This can be seen in \cref{fig:croppeddenoising}. While there is some clear artefacting from the denoising (especially when looking at shapes that are different from the norm, such as non-circular shapes), when comparing the \acrshort{hq} and denoised images it is evident that a majority of the features have been preserved with the noise being drastically reduced. 
+When the images are all cropped, with no other changes being made, the network instantly performs much better. This can be seen in \cref{fig:croppeddenoising}. While there is some clear artefacting from the denoising (especially when looking at shapes that are differ from the common shapes in the dataset, such as non-circular shapes for this dataset), when comparing the \acrshort{hq} and denoised images it is evident that a majority of the features have been preserved with the noise being drastically reduced. 
 
 Comparing the non-cropped denoising with an early-iteration cropped denoising (i.e. not yet converged), as seen in \cref{fig:croppednoncroppedearly}, the results are somewhat similar indicating that the non-cropped denoising may have struggled to converge properly. 
 
-This denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for 100000 iterations with a mini batch size of 16. 
+This denoising was performed with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for 100000 iterations with a mini batch size of 16. 
 
-\todo[inline]{Include histogram in this section? }
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/uncroppeddenoising.pdf}
@@ -35,25 +33,30 @@ This denoising was done with TomoGAN using a loss function containing \acrshort{
 \end{figure}
 
 \section{Hyperparameter and Loss Function Changes}
-\todo[inline]{Show difference in tomo\_00058 denoising for different loss functions / weights (and hyperparameters?)}
 
-\todo[inline]{Line plot of gt, ns, MSE denoising, log-cosh denoising. Multiple lines around the images?}
+How the proposed change in the loss function by adding a log-cosh term, as defined in \cref{eq:losslogcosh}, affects the resulting denoising was explored on the tomo\_00058 dataset. All other hyperparameters were kept constant, only the composition of the loss function was changed (i.e. adding log-cosh loss and reducing $\lambda_{\text{MSE}}$). The resulting two denoisings for an arbitrary slice can be seen in \cref{fig:losschangedenoisingcomparison}. 
 
-\todo[inline]{SSIM and MSE evolution of arbitrary slice. }
+While there is close to no visual difference in the two denoisings, the denoising containing a log-cosh based loss achieves a slightly improved \acrshort{ssim} score compared to the one without ($0.789$ vs. $0.788$). There is also no measurable difference in the training time of the network when incorporating another loss function. Because of this minor improvement with no discernable drawback, the loss function containing a log-cosh component is chosen as the default loss function for denoising in this thesis. It is possible that a larger improvement may be achievable by further tuning the weights of the different loss functions, as this was not thoroughly explored. 
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/losschangedenoisingcomparison.pdf}
+  \caption[Effect on denoising of changing loss function]{Effect on denoising of changing loss function. Both denoisings are of tomo\_00058 with a subsampling factor of 32. The loss functions contain \acrshort{mse}, VGG, and adversarial loss components (and log-cosh for the rightmost column), and the network was trained with a depth of 1 and $100000$ iterations with a mini batch size of 16. Two \acrshort{roi}s have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. The scale bar for \textbf{(a)} applies to \textbf{(b)} and \textbf{(c)}, the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}, and the scale bar for \textbf{(g)} applies to \textbf{(h)} and \textbf{(i)}. }
+  \label{fig:losschangedenoisingcomparison}
+\end{figure}
+
+
 
 \section{Different Amounts of Noise}
 To explore how much noise the denoising method is able to remove, the tomo\_00058 dataset was recreated with four different levels of missing wedge noise. By using subsampling factors of $8$, $16$, $32$, and $48$ (where the resulting number of projections can be seen in \cref{tab:projectionsubsampling}), four datasets with different levels of noise were simulated. They can be seen alongside the \acrshort{hq} reconstruction in \cref{fig:tomo00058missingwedgecomparison}. 
 
-Once again the TomoGAN network was used with a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial components, a depth of 1 was used, and the network was trained for 100000 iterations with a mini batch size of 16. The resulting denoised images can be seen in \cref{fig:tomo00058missingwedgecomparisondenoised}. 
+Once again the TomoGAN network was used with a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial components, a depth of 1 was used, and the network was trained for 100000 iterations with a mini batch size of 16. The resulting denoised images can be seen in \cref{fig:tomo00058missingwedgecomparisondenoised}\todo[]{Do I need scale bars on all these images, or is it enough that there is a scale bar on the 1st image of \cref{fig:tomo00058missingwedgecomparison}? }. 
 
 It is evident that a subsampling factor of 48, corresponding to merely 31 projections, leads to too much noise to recover any usable denoised image. This is further confirmed by looking at plots of the pixel values along two different lines on the denoised images and comparing them with the noisy and the \acrshort{hq} image, as can be seen in \cref{fig:differentnoiselineplot1,fig:differentnoiselineplot2}. For the other three datasets the denoising seems to result in images sufficiently similar to the \acrshort{hq} image, especially for subsampling factors $8$ and $16$. 
 
-\cref{tab:missingwedgessim} contains \acrshort{ssim} and \acrshort{mse} values for the noisy and denoised images shown in \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised}. We see here that for subsampling factors $8$, $16$, and $32$, the \acrshort{mse} is improved by denoising, however for subsampling factor $48$ it is drastically worsened. All denoisings achieve, to varying degrees, \acrshort{ssim} improvements. The fact that the poor denoising of the subsampling factor of $48$ achieves an improvement in \acrshort{ssim} from $0.193$ to $0.657$ indicates that \acrshort{ssim} is not a perfect image comparison metric. 
+\cref{tab:missingwedgessim} contains \acrshort{ssim} and \acrshort{mse} values for the noisy and denoised images shown in \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised}. We see here that for subsampling factors $8$, $16$, and $32$, the \acrshort{mse} is improved by denoising, however for subsampling factor $48$ it is drastically worsened. All denoisings achieve, to varying degrees, \acrshort{ssim} improvements. The fact that the poor denoising of the subsampling factor of $48$ achieves an improvement in \acrshort{ssim} from $0.193$ to $0.657$ indicates that \acrshort{ssim} is not a perfect image comparison metric for this use case. 
 
 It is worth noting that a subsampling factor of $32$ corresponds to $46$ projections, which is similar to the $64$ projections used in the noisiest simulated dataset in the original article by Liu et al. \cite{liu2020tomogan}. The achieved \acrshort{ssim} score on a real dataset of $0.789$ in this thesis is similar to their results on a simulated phantom. 
-
-\todo[inline]{Plot showing improvement in SSIM for different levels of noise. }
-
 
 
 \begin{figure}
@@ -121,14 +124,14 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
     \includegraphics[width=\linewidth]{figures/ns48it100000itd4mse035logcosh3.png}
     \caption{Subsampling factor 48. }
   \end{subfigure}
-  \caption[Denoising of four different levels of missing wedge noise]{Comparison of denoising of different levels of missing wedge noise on the tomo\_00058 dataset, where the corresponding noisy images can be seen in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
+  \caption[Denoising of four different levels of missing wedge noise]{Comparison of denoising of different levels of missing wedge noise on the tomo\_00058 dataset, where the corresponding noisy images can be seen in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:tomo00058missingwedgecomparisondenoised}
 \end{figure}
 
 
 \begin{table}[htbp]
   \centering
-  \caption[SSIM for different levels of simulated missing wedge noise and corresponding values after denoising]{Overview of \acrshort{ssim} for different levels of simulated missing wedge noise on the tomo\_00058 dataset. The missing wedge noise was simulated by subsampling the number of projections by a factor as given in the subsampling factor column, which results in a number of projections as given in \cref{tab:projectionsubsampling}. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
+  \caption[SSIM for different levels of simulated missing wedge noise and corresponding values after denoising]{Overview of \acrshort{ssim} for different levels of simulated missing wedge noise on the tomo\_00058 dataset. The missing wedge noise was simulated by subsampling the number of projections by a factor as given in the subsampling factor column, which results in a number of projections as given in \cref{tab:projectionsubsampling}. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{tab:missingwedgessim}
   \begin{tabular}{lllll}
   \hline
@@ -148,35 +151,47 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot1.pdf}
-  \caption[Line plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 150 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \acrlong{hq} image above, for denoising of four different levels of missing wedge noise. \acrshort{hq} corresponds to the \acrlong{hq} image, NS to the missing wedge noise image, and \acrshort{dn} to the \acrfull{dn} image. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
+  \caption[Pixel value plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 150 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \acrlong{hq} image above, for denoising of four different levels of missing wedge noise. \acrshort{hq} corresponds to the \acrlong{hq} image, NS to the missing wedge noise image, and \acrshort{dn} to the denoised image. All denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:differentnoiselineplot1}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot2.pdf}
-  \caption[Line plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 400 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \acrshort{hq} image above, for denoising of four different levels of missing wedge noise. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
+  \caption[Pixel value plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 400 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \acrshort{hq} image above, for denoising of four different levels of missing wedge noise. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
   \label{fig:differentnoiselineplot2}
 \end{figure}
 
 \section{Loss Function Evolution}
-\todo[inline]{Plot how loss functions evolve through training of tomo\_00058 with good hyperparameters. }
+To try and understand how the TomoGAN network is performing during training, the evolution of the loss function and its components was plotted. This can be seen in \cref{fig:losstomo00058noadv}. We see that the main reduction in the loss of the network happens during early stages of training, especially the first few iterations. In the first $500$ iterations the loss changes from $\approx 7000$ to $\approx 100$, however a denoising after $500$ iterations does not perform well (as can be seen in \cref{fig:croppednoncroppedearly}a). At $100000$ iterations, the loss is $\approx 70$. This indicates that the loss itself is a poor metric to measure exactly how well the denoising is performing.
+
+If denoising performance could be gauged based solely on \cref{fig:losstomo00058noadv}, the denoised image after $20000$ iterations should be very similar to after $100000$ iterations. Looking at \cref{fig:iterationdenoisingcomparison} it is evident that this is not correct. The denoising after $20000$ iterations achieves an \acrshort{ssim} of $0.778$ compared to $0.789$ after $100000$ iterations. After $20000$ iterations, the spheres in tomo\_00058 are clearly less sharp and there is more artefacting. How the \acrshort{ssim} and \acrshort{mse} of an arbitrary slice of tomo\_00058 evolve through training can be seen in \cref{fig:ssimmseevolution}.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/losstomo00058ns32itd4mse035logcosh3depth1.pdf}
-  \caption[Loss function evolution]{Loss function evolution. } 
+  \caption[Loss function evolution during training]{Plot showing how the loss function evolves during $100000$ iterations of training on the tomo\_00058 dataset with a subsampling factor of 32. The adversarial loss has been omitted from the plot. The inset axis shows the final $20000$ iterations. Note that the main axis is logarithmic, with the inset axis being linear. The unit of the loss is arbitrary and of no importance. The running mean is the mean of the previous $50$ values of the total. }
   \label{fig:losstomo00058noadv}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.85\textwidth]{figures/iterationdenoisingcomparison.pdf}
+  \caption[Effect on denoising of number of iterations]{Effect on denoising of number of iterations. Both denoisings are of tomo\_00058 with a subsampling factor of 32. The loss functions contain \acrshort{mse}, log-cosh, VGG, and adversarial loss components, and the network was trained with a depth of 1 and a mini batch size of 16. Two \acrshort{roi}s have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. The scale bar for \textbf{(a)} applies to \textbf{(b)} and \textbf{(c)}, the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}, and the scale bar for \textbf{(g)} applies to \textbf{(h)} and \textbf{(i)}. }
+  \label{fig:iterationdenoisingcomparison}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.85\textwidth]{figures/ssimns32logcosh.pdf}
+  \caption[SSIM and MSE evolution during training]{Plot showing how the \acrshort{ssim} and \acrshort{mse} evolve during $100000$ iterations of training on the tomo\_00058 dataset with a subsampling factor of 32. The network was trained with a depth of 1 and a mini batch size of 16. }
+  \label{fig:ssimmseevolution}
 \end{figure}
 
 
 \section{TomoGAN Compared to PICCS}
 \todo[]{Change section name?}
-\todo[inline]{Axial, sagittal, coronal plots for different depth parameters. }
 \todo[inline]{Maybe make 3D model plot of this dataset. }
-\todo[inline]{Line plot comparing GT, FDK?, PICCS, denoised. }
-\todo[inline]{Histogram. Looks like peaks roughly align, sharper peaks. Looks like it is performing segmentation? Note: ordinate (y-axis) cropped to 20k. }
-
 \cref{fig:kimrobertcomparison,fig:sideplothq,fig:sideplotfdk,fig:sideplotpiccs,fig:sideplotdepth1,fig:sideplotdepth3,fig:sideplotdepth5,fig:sideplotdepth7,fig:kimrobertline,fig:kimroberthist}. 
 
 \begin{figure}
@@ -262,14 +277,14 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/kimrobertline.pdf}
-  \caption[Line plot of IHHQ and IHLQ, noisy and denoised]{The plot shows pixel values for 620 pixels on a horizontal line, as shown by the red line on the \acrshort{hq} image above, on the \acrshort{ihhq} and \acrshort{ihlq} dataset, both noisy and denoised. The denoised values are from denoising the \acrshort{ihlq} \acrshort{fdk} reconstruction with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. }
+  \caption[Pixel value plot of IHHQ and IHLQ, noisy and denoised]{The plot shows pixel values for 620 pixels on a horizontal line, as shown by the red line on the \acrshort{hq} image above, on the \acrshort{ihhq} and \acrshort{ihlq} dataset, both noisy and denoised. The denoised values are from denoising the \acrshort{ihlq} \acrshort{fdk} reconstruction with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:kimrobertline}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/kimroberthist.pdf}
-  \caption[Histograms of IHHQ and IHLQ, noisy and denoised]{Histograms of the \acrshort{ihhq} and \acrshort{ihlq} \acrshort{fdk} dataset, both noisy and denoised. The denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations. Note that the ordinate has been cropped to a max value of $20000$. }
+  \caption[Histograms of IHHQ and IHLQ, noisy and denoised]{Histograms of an arbitrary slice from the \acrshort{ihhq} and \acrshort{ihlq} \acrshort{fdk} dataset, both noisy and denoised. The denoising was done with TomoGAN using a loss function containing \acrshort{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. Note that the ordinate has been cropped to a max value of $20000$. }
   \label{fig:kimroberthist}
 \end{figure}
 

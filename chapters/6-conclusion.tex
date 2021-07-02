@@ -1,8 +1,11 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
 \todo[inline]{Network performs well, however without depth it does not properly capture 3D information. It is just denoising separate 2D images then (which can be used for many other cases than \acrshort{ct} denoising). }
+\todo[inline]{Without proper pre-processing of the dataset the network does not manage to produce usable denoising. }
+\todo[inline]{Improvement in SSIM does not mean good denoising. SSIM can be used as a guide, but it is not a definite way to gauge performance. }
 \todo[inline]{No reason this network has to be limited to denoising, may be usable for image super resoluton and other tasks? }
 
 \section{Further Work}
 \todo[inline]{Experiment with changing the structure of the network (e.g. depth of network, or use of 3D convolutions). Currently there is an obvious favored dimension (axial per-slice) in the denoising. }
 \todo[inline]{TomoGAN with depth 1 can be used to denoise, and generally transform, other images than \acrshort{ct} images. Would be interesting to see other image processing tasks tackled.} 
+\todo[inline]{Image augmentation to increase size of training dataset (e.g. image rotation, vertical/horizontal shift, zoom?, flip, )}

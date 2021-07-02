@@ -106,12 +106,15 @@ In an encoder-decoder network, the encoder and decoder are two separate networks
 
 \subsection{Generative Adversarial Network}
 \label{sec:ml:types:gan}
-\acrfull{gan}s were introduced in \citeyear{goodfellow2014gan} by Goodfellow et al.  as a novel method of estimating generating models via an adversarial process \cite{goodfellow2014gan}. This type of neural network consists of two separate networks: a generator and a discriminator. The generator, called $G$, captures the distribution of the training data and generates new samples from that distribution, while the discriminator $D$ estimates the probability that a given sample came from the training data (i.e. real sample) rather than being a generated sample from $G$. 
+\acrfull{gan}s were introduced in \citeyear{goodfellow2014gan} by Goodfellow et al.  as a novel method of estimating generating models via an adversarial process \cite{goodfellow2014gan}. This type of neural network consists of two separate networks: a generator and a discriminator. The generator, called $G$, captures the distribution of the training data and generates new samples from that distribution, while the discriminator $D$ estimates the probability that a given sample came from the training data (i.e. is a real sample) rather than being a generated sample from $G$. 
 
 The two networks play a game, in the sense of game theory, where they try to minimize their own cost, or error rates, while at the same time maximizing the other network's cost \cite{goodfellow2020gan}. \acrshort{gan}s are designed to reach a Nash equilibrium at which neither of the two networks can reduce its costs without changing the other network's parameters \cite{liu2020tomogan}. As opposed to normal neural networks that are based on optimization to reduce their error rates, \acrshort{gan}s are based on game theory \cite{goodfellow2020gan}. 
 
 To generate random samples from the distribution of the training data, a fully trained \acrshort{gan} is given random noise as input and then maps that to a random sample, such as in \cite{zhangsagan}. This allows the network to generate new samples that are similar, but not equal, to the training data. Another common use case for \acrshort{gan}s is to instead of feeding the network random noise as input, feeding it some data that needs augmentation. This has been used to denoise images and has been shown to be a good method for image super-resolution \cite{8710893,Ledig_2017_CVPR}. 
 
+\acrshort{gan}s are generally seen as unsupervised learning algorithms with a supervised loss as part of the training. For a general \acrshort{gan} the training data is an unlabeled dataset and the \acrshort{gan} tries to model a probability distribution of the dataset in order to randomly generate new samples. By generating new samples, it is trivial to apply labels to the original (i.e. real) samples and the generated samples and then use these labels to perform supervised learning to train the discriminator. 
+
+When the input dataset to the \acrshort{gan} no longer only contains a set to learn the distribution of, but instead the \acrshort{gan} training process is used to train a generator that takes a non-random input and outputs an augmented version of the input (such as in \cite{liu2020tomogan}), it can be seen as a supervised learning algorithm.
 
 \section{Training a Neural Network}
 The process of tuning all the parameters (i.e. weights and biases) of a neural network is called training. During training, input data from a training dataset is forwards propagated through the network, and the resulting feature map is compared to an expected feature map (e.g. manually labeled data)\footnote{This is what is called supervised learning, as opposed to unsupervised learning where there is no ground truth answer to compare to, instead trying to learn some inherent structure of the data without explicit labels (e.g. clustering). }. The difference in these feature maps is calcuated using some loss function, and the loss is then backwards propagated through the network to update each and every parameter to reduce the loss. 
@@ -128,13 +131,13 @@ During training, the parameters of the neural network are automatically changed,
     \item Mini batch size.
 \end{itemize}
 
-The process of choosing these hyperparameters is not an exact science, and there is research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called auto-tuning \cite{autotuning}.
+The process of choosing these hyperparameters is not an exact science, and there is research being done into finding ways of automatically tuning hyperparameters to their ideal configurations, called hyperparameter optimization \cite{hyperparameteroptimizing}.
 
 \subsection{Loss Functions}
 \label{sec:ml:training:lossfunctions}
 To properly quantify the error, or loss, of a neural network one needs to define some metric. These are called loss functions. Depending on the problem type diferent loss functions may perform better than others, however there are some standard loss functions often used. Some of these, as well as some specific ones used in this thesis, will be presented here. The losses are calculated on a per-pixel basis and summed unless otherwise stated. 
 
-Perhaps the most commonly used loss function is the \acrfull{mse}. It is closely related to the L2-norm, and it can be defined as
+Perhaps the most commonly used loss function is the \acrfull{mse}. It is closely related to the L2-norm\footnote{Sometimes the \acrshort{mse} loss is improperly called the L2-norm, however that is incorrect. The L2-norm can be defined as the square root of \acrshort{mse}. }, and it can be defined as
 \begin{equation}
     \label{eq:lossmse}
     L_{\text{MSE}} = \frac{1}{N} \sum_{i=1}^N(Y_i - \hat{Y}_i)^2,

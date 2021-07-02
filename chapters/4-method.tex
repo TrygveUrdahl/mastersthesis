@@ -15,7 +15,16 @@ In the down sampling part of the generator, three sets of two $3\times3$ convolu
 
 The up sampling part of the generator is symmetric to the down sampling part, containing three sets of two $3\times3$ convolutional layers. The max pooling layers are replaced by bi-linear interpolation layers that instead of reducing the size of the feature map, increase it. Again, all the convolutional kernels have kernels of size $3\times3$ and use ReLU activation functions. At each of the three sets of convolutional layers, the feature maps from the corresponding set in the down sampling section are concatenated to the feature maps outputted from the previous set of convolutional layers\footnote{These skip-connection, as they are often called, are what make this structure a U-net style network and not simply an encoder-decoder network \cite{unet}. }. Finally, a $1\times1$ convolutional layer with a ReLU activation function followed by a $1\times1$ convolutional layer with a linear activation function is used to combine all the channels into a final output image. 
 
-\missingfigure{TODO: TomoGAN network structure. }
+Because of the three $2\times2$ max pooling layers the dimensions of the input images must all be divisible by $2^3=8$. 
+
+A schematic of the generator of TomoGAN can be seen in \cref{fig:tomoganstructure}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/tomoganstructure.png}
+    \caption[Visualization of the structure of TomoGAN]{A visualization of the structure of TomoGAN. Here, an image of size $1024\times1024$ has been used as an example. Every bar corresponds to a multi-channel feature map with the number of channels written above and the dimension of the feature map written on the bottom left. All convolutions use zero-padding. The type of activation function used with a given convolution can be seen in the legend. The copy operations transfer the feature map from a down sampling layer and concatenates it to the corresponding up sampling layer. } 
+    \label{fig:tomoganstructure}
+  \end{figure}
 
 The discriminator network used to help train TomoGAN consists of six 2D $3\times3$ convolutional layers with leaky ReLU activation functions, as well as two fully connected layers. \todo[]{Write about Wasserstein distance and its use as loss function? }
 
@@ -57,7 +66,8 @@ where $x$ and $y$ are the two images to compare, $\mu$ is the mean pixel value o
 
 \section{Datasets}
 \label{sec:method:datasets}
-A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is \todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
+\todo[inline]{Should I include sample images of the datasets in this section also, or just show them in the results?}
+A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is ---\todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
 
 \subsection{TomoBank}
 TomoBank is an X-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
@@ -103,14 +113,19 @@ Two datasets of shale from TomoBank were also used, namely tomo\_00001 and tomo\
 
 All datasets used from TomoBank were reconstructed using \acrshort{fbp} from the TomoPy library \cite{tomopy}. 
 
-
+\subsection{ASM\_ID16B}
 \todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018, not in-house}
+\todo[inline]{Get a better name for this dataset and subsection}
+\todo[inline]{Get the technical information of this dataset}
+
 \subsection{In-house}
 An in-house captured dataset imaging a sample of soda lime glass spheres in a capillary tube containing a potassium iodide (KI) doped water solution has been used. The soda lime glass spheres have diameters in the \SIrange{1250}{1650}{\micro \meter} range, the capillary tube has an inner diameter of \SI{2.5}{\milli \meter} and an outer diameter of \SI{4.0}{\milli \meter}, and the potassium iodide doped water has a concentration of \SI{0.5}{\molar} KI. The sample was imaged twice: one slow \acrlong{hq} imaging, and one fast \acrlong{lq} imaging. The technical information of the two imagings of the in-house dataset can be seen in \cref{tab:inhousehq,tab:inhouselq}.
 
 For the sake of simplicity, the two datasets will be refered to as the \acrfull{ihhq} and the \acrfull{ihlq} datasets. 
 
 Because the used \acrshort{ct} instrument has a conical beam, the \acrshort{fdk} reconstruction algorithm was used to reconstruct these datasets. A \acrshort{piccs} reconstruction of the \acrshort{ihlq} dataset is also included as an alternative denoising method for comparison. 
+
+\acrshort{piccs} takes advantage of the fact that a prior image (i.e. a \acrshort{hq} dataset) often can be made available for reconstructing dynamic \acrshort{ct} images. This requirement is similar to the one for TomoGAN, where a \acrshort{hq} dataset must be available to train the denoising network. 
 
 \begin{table}[htbp]
     \centering
