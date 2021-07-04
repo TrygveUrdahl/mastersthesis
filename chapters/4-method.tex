@@ -17,14 +17,14 @@ The up sampling part of the generator is symmetric to the down sampling part, co
 
 Because of the three $2\times2$ max pooling layers the dimensions of the input images must all be divisible by $2^3=8$. 
 
-A schematic of the generator of TomoGAN can be seen in \cref{fig:tomoganstructure}.
+A schematic of the generator of TomoGAN is given in \cref{fig:tomoganstructure}.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/tomoganstructure.png}
-    \caption[Visualization of the structure of TomoGAN]{A visualization of the structure of TomoGAN. Here, an image of size $1024\times1024$ has been used as an example. Every bar corresponds to a multi-channel feature map with the number of channels written above and the dimension of the feature map written on the bottom left. All convolutions use zero-padding. The type of activation function used with a given convolution can be seen in the legend. The copy operations transfer the feature map from a down sampling layer and concatenates it to the corresponding up sampling layer. } 
+    \caption[Visualization of the structure of TomoGAN]{A visualization of the structure of TomoGAN. Here, an image of size $1024\times1024$ has been used as an example. Every bar corresponds to a multi-channel feature map with the number of channels written above and the dimension of the feature map written on the bottom left. All convolutions use zero-padding. The type of activation function used with a given convolution can be seen in the legend. The copy operations transfer the feature map from a down sampling layer and concatenates it to the corresponding up sampling layer. Figure adapted from \cite{liu2020tomogan}. } 
     \label{fig:tomoganstructure}
-  \end{figure}
+\end{figure}
 
 The discriminator network used to help train TomoGAN consists of six 2D $3\times3$ convolutional layers with leaky ReLU activation functions, as well as two fully connected layers. \todo[]{Write about Wasserstein distance and its use as loss function? }
 
@@ -72,7 +72,7 @@ A selection of different datasets have been used to train and test the TomoGAN n
 \subsection{TomoBank}
 TomoBank is an X-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
 
-The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset can be seen in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate artefacting due to undersampling can be seen in \cref{tab:projectionsubsampling}. The subsampling is done with evenly angular spacing. 
+The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset is given in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate artefacting due to undersampling is given in \cref{tab:projectionsubsampling}. The subsampling is done with evenly angular spacing. 
 
 \begin{table}[htbp]
     \centering
@@ -119,7 +119,7 @@ All datasets used from TomoBank were reconstructed using \gls{fbp} from the Tomo
 \todo[inline]{Get the technical information of this dataset}
 
 \subsection{Soda lime glass spheres}
-An in-house captured dataset imaging a sample of soda lime glass spheres in a capillary tube containing a potassium iodide (KI) doped water solution has been used. The soda lime glass spheres have diameters in the \SIrange{1250}{1650}{\micro \meter} range, the capillary tube has an inner diameter of \SI{2.5}{\milli \meter} and an outer diameter of \SI{4.0}{\milli \meter}, and the potassium iodide doped water has a concentration of \SI{0.5}{\molar} KI. The sample was imaged twice: one slow \acrlong{hq} imaging, and one fast \acrlong{lq} imaging. The technical information of the two imagings of the in-house dataset can be seen in \cref{tab:inhousehq,tab:inhouselq}.
+An in-house captured dataset imaging a sample of soda lime glass spheres in a capillary tube containing a potassium iodide (KI) doped water solution has been used. The soda lime glass spheres have diameters in the \SIrange{1250}{1650}{\micro \meter} range, the capillary tube has an inner diameter of \SI{2.5}{\milli \meter} and an outer diameter of \SI{4.0}{\milli \meter}, and the potassium iodide doped water has a concentration of \SI{0.5}{\molar} KI. The sample was imaged twice: one slow \acrlong{hq} imaging, and one fast \acrlong{lq} imaging. The technical information of the two imagings of the in-house dataset is given in \cref{tab:inhousehq,tab:inhouselq}.
 
 For the sake of simplicity, the two datasets will be refered to as the \gls{ihhq} and the \gls{ihlq} datasets. 
 
@@ -165,7 +165,7 @@ Because the used \gls{ct} instrument has a conical beam, the \gls{fdk} reconstru
 \label{sec:method:compilingdataset}
 In this section, an explanation of how to compile a set of images into a suitable dataset for training the TomoGAN network, or to denoise with an already trained network, will be given. 
 
-The process of preparing a dataset for either training or ence (i.e. denoising using an already trained network) consists of a few steps. A flowchart visualizing this process can be seen in \cref{fig:compilingdatasetflowchart}. The detailed steps are as follows:
+The process of preparing a dataset for either training or ence (i.e. denoising using an already trained network) consists of a few steps. A flowchart visualizing this process is given in \cref{fig:compilingdatasetflowchart}. The detailed steps are as follows:
 
 \begin{enumerate}
     \item Begin with a full stack of reconstructed images. If the dataset is ment to be used to train the network, both a set of \gls{hq} reconstructions as well as a corresponding set (of the same dataset) of \gls{lq} reconstructions are needed. They must be sorted the same way so that image 0 of the \gls{hq} dataset corresponds to image 0 of the \gls{lq} dataset. If it is a datset that is to be denoised, only the \gls{lq} dataset is needed. 

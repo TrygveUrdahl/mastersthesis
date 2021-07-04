@@ -11,7 +11,7 @@ This chapter contains a brief introduction to neural networks and their basic co
 \section{Components of a Neural Network}
 \label{sec:ml:componentsofaneuralnetwork}
 \todo[inline]{Briefly state what a neural network is. }
-Neural networks were initially designed to simulate the human brain and how it learns and adapts to new information \cite{McCulloch1943}. Because of this, the basic building block of a neural network is called a neuron. Several neurons build up a layer, and several layers build up a neural network. Neurons in different layers have connections to each other (i.e. neurons in layer 1 are connected to neurons in layer 2), and these connections have weights and biases. A simple schematic of this can be seen in \cref{fig:neuralnetwork}. The value of a neuron is a real number and can be given as \cite[81]{Wang2003}
+Neural networks were initially designed to simulate the human brain and how it learns and adapts to new information \cite{McCulloch1943}. Because of this, the basic building block of a neural network is called a neuron. Several neurons build up a layer, and several layers build up a neural network. Neurons in different layers have connections to each other (i.e. neurons in layer 1 are connected to neurons in layer 2), and these connections have weights and biases. A simple schematic of this is given in \cref{fig:neuralnetwork}. The value of a neuron is a real number and can be given as \cite[81]{Wang2003}
 \begin{equation}
     \label{eq:neuron}
     Y_{k} = \sigma\left(\sum_{j=0}^{m}w_{kj}x_j + \lambda \right),
@@ -61,14 +61,14 @@ For example, if a neural network is trained with a dataset containing images of 
 There are many different types of neural networks that are suited for different problems. Here, a selection of types that lead up to the \gls{gan} structure used in this thesis will be introduced. 
 
 \subsection{Convolutional Neural Network}
-A \gls{cnn} builds upon the structure of the \gls{ann}, however it adds a new type of layer: the convolutional layer. Instead of containing a set of neurons, this layer contains one (or more) convolutional kernel(s), and performs a convolution of the input to the layer with the kernel(s). This type of network was first introduced in \citeyear{lecun1999object},\footnote{There is some disagreement around whether the paper by LeCun in \citeyear{lecun1999object} \cite{lecun1999object} was truly the introduction of \gls{cnn}s, however it is often seen as it. } and has shown to perform well for many different image related tasks \cite{lecun1999object,alexnet}. The convolution operation allows the network to utilize 2D information by performing 2D convolutions.\footnote{Likewise higher-dimensional information may be used by performing higher-dimensional convolutions \cite{8353466}. } This has been shown to perform exceptionally well in image processing tasks \cite{alexnet,oshea2015introduction}\todo[]{"Examples with refs." meaning what? Should I mark these refs. as examples? If so, how?}.
+A \gls{cnn} builds upon the structure of the \gls{ann}, however it adds a new type of layer: the convolutional layer. Instead of containing a set of neurons, this layer contains one (or more) convolutional kernel(s), and performs a convolution of the input to the layer, with the kernel(s). This type of network was first introduced in \citeyear{lecun1999object},\footnote{There is some disagreement around whether the paper by LeCun in \citeyear{lecun1999object} \cite{lecun1999object} was truly the introduction of \gls{cnn}s, however it is often seen as it. } and has shown to perform well for many different image related tasks \cite{lecun1999object,alexnet}. The convolution operation allows the network to utilize 2D information by performing 2D convolutions.\footnote{Likewise higher-dimensional information may be used by performing higher-dimensional convolutions \cite{8353466}. }
 
-The discrete convolution operator is defined as \todo[]{Reference}
+The discrete convolution operator is defined as \cite[899-901]{cormenalgorithms}
 \begin{equation}
     \label{eq:convolution}
     g(x,y) = \omega \ast f(x,y) = \sum_{dx=-a}^{a}\sum_{dy=-b}^{b} \omega(dx,dy)f(x+dx,y+dy),
 \end{equation}
-where $g(x,y)$ is the convoluted matrix, $f(x,y)$ is the original matrix, and $\omega$ is a convolution kernel of dimension $(2a+1,2b+1)$.\footnote{The dimensions of the kernel are typically square and odd, such as $3\times3$ or $5\times5$, giving $dx,dy\in[-1,1]$ or $dx,dy\in[-2,2]$. } For the sake of simplicity, kernel dimensions will be referred to as $a\times b$ where $a$ and $b$ simply represent the kernel dimensions, and not the half-dimension as would correspond to \cref{eq:convolution}. 
+where $g(x,y)$ is the convoluted matrix, $f(x,y)$ is the original matrix, and $\omega$ is a convolution kernel of dimension $(2a+1,2b+1)$.\footnote{The dimensions of the kernel are typically square and odd, such as $3\times3$ or $5\times5$, giving $dx,dy\in[-1,1]$ or $dx,dy\in[-2,2]$. } For the sake of simplicity, kernel dimensions will be referred to as $a\times b$ where $a$ and $b$ represent the kernel dimensions, and not the half-dimension as would correspond to \cref{eq:convolution}. 
 
 A visualization of the convolution of a matrix (which could represent an image) with a given kernel is provided in \cref{fig:convolution}. Here, the kernel dimensions are $3\times3$. The output matrix has reduced dimensions corresponding to the kernel dimensions. The reduction can be given as 
 \begin{equation}
@@ -78,7 +78,7 @@ where $(x_o,y_o)$ are the output dimensions, $(x_i,y_i)$ are the input dimension
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.85\textwidth]{figures/convolution.pdf}
-    \caption[Convolution example]{An example showing how a convolution works. This figure depicts: a) an input matrix of dimension $(9,9)$ (e.g. an image), b) a $3\times3$ convolutional kernel, and c) the resulting convolution of dimension $(7,7)$. This convolution also has a stride of 1. Note that the output dimension is smaller than the input dimension. }
+    \caption[Illustration of a 2D discrete convolution]{Illustration of a 2D discrete convolution operation: a) an input matrix of dimension $(9,9)$, where the numbers can e.g. represent intensities in a grayscale image, b) a $3\times3$ convolutional kernel, and c) the resulting convolution of dimension $(7,7)$. This convolution has a stride of 1. Note that the output dimension is smaller than the input dimension. }
     \label{fig:convolution}
 \end{figure}
 
@@ -86,14 +86,21 @@ Multiple convolutional kernels can be used in parallel in each convolutional lay
 
 The stride of a convolution is how far the kernel shifts \cite{oshea2015introduction}. In the example given in \cref{fig:convolution}, the stride is 1. If the stride were set to 2, the kernel would shift two units in the matrix for each output. This would mean less overlap between each value in the output, but also further reduction of the output dimensions. 
 
-Often, pooling layers are included in \gls{cnn}s. These layers are used to down sample the feature maps after a convolutional layer by applying some pooling function (e.g. max, average, sum) to an area of the feature map, reducing the dimension. This can for instance be a $2\times2$ max pooling layer that looks at a $2\times2$ section of a feature map and replaces it with a single value corresponding to the maximum value of the original section. Pooling layers reduce the dimensions of the feature map corresponding to the size of the pooling (e.g. a $2\times2$ pooling layer reduces both dimensions of a feature map by a factor of $2$). 
+Often, pooling layers are included in \gls{cnn}s. These layers are used to down sample the feature maps after a convolutional layer by applying some pooling function (e.g. max, average, sum) to an area of the feature map, reducing the dimension. This can for instance be a $2\times2$ max pooling layer that looks at a $2\times2$ section of a feature map and replaces it with a single value corresponding to the maximum value of the original section. Pooling layers reduce the dimensions of the feature map corresponding to the size of the pooling (e.g. a $2\times2$ pooling layer reduces both dimensions of a feature map by a factor of $2$). An example is provided in \cref{fig:maxpool}. 
+
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.7\textwidth]{figures/maxpool.pdf}
+    \caption[Illustration of a max pooling operation]{Illustration of a 2D $2\times2$ max pooling with a stride of 2: a) an input matrix of dimension $(8,8)$, where the numbers can e.g. represent intensities in a grayscale image, and b) the resulting max pooled matrix of dimension $(4,4)$. Every element in b) corresponds to the maximum of four elements in a). }
+    \label{fig:maxpool}
+\end{figure}
 
 The part of the convolution that a \gls{cnn} learns is the values in the convolutional kernel. Each layer of the \gls{cnn} may have several kernels that are applied in parallel (e.g. 32 kernels applied to the same input). Each kernel is often called a filter. One of the advantages of using convolution in neural networks is the reduction in the number of trainable parameters: a typical convolutional kernel contains $9-49$ parameters (for kernels of dimensions $3\times3$ to $7\times7$), however a fully connected feedforward network may have several thousand parameters for each layer.\footnote{Consider an image of dimension $100\times100$. In a fully connected \gls{ann} there would have to be $100 \cdot 100 = 10^4$ connections from each neuron in one layer to the next layer for a total of $10^{8}$ connections, where each connection has a trainable parameter. In comparison, if using a \gls{cnn} with 32 channels (or kernels) of dimension $3\times3$ there are only a total of $32 \cdot 3 \cdot 3 = 288$ trainable parameters. } 
 \todo[inline]{Write about overfitting? Reduce number of trainable parameters helps avoid overfitting. }
 
 \subsection{Encoder-Decoder Network}
 \label{sec:ml:types:encoderdecoder}
-An encoder-decoder network is a type of \gls{ann} that learns to copy its input to its output \cite{https://doi.org/10.1002/aic.690370209}. It consists of two parts (as the name suggests): an encoder, and a decoder. The task of the encoder is to take the input and encode it into a feature map. The decoder then takes the resulting feature map and decodes it into an output similar to the original input. A schematic of this structure can be seen in \cref{fig:encoderdecoder}. The encoder's goal is to extract the relevant information from the input, ignoring any signal noise or unwanted data. The decoder then recreates something similar to the original data from the "denoised" feature map. It is common to use \gls{cnn}s as both encoder and decoder, where consecutive layers in the encoder reduce the dimensions of the feature maps and consecutive layers in the decoder increase the dimensions of the feature maps. Encoder-decoder networks have been shown to perform well in many different tasks, such as image segmentation \cite{7803544} and PET image reconstruction \cite{HAGGSTROM2019253}.  
+An encoder-decoder network is a type of \gls{ann} that learns to copy its input to its output \cite{https://doi.org/10.1002/aic.690370209}. It consists of two parts (as the name suggests): an encoder, and a decoder. The task of the encoder is to take the input and encode it into a feature map. The decoder then takes the resulting feature map and decodes it into an output similar to the original input. A schematic of this structure is given in \cref{fig:encoderdecoder}. The encoder's goal is to extract the relevant information from the input, ignoring any signal noise or unwanted data. The decoder then recreates something similar to the original data from the "denoised" feature map. It is common to use \gls{cnn}s as both encoder and decoder, where consecutive layers in the encoder reduce the dimensions of the feature maps and consecutive layers in the decoder increase the dimensions of the feature maps. Encoder-decoder networks have been shown to perform well in many different tasks, such as image segmentation \cite{7803544} and PET image reconstruction \cite{HAGGSTROM2019253}.  
 
 \begin{figure}[htbp]  
     \centering
@@ -107,7 +114,14 @@ In an encoder-decoder network, the encoder and decoder are two separate networks
 
 \subsection{Generative Adversarial Network}
 \label{sec:ml:types:gan}
-\gls{gan}s were introduced in \citeyear{goodfellow2014gan} by Goodfellow et al.  as a novel method of estimating generating models via an adversarial process \cite{goodfellow2014gan}. This type of neural network consists of two separate networks: a generator and a discriminator. The generator, called $G$, captures the distribution of the training data and generates new samples from that distribution, while the discriminator $D$ estimates the probability that a given sample came from the training data (i.e. is a real sample) rather than being a generated sample from $G$. 
+\gls{gan}s were introduced in \citeyear{goodfellow2014gan} by Goodfellow et al.  as a novel method of estimating generating models via an adversarial process \cite{goodfellow2014gan}. This type of neural network consists of two separate networks: a generator and a discriminator. The generator, called $G$, captures the distribution of the training data and generates new samples from that distribution, while the discriminator $D$ estimates the probability that a given sample came from the training data (i.e. is a real sample) rather than being a generated sample from $G$. An illustration of the \gls{gan} structure is given in \cref{fig:gan}. 
+
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.75\textwidth]{figures/gan.pdf}
+    \caption[Illustration of a GAN structure]{Illustration of a \gls{gan} structure. The generator takes a random input and attempts to generate a sample similar to the training data. The discriminator attempts to distinguish a training data sample (i.e. real sample) from a generated sample, and the output from the generator to better generate samples similar to the training data as well as the discriminator to better distinguish between real and generated samples. }
+    \label{fig:gan}
+\end{figure}
 
 The two networks play a game where they try to minimize their own cost, or error rates, while at the same time maximizing the other network's cost \cite{goodfellow2020gan}.\footnote{\gls{gan}s are designed to reach a Nash equilibrium at which neither of the two networks can reduce its costs without changing the other network's parameters \cite{liu2020tomogan}.} As opposed to normal neural networks that are based on optimization to reduce their error rates, \gls{gan}s are based on game theory \cite{goodfellow2020gan}. 
 
