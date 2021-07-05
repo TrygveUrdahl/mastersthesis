@@ -1,24 +1,25 @@
 \chapter{Introduction}
 \label{sec:introduction}
 \todo[inline]{}
-\gls{gan}
+\Gls{gan}
 
 \section{Motivation}
 \todo[inline]{Reduce radiation doses}
 \todo[inline]{Improve image quality}
 \todo[inline]{Perhaps speed up reconstruction process}
+\todo[inline]{Enable time-resolved CT (4D CT)}
 
 \section{Goal of Work}
 \todo[inline]{}
-The goal of this thesis is to use \gls{gan} based image denoising to improve the quality of \gls{ct} imaging datasets. The TomoGAN \cite{liu2020tomogan} denoising neural network will be tested, and its limitations will be explored. An analysis of when this denoising technique is suited will be given. This thesis will focus on missing wedge noise, and not quantum noise. 
+The goal of this thesis is to use \gls{gan} based image denoising to improve the image quality in \gls{ct}, in cases where the experimental datasets are noisy and/or undersampled. The TomoGAN \cite{liu2020tomogan} denoising neural network will be tested, and its limitations will be explored. An analysis of when this denoising technique is suited will be given. This thesis will focus on undersampling artefacts, and not quantum noise (see \cref{sec:ct:theory:noise}). 
 \todo[inline]{Explore limitations of method}
 \todo[inline]{Focus on missing wedge, not quantum noise}
 
 \section{Thesis Structure}
-This thesis begins with two chapters of theory. \cref{sec:ct} will introduce the necessary theory to understand how \gls{ct} images are captured, what the primary causes of noise in them are, and how the reconstruction process works. Next, \cref{sec:ml} will give a basic introduction to \gls{ml}, and more precisely neural networks and the theory needed to understand how \gls{gan}s work. 
+This thesis begins with \cref{sec:introduction} containing an introduction to the thesis, including its motivation and goal, and how it is structured. It is then followed by two chapters of theory. \cref{sec:ct} will introduce the necessary theory to understand how \gls{ct} images are captured, what the primary causes of noise in them are, and how the reconstruction process works. Next, \cref{sec:ml} gives a basic introduction to \gls{ml}, and more precisely neural networks and the theory needed to understand how \gls{gan}s work. 
 
 \cref{sec:method} will present the structure of the specific \gls{gan} network used in this thesis, namely TomoGAN \cite{liu2020tomogan}. After that some image comparison metrics that will be used in the discussion are presented. The datasets that are used in this thesis will be presented in this chapter, and the method used for compiling a given dataset into a suitable format for the \gls{gan} to use is given. 
 
-\cref{sec:results} will present the results of the denoising using different visualization methods and image comparison metrics defined in \cref{sec:method:metrics}, and discussions of the results. 
+In \cref{sec:results}, the results of the denoising will be presented and discussed using different visualization methods and image comparison metrics defined in \cref{sec:method:metrics}.
 
 Finally, \cref{sec:conclusion} will conclude this thesis and note some possibilities of further work. 

@@ -31,6 +31,7 @@ This can be solved for the attenuation coefficient projection, giving \cite{doi:
 The attenuated intensity $I$ can be related to the attenuation coefficient projection $\mu_m$ of a path through the sample by use of this equation. When the attenuation coefficient projections are known, the 2D attenuation coefficient map can be reconstructed using a reconstruction algorithm if a sufficient number of projections are available. Strategies for numerical \gls{ct} reconstructions will be described in \cref{sec:ct:reconstruction}.
 
 \subsection{Noise}
+\label{sec:ct:theory:noise}
 Assuming a sufficient number of projections of the attenuation coefficient are available, the primary sources of noise in \gls{ct} measurements are quantum noise and electronic noise \cite{boas2012ct}. 
 
 The quantum noise, sometimes also known as shot noise or simply Poisson noise, is due to the statistical error of low photon counts. It can be modeled as a Poisson distribution \cite{Whiting2006},
@@ -60,7 +61,9 @@ A comparison of quantum noise and missing wedge noise on a dataset imaging glass
 \section{Imaging Method}
 \todo[inline]{Keep this section?}
 \subsection{Setup}
-\missingfigure{Figure of generic CT setup, if section is staying. }
+\missingfigure{Figure of generic CT setup}
+\subsection{Sinograms}
+\missingfigure{Figure of image and its sinogram}
 
 \section{CT Reconstruction}
 \label{sec:ct:reconstruction}
@@ -74,9 +77,9 @@ where $u$ is the position on the detector and $\delta$ is the Dirac delta functi
     \label{eq:projectiondata}
     \bm{y} = \bm{A}\bm{x},
 \end{equation}
-where element $a_{ij} \in \mathbb{R}$ of $\bm{A} \in \mathbb{R}^{N_\theta N_d \times N^2}$ is equal to the contribution of image pixel $j$ to detector pixel $i$. This gives the tomographic reconstruction problem of recovering the unknown object $\bm{x}$ from the acquired projection data $\bm{y}$. It can be seen as performing the \textit{inverse} Radon transform \cite{KabanikhinIllVersed,GANrec}. \footnote{The inverse Radon transform is an \textit{inverse} problem. Inverse problems are often ill-posed. An ill-posed problem is a problem that does not meet any one or more of the three conditions suggested by Jacques Hadamard: existence, uniqueness, and stability \cite{KabanikhinIllVersed}. The stability condition is most often violated. This means that its output is highly sensitive to small changes in the input (e.g. noise can drastically change the resulting output). }
+where element $a_{ij} \in \mathbb{R}$ of $\bm{A} \in \mathbb{R}^{N_\theta N_d \times N^2}$ is equal to the contribution of image pixel $j$ to detector pixel $i$. This gives the tomographic reconstruction problem of recovering the unknown object $\bm{x}$ from the acquired projection data $\bm{y}$. It can be seen as performing the \textit{inverse} Radon transform \cite{KabanikhinIllVersed,GANrec}.\footnote{The inverse Radon transform is an \textit{inverse} problem. Inverse problems are often ill-posed. An ill-posed problem is a problem that does not meet any one or more of the three conditions suggested by Jacques Hadamard: existence, uniqueness, and stability \cite{KabanikhinIllVersed}. The stability condition is most often violated. This means that its output is highly sensitive to small changes in the input (e.g. noise can drastically change the resulting output). }
 
-Conventional tomographic reconstruction algorithms are generally divided into two groups: direct reconstruction, and iterative reconstruction, however a third method using \gls{ml} has also shown some promise \cite{GANrec}.
+Conventional tomographic reconstruction algorithms are generally divided into two groups: direct reconstruction, and iterative reconstruction, however a third method using \gls{ml} has also shown promise \cite{GANrec}.
 
 \subsection{Direct Reconstruction}
 Direct tomographic reconstruction algorithms are based on finding an inversion formula of the continuous forward Radon transform, as given in \cref{eq:radontransform}. The numerical implementation is done by using a discretized inverse Radon transform \cite{jimaging4110128}. The most commonly used direct reconstruction algorithm is the \gls{fbp} algorithm, which can be written as \cite{jimaging4110128}
@@ -85,7 +88,7 @@ Direct tomographic reconstruction algorithms are based on finding an inversion f
     \bm{x}_{FBP} = \bm{A}^T \bm{C}_h \bm{y},
 \end{equation}
 where $\bm{C}_h$ is a 1D convolution operation that convolves each detector row in $\bm{y}$ with a filter $\bm{h} \in \mathbb{R}^{N_d}$. The filter is typically some standard filter that can be used for any reconstruction (e.g. the Ram-Lak filter), and may include low-pass filtering to reduce high frequency noise in the reconstructed image \cite{681991}. It has also been shown that this filter can be learned by use of \gls{ml} (more specifically an \gls{ann}) to further improve the performance of \gls{fbp} \cite{6607157}. 
-
+\missingfigure{Illustration of FBP with projections leading to subsampling in Fourier space}
 Direct algorithms, such as \gls{fbp}, have the advantage of most often being computationally efficient, as well as producing accurate results when enough projections are available \cite{jimaging4110128}. It can be shown that the sufficient number of projections in \gls{fbp} is ...\todo[]{Write this} The issue with these techniques arises when only a limited number of projections are available, as they are generally highly prone to noise leading to insufficient image quality for further analysis \cite{jimaging4110128}. This is where the use for iterative reconstruction algorithms arises.
 
 For \gls{ct} imaging systems where the X-ray beam is conical (as opposed to parallel), an alternative direct reconstruction method similar to \gls{fbp} is the \gls{fdk} reconstruction algorithm \cite{Feldkamp:84}. 
@@ -109,8 +112,8 @@ Another iterative reconstruction algorithm is known as \gls{piccs} \cite{piccs}.
 
 \subsection{Other Methods}
 \todo[inline]{Change structure, is this section needed?}
-In addition to direct and iterative reconstruction techniques, \gls{ml} has been used to make an iterative-like reconstruction algorithm \cite{GANrec}. One method, termed GANrec, is based on a \gls{gan} (which will be introduced in \cref{sec:ml:types:gan}) and is an \gls{ml} method that does not require training of the network before reconstruction, instead using the training process as the reconstruction process. 
+In addition to direct and iterative reconstruction techniques, \gls{ml} has been used to make an iterative-like reconstruction algorithm \cite{GANrec}. One method, termed GANrec, is based on a \gls{gan} (see \cref{sec:ml:types:gan}) and is an \gls{ml} method that does not require training of the network before reconstruction, instead using the training process as the reconstruction process. 
 
-It takes a given sinogram $\bm{y}$ and uses the generating network $G$ to create a candidate reconstructed image $\bm{x} = G(\bm{y})$, then creates the corresponding candidate sinogram $\hat{\bm{y}} = P(\bm{x})$, where $P$ is the Radon transform. The loss $L = \left|\left| y - \hat{y} \right|\right|$ is then the basis of training the network (i.e. reconstructing the image)\footnote{The actual loss used for training GANrec also includes an adversarial loss, which will be introduced in \cref{sec:ml:training:lossfunctions}, however it is omitted in this description for the sake of simplicity. }.
+It takes a given sinogram $\bm{y}$ and uses the generating network $G$ to create a candidate reconstructed image $\bm{x} = G(\bm{y})$, then creates the corresponding candidate sinogram $\hat{\bm{y}} = P(\bm{x})$, where $P$ is the Radon transform. The loss $L = \left|\left| y - \hat{y} \right|\right|$ is then the basis of training the network (i.e. reconstructing the image).\footnote{The actual loss used for training GANrec also includes an adversarial loss, which will be introduced in \cref{sec:ml:training:lossfunctions}, however it is omitted in this description for the sake of simplicity. }
 
-The sinogram-to-reconstruction transformation cannot be done by a conventional \gls{cnn}-style network, however it has been shown that a single fully connected layer can perform this transformation \cite{PASCHALIS2004211}. The accuracy of the transformation can be improved by increasing the number of layers and neurons, however this is dependent on the available computational power \cite{GANrec}. Because of this limitation, the generating network in GANrec is a modified version of U-net \cite{unet}, which will be introduced in \cref{sec:ml:types:encoderdecoder}, with three fully connected layers at the start to perform this transform. 
+The sinogram-to-reconstruction transformation cannot be done by a conventional \gls{cnn}-style network, however it has been shown that a single fully connected layer can perform this transformation \cite{PASCHALIS2004211}. The accuracy of the transformation can be improved by increasing the number of layers and neurons, however this is dependent on the available computational power \cite{GANrec}. Because of this limitation, the generating network in GANrec is a modified version of U-net \cite{unet} (see \cref{sec:ml:types:encoderdecoder}), with three fully connected layers at the start to perform this transform. 

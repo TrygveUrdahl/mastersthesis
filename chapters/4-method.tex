@@ -5,7 +5,7 @@ In this chapter, the specific neural network used to denoise \gls{ct} images wil
 
 \section{TomoGAN}
 \label{sec:method:tomogan}
-The denoising neural network used in this thesis is called TomoGAN \cite{liu2020tomogan}. It is a \gls{gan} where the generator is based on the U-net model \cite{unet}, and the input to the \gls{gan} is not some random noise but rather some noisy image. There are some key differences in the generator from the U-net model, namely \cite{liu2020tomogan}:
+The denoising neural network used in this thesis is called TomoGAN \cite{liu2020tomogan}. It is a \gls{gan} where the generator is based on the U-net model \cite{unet}, and the input to the \gls{gan} is not random noise but rather noisy images. There are a number of key differences in the generator from the U-net model, namely \cite{liu2020tomogan}:
 \begin{itemize}
     \item There are three (instead of four) down and up sampling layers.
     \item All convolutions have zero-padding to keep image dimensions unchanged during convolutions.
@@ -40,16 +40,18 @@ The weights for the different loss functions were mostly unchanged, with only $\
 
 \section{Image Comparison Metrics}
 \label{sec:method:metrics}
-To properly quantify the performance of the denoising method, some metrics must be defined. While there are some standards to doing this, not all methods perform equally well. 
+To quantify the performance of the denoising method, some metrics must be defined. While there are some standards to doing this, not all methods perform equally well. 
 
 \subsection{Mean Squared Error}
 \label{sec:method:metrics:mse}
-The most commonly used full-reference image quality metric is the \gls{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is very easy to calculate and physically understand, a low (i.e. good) \gls{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \gls{psnr}, which is another very commonly used metric, does not correspond to visual similarity. The \gls{psnr} can be defined from the \gls{mse}, and is given as \cite{477498}
+The most commonly used full-reference image quality metric is the \gls{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is easy to calculate and physically understand, a low (i.e. good) \gls{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \gls{psnr}, which is another very commonly used metric, does not correspond to visual similarity. The \gls{psnr} can be defined from the \gls{mse}, and is given as \cite{477498}
 \begin{equation}
     \label{eq:psnr}
     \text{PSNR} = 10 \cdot \log_{10} \left( \frac{\text{MAX}_Y}{MSE^2} \right),
 \end{equation}
 where $\text{MAX}_Y$ is the maximal pixel value possible in the image (e.g. for an 8-bit image it is $2^8-1=255$), and $MSE$ is the \gls{mse} of the image. 
+
+\missingfigure{Figure showing how images with same MSE are qualitatively different}
 
 \subsection{Structural Similarity Index Measure}
 The \gls{ssim} is a metric to measure similarity between images \cite{ssim}. It is a full-reference image quality assessment, meaning it compares a complete reference image to a low-quality image.\footnote{Other types of image quality assessments are either no-reference where there is no reference image to compare to, or reduced-reference where there is some partial information from a reference image to compare to (e.g. a set of extracted features)\cite{ssim}. }

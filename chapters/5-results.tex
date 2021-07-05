@@ -37,7 +37,7 @@ This denoising was performed with TomoGAN using a loss function containing \gls{
 \section{Hyperparameter and Loss Function Changes}
 How the change in the loss function affected the denoising operation was explored for the dataset of the glass beads acquired from TomoBank (\cref{sec:method:datasets}). A log-cosh term (\cref{sec:ml:training:lossfunctions}) was added to the loss function, and the resulting denoised images obtained using different loss functions were compared. All other hyperparameters were kept constant, only the composition of the loss function was changed (i.e. adding log-cosh loss and reducing $\lambda_{\text{MSE}}$). The resulting two denoisings for an arbitrary slice is given in \cref{fig:losschangedenoisingcomparison}. 
 
-While there is little visual difference in the two denoisings, the denoising containing a log-cosh based loss achieves a slightly improved \gls{ssim} score compared to the one without ($0.789$ vs. $0.788$). There is also no measurable difference in the training time of the network when incorporating another loss function. Because of this minor improvement with no discernable drawback, the loss function containing a log-cosh component is chosen as the default loss function for denoising in this thesis. It is possible that a larger improvement may be achievable by further tuning the weights of the different loss functions, as this was not thoroughly explored. 
+While there is little visual difference in the two denoisings, the denoising containing a log-cosh based loss achieves a slight improvement in the \gls{ssim} score compared to the one without ($0.789$ vs. $0.788$). There is also no measurable difference in the training time of the network when incorporating another loss function. Because of this minor improvement with no discernable drawback, the loss function containing a log-cosh component is chosen as the default loss function for denoising in this thesis. It is possible that a larger improvement may be achievable by further tuning the weights of the different loss functions, as this has not been thoroughly explored. 
 
 \begin{figure}[htbp]
   \centering
@@ -49,7 +49,7 @@ While there is little visual difference in the two denoisings, the denoising con
 
 
 \section{Different Amounts of Noise}
-To explore the efficiency of the denoising method, the tomo\_00058 dataset was recreated with four different levels of missing wedge noise. By using subsampling factors of $8$, $16$, $32$, and $48$ (see \cref{tab:projectionsubsampling}), four datasets with different levels of noise were simulated. They are given alongside the \gls{hq} reconstruction in \cref{fig:tomo00058missingwedgecomparison}. 
+To explore the efficiency of the denoising method, the tomo\_00058 dataset was recreated with four different levels of projection undersampling. By using subsampling factors of $8$, $16$, $32$, and $48$ (see \cref{tab:projectionsubsampling}), four datasets with different levels of artefacting were simulated. They are given alongside the \gls{hq} reconstruction in \cref{fig:tomo00058missingwedgecomparison}. 
 
 Once again the TomoGAN network was used with a loss function containing \gls{mse}, log-cosh, VGG, and adversarial components, a depth of 1 was used, and the network was trained for 100000 iterations with a mini batch size of 16. The resulting denoised images are given in \cref{fig:tomo00058missingwedgecomparisondenoised}\todo[]{Do I need scale bars on all these images, or is it enough that there is a scale bar on the 1st image of \cref{fig:tomo00058missingwedgecomparison}? }. 
 
@@ -57,7 +57,7 @@ It is evident that a subsampling factor of 48, corresponding to merely 31 projec
 
 \cref{tab:missingwedgessim} contains \gls{ssim} and \gls{mse} values for the noisy and denoised images shown in \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised}. We see here that for subsampling factors $8$, $16$, and $32$, the \gls{mse} is improved by denoising, however for subsampling factor $48$ it is drastically worsened. All denoisings achieve, to varying degrees, \gls{ssim} improvements. The fact that the poor denoising of the subsampling factor of $48$ achieves an improvement in \gls{ssim} from $0.193$ to $0.657$ indicates that \gls{ssim} is not a perfect image comparison metric for this use case. 
 
-It is worth noting that a subsampling factor of $32$ corresponds to $46$ projections, which is similar to the $64$ projections used in the noisiest simulated dataset in the original article by Liu et al. \cite{liu2020tomogan}. The achieved \gls{ssim} score on a real dataset of $0.789$ in this thesis is similar to their results on a simulated phantom. 
+It is worth noting that a subsampling factor of $32$ corresponds to $46$ projections, which is similar to the $64$ projections used in the noisiest simulated dataset in the original article by Liu \textit{et al.} \cite{liu2020tomogan}. The achieved \gls{ssim} score on a real dataset of $0.789$ in this thesis is similar to their results on a simulated phantom. 
 
 
 \begin{figure}
@@ -94,7 +94,7 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
     \includegraphics[width=\linewidth]{figures/ns48.png}
     \caption{Subsampling factor 48 (31 projections). }
   \end{subfigure}
-  \caption[Four different levels of missing wedge noise]{Comparison of different levels of missing wedge noise on the tomo\_00058 dataset by reconstructing the images with the \gls{fbp} algorithm. The same cross-section is displayed for different reconstructions made by varying the number of projections used.  }
+  \caption[Four different levels of projection undersampling]{Comparison of different levels of projection undersampling on the tomo\_00058 dataset by reconstructing the images with the \gls{fbp} algorithm. The same cross-section is displayed for different reconstructions made by varying the number of projections used.  }
   \label{fig:tomo00058missingwedgecomparison}
 \end{figure}
 
@@ -125,14 +125,14 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
     \includegraphics[width=\linewidth]{figures/ns48it100000itd4mse035logcosh3.png}
     \caption{Subsampling factor 48 (31 projections). }
   \end{subfigure}
-  \caption[Denoising of four different levels of missing wedge noise]{Comparison of denoising of different levels of missing wedge noise on the tomo\_00058 dataset, where the corresponding noisy images are given in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
+  \caption[Denoising of four different levels of projection undersampling]{Comparison of denoising of different levels of projection undersampling on the tomo\_00058 dataset, where the corresponding noisy images are given in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:tomo00058missingwedgecomparisondenoised}
 \end{figure}
 
 
 \begin{table}[htbp]
   \centering
-  \caption[SSIM for different levels of simulated missing wedge noise and corresponding values after denoising]{Overview of \gls{ssim} for different levels of simulated missing wedge noise on the tomo\_00058 dataset. The missing wedge noise was simulated by subsampling the number of projections by a factor as given in the subsampling factor column, which results in a number of projections as given in \cref{tab:projectionsubsampling}. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
+  \caption[SSIM for different levels of simulated projection undersampling and corresponding values after denoising]{Overview of \gls{ssim} for different levels of simulated projection undersampling on the tomo\_00058 dataset. The projection undersampling was simulated by subsampling the number of projections by a factor as given in the subsampling factor column, which results in a number of projections as given in \cref{tab:projectionsubsampling}. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{tab:missingwedgessim}
   \begin{tabular}{lllll}
   \hline
@@ -152,19 +152,19 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot1.pdf}
-  \caption[Pixel value plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 150 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of missing wedge noise. \gls{hq} corresponds to the \gls{hq} image, NS to the \gls{lq} image, and \gls{dn} to the denoised image. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
+  \caption[Pixel value plot of denoising of different levels of projection undersampling on tomo\_00058]{The plots show pixel values for 150 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of projection undersampling. \gls{hq} corresponds to the \gls{hq} image, NS to the \gls{lq} image, and \gls{dn} to the denoised image. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:differentnoiselineplot1}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot2.pdf}
-  \caption[Pixel value plot of denoising of different levels of noise on tomo\_00058]{The plots show pixel values for 400 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of missing wedge noise. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
+  \caption[Pixel value plot of denoising of different levels of projection undersampling on tomo\_00058]{The plots show pixel values for 400 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of projection undersampling. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
   \label{fig:differentnoiselineplot2}
 \end{figure}
 
 \section{Loss Function Evolution}
-To try and understand how the TomoGAN network is performing during training, the evolution of the loss function and its components was plotted. This is given in \cref{fig:losstomo00058noadv}. We see that the main reduction in the loss of the network happens during early stages of training, especially the first few iterations. In the first $500$ iterations the loss changes from $\approx 7000$ to $\approx 100$, however a denoising after $500$ iterations does not perform well (as is given in \cref{fig:croppednoncroppedearly}a). At $100000$ iterations, the loss is $\approx 70$. 
+To try and understand how the TomoGAN network is performing during training, the evolution of the loss function and its components was plotted. This is given in \cref{fig:losstomo00058noadv}. We see that the main reduction in the loss of the network happens during early stages of training, especially the first few iterations. In the first $500$ iterations the loss changes from $\approx 7000$ to $\approx 100$, however a denoising after $500$ iterations does not perform well (as is given in \cref{fig:croppednoncroppedearly}a). At $100000$ iterations, the loss is $\approx 70$. In the early iterations the denoising solves for low spatial-frequency features which result in large decreases in the loss function. In later iterations high frequency information is captured, which has a smaller impact on the loss as these are finer details. 
 
 If denoising performance could be gauged based solely on \cref{fig:losstomo00058noadv}, the denoised image after $20000$ iterations should be very similar to after $100000$ iterations. Looking at \cref{fig:iterationdenoisingcomparison} it is evident that this is not correct. The denoising after $20000$ iterations achieves an \gls{ssim} of $0.778$ compared to $0.789$ after $100000$ iterations. After $20000$ iterations, the spheres in tomo\_00058 are less sharp and more artefacts have been introduced. How the \gls{ssim} and \gls{mse} of an arbitrary slice of tomo\_00058 evolve through training is given in \cref{fig:ssimmseevolution}.
 
