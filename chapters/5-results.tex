@@ -198,86 +198,13 @@ For this dataset, the 3D stability of the denoising method has been explored.
 
 
 \todo[inline]{Maybe make 3D model plot of this dataset. }
-\cref{fig:kimrobertcomparison,fig:sideplothq,fig:sideplotfdk,fig:sideplotpiccs,fig:sideplotdepth1,fig:sideplotdepth3,fig:sideplotdepth5,fig:sideplotdepth7,fig:kimrobertline,fig:kimroberthist}. 
-
-\begin{figure}
-    \begin{subfigure}[t]{.45\textwidth}
-      \centering
-      \includegraphics[width=\linewidth]{figures/kimrobertgt.png}
-      \caption{\acrlong{ihhq} \gls{fdk}. }
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{.45\textwidth}
-      \centering
-      \includegraphics[width=\linewidth]{figures/kimrobertFDK.png}
-      \caption{\acrlong{ihlq} \gls{fdk}.}
-    \end{subfigure}
-  
-    \medskip
-  
-    \begin{subfigure}[t]{.45\textwidth}
-      \centering
-      \includegraphics[width=\linewidth]{figures/kimrobertPICCS.png}
-      \caption{\acrlong{ihlq} \gls{piccs}. }
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{.45\textwidth}
-      \centering
-      \includegraphics[width=\linewidth]{figures/kimrobertdepth1dn.png}
-      \caption{\acrlong{dn} \acrlong{ihlq} \gls{fdk}. }
-    \end{subfigure}
-    \caption[Comparison of different reconstructions of IHHQ and IHLQ]{Comparison of different reconstructions of the \gls{ihhq} and the \gls{ihlq} dataset. }
-    \label{fig:kimrobertcomparison}
-\end{figure}
-\todo[]{Remove \cref{fig:kimrobertcomparison}? May not be needed, as this is basically showed in other figures. }
+\cref{fig:bigfigure,fig:kimrobertline,fig:kimroberthist}. 
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.9\textwidth]{figures/kimroberthq-x475y620s250.pdf}
-  \caption[View of IHHQ]{View of the \gls{ihhq} \gls{fdk} reconstruction. The red horizontal line in \textbf{(a)} corresponds to the sagittal view in \textbf{(b)}, and the red vertical line corresponds to the coronal view in \textbf{(c)}. Three \gls{roi}s have been marked in \textbf{(b)} and \textbf{(c)}, and can be seen in \textbf{(d)}-\textbf{(f)}. The scale bar for \textbf{(b)} applies to \textbf{(c)}, and the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}. }
-  \label{fig:sideplothq}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/kimrobertfdk-x475y620s250.pdf}
-  \caption[View of IHLQ FDK]{View of the \gls{ihlq} \gls{fdk} reconstruction. Figure elements are as in \cref{fig:sideplothq}.} 
-  \label{fig:sideplotfdk}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/kimrobertpiccs-x475y620s250.pdf}
-  \caption[View of IHLQ PICCS]{View of the \gls{ihlq} \gls{piccs} reconstruction. Figure elements are as in \cref{fig:sideplothq}. }
-  \label{fig:sideplotpiccs}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/kimrobertdepth1-x475y620s250.pdf}
-  \caption[View of IHLQ FDK denoised with a depth of 1]{View of the denoised \gls{ihlq} \gls{fdk} reconstruction with a denoising depth of 1. Figure elements are as in \cref{fig:sideplothq}. }
-  \label{fig:sideplotdepth1}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/kimrobertdepth3-x475y620s250.pdf}
-  \caption[View of IHLQ FDK denoised with a depth of 3]{View of the denoised \gls{ihlq} \gls{fdk} reconstruction with a denoising depth of 3. Figure elements are as in \cref{fig:sideplothq}. }
-  \label{fig:sideplotdepth3}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/kimrobertdepth5-x475y620s250.pdf}
-  \caption[View of IHLQ FDK denoised with a depth of 5]{View of the denoised \gls{ihlq} \gls{fdk} reconstruction with a denoising depth of 5. Figure elements are as in \cref{fig:sideplothq}. }
-  \label{fig:sideplotdepth5}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.85\textwidth]{figures/kimrobertdepth7-x475y620s250.pdf}
-  \caption[View of IHLQ FDK denoised with a depth of 7]{View of the denoised \gls{ihlq} \gls{fdk} reconstruction with a denoising depth of 7. Figure elements are as in \cref{fig:sideplothq}. }
-  \label{fig:sideplotdepth7}
+  \includegraphics[width=.8\textwidth]{figures/bigfigure.pdf}
+  \caption[Different reconstructions and denoisings of the IHLQ and IHHQ datasets]{Different reconstructions and denoisings of the \gls{ihhq} and \gls{ihlq} datasets. The top three images are full views of the \gls{ihhq} dataset. The red horizontal line in the top left figure corresponds to the sagittal view in the top middle figure, and the red vertical line corresponds to the coronal view in the top right figure. Four \glspl{roi} have been marked in the top figures and have been zoomed in for the different reconstructions and denoisings. All zoomed in figures have the same scale bar. }
+  \label{fig:bigfigure}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -294,12 +221,6 @@ For this dataset, the 3D stability of the denoising method has been explored.
   \label{fig:kimroberthist}
 \end{figure}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.8\textwidth]{figures/bigfigure.pdf}
-  \caption[Different reconstructions and denoisings of the IHLQ and IHHQ datasets]{Different reconstructions and denoisings of the \gls{ihlq} and \gls{ihhq} datasets. The top three images are full views of the \gls{ihhq} dataset. The red horizontal line in the top left figure corresponds to the sagittal view in the top middle figure, and the red vertical line corresponds to the coronal view in the top right figure. Four \glspl{roi} have been marked in the top figures and have been zoomed in for the different reconstructions and denoisings. All zoomed in figures have the same scale bar. }
-  \label{fig:bigfig}
-\end{figure}
 
 
 \section{Attempted Shale Denoising}
