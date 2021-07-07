@@ -1,17 +1,18 @@
 \chapter{Machine Learning}
 \label{sec:ml}
-%The field of \gls{ml} is often seen as a part of the greater field of \gls{ai}\cite[3]{Alpaydin10}, and the term was coined by Arthur Samuel in \citeyear{samuelmachinelearning} \cite{samuelmachinelearning}. 
-The therm \gls{ml} was termed by Arthur Samuel in \citeyear{samuelmachinelearning} \cite{samuelmachinelearning}. An \gls{ml} algorithm builds a model based on a dataset, intended to make predictions or classifications without being explicitly programmed how to do so. 
+%The field of \glsfirst{ml} is often seen as a part of the greater field of \gls{ai}\cite[3]{Alpaydin10}, and the term was coined by Arthur Samuel in \citeyear{samuelmachinelearning} \cite{samuelmachinelearning}. 
+The term \glsfirst{ml} was termed by Arthur Samuel in \citeyear{samuelmachinelearning} \cite{samuelmachinelearning}. An \gls{ml} algorithm builds a model based on a dataset, intended to make predictions or classifications without being explicitly programmed how to do so. 
 
 Whereas some problems can easily be solved by programming an explicit algorithm (e.g. sorting a list, or \gls{fbp} reconstruction), there are many cases where an exact algorithm fails to provide adequate solutions to the problem. A typical example is to filter out spam emails from an email inbox. The content and structure of the spam emails vary sufficiently to prevent filtering them with "hardcoded" rules, as in conventional algorithms. This is where \gls{ml} comes in: an \gls{ml} model can be trained to discern differences in a dataset without being explicitly told what to look for. So long as there is a sufficient amount of data to train the model with, it may be able to find a pattern in the data and thereby predict or classify new data, or augment or enhance the data \cite[2-4]{Alpaydin10}. 
 
 There are many different \gls{ml} algorithms, however in this thesis, only the class of \textit{neural networks} will be discussed and the focus will be on \textit{supervised learning}. 
 
-This chapter contains a brief introduction to neural networks and their basic components, an explanation of what a \gls{cnn} is, a description of encoder-decoder networks, and an introduction to \glspl{gan}, before covering the basics of how a neural network is trained and giving an overview of some common loss functions used for this process. 
+This chapter contains a brief introduction to neural networks and their basic components, an explanation of what a \glsfirst{cnn} is, a description of encoder-decoder networks, and an introduction to \glspl{gan}, before covering the basics of how a neural network is trained and giving an overview of some common loss functions used for this process. 
 
 \section{Components of a Neural Network}
 \label{sec:ml:componentsofaneuralnetwork}
-\todo[inline]{Briefly state what a neural network is. }
+Neural networks are computing systems that are designed to learn in ways similar to the human brain by being exposed large amounts of data, and attempting to find some inherent pattern or system to the data. 
+
 Neural networks were initially designed to simulate the human brain and how it learns and adapts to new information \cite{McCulloch1943}. Because of this, the basic building block of a neural network is called a neuron. Several neurons build up a layer, and several layers build up a neural network. Neurons in different layers have connections to each other (i.e. neurons in layer 1 are connected to neurons in layer 2), these connections have weights, and each neuron has a bias. A simple schematic of this is given in \cref{fig:neuralnetwork}. The value of a neuron is a real number and can be given as \cite[81]{Wang2003}
 \begin{equation}
     \label{eq:neuron}
@@ -26,7 +27,7 @@ where $k$ refers to which neuron it is, $m$ is the number of inputs to the neuro
     \label{fig:neuralnetwork}
 \end{figure}
 
-The activation function, also known as the transfer function, is denoted as $\sigma$. Its purpose is to bound the value of a neuron so that the network is not crippled by neurons with diverging values \cite[81]{Wang2003}. Furthermore, the activation function is used to introduce nonlinearity to the network,\footnote{For this reason, the identity activation function $f(x)=x$ generally performs poorly.} and it can be shown that a two-layer deep neural network with a nonlinear activation function is a universal function approximator, meaning it can approximate any function mapping between two Euclidian spaces \cite{Cybenko1989}. There are many different activation functions, and some examples are presented in \cref{tab:activationfunctions} and plotted in \cref{fig:activationfunctions}.
+The activation function, also known as the transfer function, is denoted as $\sigma$. Its purpose is to bound the value of a neuron so that the network does not diverge during training because of neurons with diverging values \cite[81]{Wang2003}. Furthermore, the activation function is used to introduce nonlinearity to the network,\footnote{For this reason, the identity activation function $f(x)=x$ generally performs poorly.} and it can be shown that a two-layer deep neural network with a nonlinear activation function is a \textit{universal function approximator}, meaning it can approximate any function mapping between two Euclidian spaces \cite{Cybenko1989}. There are many different activation functions, and some examples are presented in \cref{tab:activationfunctions} and plotted in \cref{fig:activationfunctions}.
 
 \begin{table}[htbp]
     \centering

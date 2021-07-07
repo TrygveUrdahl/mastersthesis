@@ -1,6 +1,7 @@
+% \acresetall
 \chapter{X-ray Computed Tomography}
 \label{sec:ct}
-While this thesis is primarily focused on noise reduction using \gls{gan}s, a brief overview of some of the basic principles behind \gls{ct} imaging will be given in this chapter. The focus will be on explaining the underlying theoretical foundation of \gls{ct} imaging, including the main sources of noise. An overview of common reconstruction methods, as well a more novel one, will also be presented.
+While this thesis is primarily focused on noise reduction using \glsfirst{gan}s, a brief overview of some of the basic principles behind \glsfirst{ct} imaging will be given in this chapter. The focus will be on explaining the underlying theoretical foundation of \gls{ct} imaging, including the main sources of noise. An overview of common reconstruction methods, as well a more novel one, will also be presented.
 
 \section{X-ray Attenuation in a Sample}
 \label{sec:ct:theoreticalfoundation}
@@ -9,8 +10,7 @@ X-ray \gls{ct} imaging is based on interaction between X-rays and matter. This i
     \label{eq:beerlambert}
     I = I_0 \rm{e}^{-\int_{l_0}^{l}\mu\left(x,y,E\right)dl},
 \end{equation}
-where $I_0$ and $I$ are the incident and the attenuated X-ray beam intensities at positions $l_0$ and $l$ respectively, and $\mu$ is the attenuation coefficient of the traversed matter. The integral in the exponent is the path of the photon beam through the sample. The attenuation coefficient is dependent on energy ($E$), and typical X-ray \gls{ct} systems span a range of wavelengths (i.e. energies). 
-Because of this, \cref{eq:beerlambert} must be modified to also account for the polychromatic nature of the X-ray source. 
+where $I_0$ and $I$ are the incident and the attenuated X-ray beam intensities at positions $l_0$ and $l$ respectively, and $\mu$ is the attenuation coefficient of the traversed matter. The integral in the exponent is the path of the photon beam through the sample \cite{KakSlaney98}. The attenuation coefficient is dependent on energy ($E$), and typical X-ray \gls{ct} systems span a range of wavelengths (i.e. energies). Because of this, \cref{eq:beerlambert} must be modified to also account for the polychromatic nature of the X-ray source. 
 
 The total incident radiation can be determined by integrating over all photon energies, 
 \begin{equation}
@@ -26,9 +26,18 @@ By combining \cref{eq:beerlambert,eq:incidentradiation}, we get the modified Bee
 This can be solved for the attenuation coefficient projection, giving \cite{doi:10.1063/1.4950807}
 \begin{equation}
     \label{eq:ctattenuationcoefficient}
-    \int_{l_0}^{l} \mu_m\left(x,y\right)dl = -\ln\left[\frac{\int S\left(E\right) D\left(E\right)\rm{e}^{-\int_{l_0}^{l}\mu\left(x,y,E\right)dl} dE }{ \int S\left(E\right) D\left(E\right) dE }\right].
+    \int_{l_0}^{l} \mu\left(x,y\right)dl = -\ln\left[\frac{\int S\left(E\right) D\left(E\right)\rm{e}^{-\int_{l_0}^{l}\mu\left(x,y,E\right)dl} dE }{ \int S\left(E\right) D\left(E\right) dE }\right].
 \end{equation}
-The attenuated intensity $I$ can be related to the attenuation coefficient projection $\mu_m$ of a path through the sample by use of this equation. When the attenuation coefficient projections are known, the 2D attenuation coefficient map can be reconstructed using a reconstruction algorithm if a sufficient number of projections are available. Strategies for numerical \gls{ct} reconstructions will be described in \cref{sec:ct:reconstruction}.
+The attenuated intensity $I$ can be related to the attenuation coefficient projection $\mu$ of a path through the sample by use of this equation. When the attenuation coefficient projections are known, the 2D attenuation coefficient map can be reconstructed using a reconstruction algorithm if a sufficient number of projections are available. Strategies for numerical \gls{ct} reconstructions will be described in \cref{sec:ct:reconstruction}.
+
+An illustration of how a projection of an object relates to the Fourier transform of an object is provided in \cref{fig:fourierslicetheorem}. By collecting this projection for several angles, the entire Fourier transform of the object can be collected. This is known as the Fourier slice theorem \cite[57]{KakSlaney98}.
+
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.8\textwidth]{figures/fourierslicetheorem.pdf}
+    \caption[Illustration of the Fourier slice theorem]{Illustration of how the projection of an object corresponding to an angle $\theta$ relates to the Fourier transform of the object. Adapted from \cite{KakSlaney98}.}
+    \label{fig:fourierslicetheorem}
+\end{figure}
 
 \subsection{Noise}
 \label{sec:ct:theory:noise}
@@ -47,27 +56,49 @@ Electronic noise is related to the electronics of the X-ray detector, and it is 
 \end{equation}
 which corresponds to a normal distribution with mean signal value of $0$ and standard deviation $\sigma$.
 
-If an insufficient number of projections of the attenuation coefficient are available, it is known as a \textit{missing wedge problem}. Missing wedge measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to artefacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). Several different reconstruction methods removing these artefacts have been attempted, also including \gls{ml} based approaches \cite{liu2020tomogan,GANrec}. Missing wedge artefacts will be refered to as noise in this thesis\todo[]{Not actually noise, change?}. 
+If an insufficient number of projections of the attenuation coefficient are available, it is known as a \textit{missing wedge problem} or an \textit{undersampling problem}. Missing wedge measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to artefacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). An illustration of undersampling and missing wedge in Fourier space is provided in \cref{fig:undersampling}. Several different reconstruction methods removing these artefacts have been attempted, also including \gls{ml} based approaches \cite{liu2020tomogan,GANrec}. Missing wedge artefacts will be refered to as noise in this thesis\todo[]{Not actually noise, change?}. 
 
-A comparison of quantum noise and missing wedge noise on a dataset imaging glass beads is given in \cref{fig:noisecomparison}. 
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.8\textwidth]{figures/undersampling.pdf}
+    \caption[Illustration of undersampling and missing wedge in Fourier space]{Illustration of undersampling and missing wedge in Fourier space. The figure contains: \textbf{(a)} sufficiently many projections, \textbf{(b)} undersampled projections, and \textbf{(c)} missing wedge projections. }
+    \label{fig:undersampling}
+\end{figure}
+
+A comparison of quantum noise and undersampling artefacting on a dataset imaging borosilicate glass beads is given in \cref{fig:noisecomparison}. More details on the dataset are provided in \cref{sec:method:datasets}. 
 
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.9\textwidth]{figures/noisecomparison.pdf}
-    \caption[Reconstruction noise comparison]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and a missing wedge reconstruction. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the missing wedge problem is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction. The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
+    \caption[Reconstruction noise and artefacting comparison]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and an undersampled reconstruction. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the undersampled reconstruction is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction (i.e. uniformly subsampled projections). The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
     \label{fig:noisecomparison}
 \end{figure}
 
 \section{Imaging Method}
-\todo[inline]{Keep this section?}
-\subsection{Setup}
-\missingfigure{Figure of generic CT setup}
+
+\subsection{Imaging Setup}
+There are different types of \gls{ct} imaging systems. In \cref{fig:ctsetup}, a simple schematic of a \textit{micro-\gls{ct}} system is provided, where the object itself is the part of the system that is rotated. Other types of \gls{ct} systems may instead rotate the x-ray source and/or detector around the object \cite[126-129]{KakSlaney98}. 
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.9\textwidth]{figures/ctsetup.pdf}
+    \caption[Illustration of a CT imaging setup]{Illustration of a micro-\gls{ct} imaging setup. The object is rotated around the axis of rotation to capture projections from several angles, and the x-ray source and detector are stationary. }
+    \label{fig:ctsetup}
+\end{figure}
+
+There are typically three different detector types used. The detector output may be proportional to the total number of photons incident on it, it may be proportional to the total photon energy, or it may be dependant on energy deposition per unit mass. These three different measurement types typically correspond to counting-type detectors, scintillation-type detectors, and ionization detectors, respectively \cite[118]{KakSlaney98}. 
+
 \subsection{Sinograms}
-\missingfigure{Figure of image and its sinogram}
+The captured projections form a \textit{sinogram}. The sinogram of an image consists of several projections corresponding to the Radon transform of the image (see \cref{sec:ct:reconstruction}) from different angles, where each projection is one line in the sinogram. An example is provided in \cref{fig:sinogramshepplogan}. 
+\begin{figure}[htbp]  
+    \centering
+    \includegraphics[width=.9\textwidth]{figures/sinogramshepplogan.pdf}
+    \caption[Illustration of an image and a corresponding sinogram]{Illustration of an image and its sinogram. The image is the Shepp-Logan phantom \cite{6499235}. The sinogram is created by plotting the Radon transform (see \cref{sec:ct:reconstruction}) of the image for $400$ angles from $0-180$ degrees. }
+    \label{fig:sinogramshepplogan}
+\end{figure}
 
 \section{CT Reconstruction}
 \label{sec:ct:reconstruction}
-After acquiring the attenuation coefficient projections, or sinograms\todo[]{Make figure showing an image and its sinogram. }, this data must be reconstructed into an image (of either 2D or 3D) of the object. The collection of a sinogram $P_\theta$ for projection angle $\theta$ is given by the Radon transform \cite{4307775,jimaging4110128}
+After acquiring the attenuation coefficient projections, or sinograms, this data must be reconstructed into an image (of either 2D or 3D) of the object. The collection of a sinogram $P_\theta$ for projection angle $\theta$ is given by the Radon transform \cite{4307775,jimaging4110128}
 \begin{equation}
     \label{eq:radontransform}
     P_\theta(u) = \iint f\left(x,y \right)\delta\left(x \cos \theta + y \sin \theta -u \right)dxdy,
@@ -82,14 +113,14 @@ where element $a_{ij} \in \mathbb{R}$ of $\bm{A} \in \mathbb{R}^{N_\theta N_d \t
 Conventional tomographic reconstruction algorithms are generally divided into two groups: direct reconstruction, and iterative reconstruction, however a third method using \gls{ml} has also shown promise \cite{GANrec}.
 
 \subsection{Direct Reconstruction}
-Direct tomographic reconstruction algorithms are based on finding an inversion formula of the continuous forward Radon transform, as given in \cref{eq:radontransform}. The numerical implementation is done by using a discretized inverse Radon transform \cite{jimaging4110128}. The most commonly used direct reconstruction algorithm is the \gls{fbp} algorithm, which can be written as \cite{jimaging4110128}
+Direct tomographic reconstruction algorithms are based on finding an inversion formula of the continuous forward Radon transform, as given in \cref{eq:radontransform}. The numerical implementation is done by using a discretized inverse Radon transform \cite{jimaging4110128}. The most commonly used direct reconstruction algorithm is the \glsfirst{fbp} algorithm, which can be written as \cite{jimaging4110128}
 \begin{equation}
     \label{eq:fbp}
     \bm{x}_{FBP} = \bm{A}^T \bm{C}_h \bm{y},
 \end{equation}
-where $\bm{C}_h$ is a 1D convolution operation that convolves each detector row in $\bm{y}$ with a filter $\bm{h} \in \mathbb{R}^{N_d}$. The filter is typically some standard filter that can be used for any reconstruction (e.g. the Ram-Lak filter), and may include low-pass filtering to reduce high frequency noise in the reconstructed image \cite{681991}. It has also been shown that this filter can be learned by use of \gls{ml} (more specifically an \gls{ann}) to further improve the performance of \gls{fbp} \cite{6607157}. 
-\missingfigure{Illustration of FBP with projections leading to subsampling in Fourier space}
-Direct algorithms, such as \gls{fbp}, have the advantage of most often being computationally efficient, as well as producing accurate results when enough projections are available \cite{jimaging4110128}. It can be shown that the sufficient number of projections in \gls{fbp} is ...\todo[]{Write this} The issue with these techniques arises when only a limited number of projections are available, as they are generally highly prone to noise leading to insufficient image quality for further analysis \cite{jimaging4110128}. This is where the use for iterative reconstruction algorithms arises.
+where $\bm{C}_h$ is a 1D convolution operation that convolves each detector row in $\bm{y}$ with a filter $\bm{h} \in \mathbb{R}^{N_d}$. The filter is typically some standard filter that can be used for any reconstruction (e.g. the Ram-Lak filter), and may include low-pass filtering to reduce high frequency noise in the reconstructed image \cite{681991}. It has also been shown that this filter can be learned by use of \gls{ml} (more specifically an \gls{ann}, see \cref{sec:ml:componentsofaneuralnetwork}) to further improve the performance of \gls{fbp} \cite{6607157}. 
+
+Direct algorithms, such as \gls{fbp}, have the advantage of most often being computationally efficient, as well as producing accurate results when enough projections are available \cite{jimaging4110128}. It can be shown that the sufficient number of projections for \gls{fbp} is roughly the same as the number of rays per projection (i.e. number of pixels across the object) \cite[59,183-186]{KakSlaney98}. The issue with these techniques arises when only a limited number of projections are available, as they are generally highly prone to noise leading to insufficient image quality for further analysis \cite{jimaging4110128}. This is where the use for iterative reconstruction algorithms arises.
 
 For \gls{ct} imaging systems where the X-ray beam is conical (as opposed to parallel), an alternative direct reconstruction method similar to \gls{fbp} is the \gls{fdk} reconstruction algorithm \cite{Feldkamp:84}. 
 
@@ -100,20 +131,18 @@ Iterative tomographic reconstruction algorithms are based on iteratively solving
     \label{eq:iterativesolution}
     \bm{x}_{iter} = \underset{\bm{x}}{\text{argmin}} \left|\left|\bm{y} - \bm{A}\bm{x}\right|\right|_2^2 + \lambda g(\bm{x}),
 \end{equation}
-where $\left|\left| \bm{\cdot} \right|\right|_2^2$ denotes the $l^2$-norm, and $\lambda$ is the relative weight of the prior knowledge penalty compared to the residual error. If a prior knowledge penalty that fits a reconstruction well is chosen, iterative reconstruction algorithms can produce significantly more accurate reconstructions than direct methods when reconstructing from limited data \cite{jimaging4110128}. If the chosen prior knowledge penalty does not fit well however, or if the weighting parameter $\lambda$ is poorly selected as it is a problem-dependent parameter, it may lead to poor quality reconstructions. 
+where $\left|\left| \bm{\cdot} \right|\right|_2^2$ denotes the $l^2$-norm, and $\lambda$ is the relative weight of the prior knowledge penalty compared to the residual error. If a prior knowledge penalty that fits a reconstruction well is chosen, iterative reconstruction algorithms can produce significantly more accurate reconstructions than direct methods when reconstructing from limited data \cite{jimaging4110128}. If the chosen prior knowledge penalty does not fit well however, or if the weighting parameter $\lambda$ is poorly selected as it is a problem-dependent parameter, it may lead to poor quality reconstructions. Some of the commonly used iterative reconstruction algorithms are \gls{art} and \gls{sirt} \cite[283-284]{KakSlaney98}. 
 
-A large drawback with iterative reconstruction is its (often) large computational cost. These types of reconstructions are slower, which may make it difficult to apply them to time-sensitive real-world tomographic data \cite{jimaging4110128}. Newer and more powerful computers can to some extent offset this downside to iterative reconstructions \cite{willemink2013iterative}. 
+A large drawback with iterative reconstruction is its (often) large computational cost. These types of reconstructions are slower, which may make it difficult to apply them to time-sensitive real-world tomographic data \cite{jimaging4110128}. Newer and more powerful computers can to some extent offset this downside to iterative reconstructions \cite{willemink2013iterative}. Because of these limitations and drawbacks, direct reconstruction algorithms are still often preferred in many fields \cite{Pan_2009}. 
 
-Because of these limitations and drawbacks, direct reconstruction algorithms are still often preferred in many fields \cite{Pan_2009}. 
-
-\todo[inline]{This next part needs fixing}
-Another iterative reconstruction algorithm is known as \gls{piccs} \cite{piccs}. It is used to better reconstruct datasets that are limited in the number of projections available when multiple imagings have been done for several time frames (known as dynamic \gls{ct} imaging). By reconstructing a prior image from the union of interleaved datasets from several time frames, the \gls{piccs} reconstruction algorithm utilizes the spatial-temporal correlations in the imaging to make assumptions on the imaged object. The prior image is used as a constrain on the reconstruction of the missing wedge prone reconstructions of each time frame. 
+\Gls{piccs} is an iterative reconstruction algorith \cite{piccs}. It is used to better reconstruct datasets that are limited in the number of projections available when multiple imagings have been done for several time frames (known as dynamic \gls{ct} imaging). By reconstructing a prior image from the union of interleaved datasets from several time frames (that are undersampled on their own), the \gls{piccs} reconstruction algorithm utilizes the spatial-temporal correlations in the imaging to make assumptions on the imaged object. The prior image is used as a constraint on the reconstruction of the undersampled reconstructions of each time frame. 
 
 
-\subsection{Other Methods}
-\todo[inline]{Change structure, is this section needed?}
+\subsection{Machine Learning Based Reconstruction}
+The terms used in this section will be properly introduced in \cref{sec:ml}. Furthermore, this is not the reconstruction technique used in this thesis, however it is worth mentioning as it has shown promise for reconstruction quality improvements. 
+
 In addition to direct and iterative reconstruction techniques, \gls{ml} has been used to make an iterative-like reconstruction algorithm \cite{GANrec}. One method, termed GANrec, is based on a \gls{gan} (see \cref{sec:ml:types:gan}) and is an \gls{ml} method that does not require training of the network before reconstruction, instead using the training process as the reconstruction process. 
 
 It takes a given sinogram $\bm{y}$ and uses the generating network $G$ to create a candidate reconstructed image $\bm{x} = G(\bm{y})$, then creates the corresponding candidate sinogram $\hat{\bm{y}} = P(\bm{x})$, where $P$ is the Radon transform. The loss $L = \left|\left| y - \hat{y} \right|\right|$ is then the basis of training the network (i.e. reconstructing the image).\footnote{The actual loss used for training GANrec also includes an adversarial loss, which will be introduced in \cref{sec:ml:training:lossfunctions}, however it is omitted in this description for the sake of simplicity. }
 
-The sinogram-to-reconstruction transformation cannot be done by a conventional \gls{cnn}-style network, however it has been shown that a single fully connected layer can perform this transformation \cite{PASCHALIS2004211}. The accuracy of the transformation can be improved by increasing the number of layers and neurons, however this is dependent on the available computational power \cite{GANrec}. Because of this limitation, the generating network in GANrec is a modified version of U-net \cite{unet} (see \cref{sec:ml:types:encoderdecoder}), with three fully connected layers at the start to perform this transform. 
+The sinogram-to-reconstruction transformation cannot be done by a conventional \gls{cnn}-style network, however it has been shown that a single fully connected layer can perform this transformation \cite{PASCHALIS2004211}. The accuracy of the transformation can be improved by increasing the number of layers and neurons, however this is dependent on the available computational power \cite{GANrec}. Because of this limitation, the generating network in GANrec is a modified version of U-net \cite{unet} (see \cref{sec:ml:types:encoderdecoder}), with three fully connected layers at the start to perform this transformation. 
