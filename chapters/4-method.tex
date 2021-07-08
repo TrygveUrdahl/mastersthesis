@@ -5,7 +5,7 @@ In this chapter, the specific neural network used to denoise \gls{ct} images wil
 
 \section{TomoGAN}
 \label{sec:method:tomogan}
-The denoising neural network used in this thesis is called TomoGAN \cite{liu2020tomogan}. It is a \gls{gan} where the generator is based on the U-net model \cite{unet}, and the input to the \gls{gan} is not random noise but rather noisy images. There are a number of key differences in the generator from the U-net model, namely \cite{liu2020tomogan}:
+The denoising neural network used in this thesis is called TomoGAN \cite{liu2020tomogan}. It is a \gls{gan} where the generator is based on the U-net model (see \cref{sec:ml:types:encoderdecoder}) \cite{unet}, and the input to the \gls{gan} is not random noise but rather noisy images. There are a number of key differences in the generator from the U-net model, namely \cite{liu2020tomogan}:
 \begin{itemize}
     \item There are three (instead of four) down and up sampling layers.
     \item All convolutions have zero-padding to keep image dimensions unchanged during convolutions.
@@ -17,7 +17,7 @@ The up sampling part of the generator is symmetric to the down sampling part, co
 
 Because of the three $2\times2$ max pooling layers, the dimensions of the input images must all be divisible by $2^3=8$. 
 
-A schematic of the generator of TomoGAN is given in \cref{fig:tomoganstructure}.
+A schematic of the generator of TomoGAN is provided in \cref{fig:tomoganstructure}.
 
 \begin{figure}[htbp]
     \centering
@@ -26,13 +26,13 @@ A schematic of the generator of TomoGAN is given in \cref{fig:tomoganstructure}.
     \label{fig:tomoganstructure}
 \end{figure}
 
-The discriminator network used to help train TomoGAN consists of six 2D $3\times3$ convolutional layers with leaky ReLU activation functions, as well as two fully connected layers. \todo[]{Write about Wasserstein distance and its use as loss function? }
+The discriminator network used to help train TomoGAN consists of six 2D $3\times3$ convolutional layers with leaky ReLU activation functions, as well as two fully connected layers. 
 
-No changes have been made to the structure of the TomoGAN network in this thesis, however some changes have been made to the loss function used to train the network. The original TomoGAN network, as given in \cite{liu2020tomogan}, was trained using a loss function comprising of an \gls{mse} loss, a feature based (VGG) loss, and an adversarial loss, given as 
+No changes have been made to the structure of the TomoGAN network in this thesis, however some changes have been made to the loss function used to train the network. The original TomoGAN network, as given by Liu \textit{et al.} \cite{liu2020tomogan}, was trained using a loss function comprising of an \gls{mse} loss, a feature based (VGG) loss, and an adversarial loss, given as 
 \begin{equation}
     L_{\text{Total}} = \lambda_{\text{MSE}}L_{\text{MSE}} + \lambda_{\text{VGG}}L_{\text{VGG}} + \lambda_{\text{Adv}}L_{\text{Adv}}.
 \end{equation}
-Based on articles citing the log-cosh loss function as a good candidate for image processing \cite{7797130,chen2019log} it was added as an additional term to the total loss, giving the overall loss function
+Based on articles citing the log-cosh loss function as a good candidate for image processing \cite{7797130,chen2019log}, a log-cosh loss function (see \cref{sec:ml:training:lossfunctions}) was added as an additional term to the total loss, giving the new loss function
 \begin{equation}
     L_{\text{Total}} = \lambda_{\text{MSE}}L_{\text{MSE}} + \lambda_{\text{Log-cosh}}L_{\text{Log-cosh}} + \lambda_{\text{VGG}}L_{\text{VGG}} + \lambda_{\text{Adv}}L_{\text{Adv}}.
 \end{equation}
@@ -44,25 +44,24 @@ To quantify the performance of the denoising method, some metrics must be define
 
 \subsection{Mean Squared Error}
 \label{sec:method:metrics:mse}
-The most commonly used full-reference image quality metric is the \gls{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is easy to calculate and physically understand, a low (i.e. good) \gls{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \gls{psnr}, which is another very commonly used metric, does not correspond to visual similarity. The \gls{psnr} can be defined from the \gls{mse}, and is given as \cite{477498}
+The most commonly used \textit{full-reference} image quality metric is the \glsfirst{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is easy to calculate and physically understand, a low (i.e. good) \gls{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \gls{psnr}, which is another very commonly used metric, does not correspond to visual similarity. The \gls{psnr} can be defined from the \gls{mse}, and is given as \cite{477498}
 \begin{equation}
     \label{eq:psnr}
     \text{PSNR} = 10 \cdot \log_{10} \left( \frac{\text{MAX}_Y}{MSE^2} \right),
 \end{equation}
-where $\text{MAX}_Y$ is the maximal pixel value possible in the image (e.g. for an 8-bit image it is $2^8-1=255$), and $MSE$ is the \gls{mse} of the image. 
+where $\text{MAX}_Y$ is the maximal pixel value possible in the image (e.g. for an 8-bit image it is $2^8-1=255$), and $MSE$ is the \gls{mse} of the image. The \gls{psnr} is not used in thesis.
 
 \missingfigure{Figure showing how images with same MSE are qualitatively different}
 
 \subsection{Structural Similarity Index Measure}
-The \gls{ssim} is a metric to measure similarity between images \cite{ssim}. It is a full-reference image quality assessment, meaning it compares a complete reference image to a low-quality image.\footnote{Other types of image quality assessments are either no-reference where there is no reference image to compare to, or reduced-reference where there is some partial information from a reference image to compare to (e.g. a set of extracted features)\cite{ssim}. }
+The \gls{ssim} is a metric to measure similarity between images \cite{ssim}. It is a full-reference image quality assessment, meaning it compares a reference image to a low-quality image.\footnote{Other types of image quality assessments are either \textit{no-reference} where there is no reference image to compare to, or \textit{reduced-reference} where there is some partial information from a reference image to compare to (e.g. a set of extracted features)\cite{ssim}. }
 
-
-The \gls{ssim} takes into account three metrics of the image: luminance, contrast, and structure. They are combined, giving the definition of \gls{ssim} as \cite{ssim}
+The \gls{ssim} takes into account three metrics of the image, namely: luminance, contrast, and structure. They are combined, giving the definition of \gls{ssim} as \cite{ssim}
 \begin{equation}
     \label{eq:ssim}
     \text{SSIM}\left(x,y\right) = \frac{\left( 2\mu_x \mu_y + C_1 \right) \left( 2\sigma_{xy} + C_2 \right)}{\left( \mu_x^2 + \mu_y^2 + C_1 \right) \left( \sigma_x^2 + \sigma_y^2 + C_2 \right)},
 \end{equation}
-where $x$ and $y$ are the two images to compare, $\mu$ is the mean pixel value of an image, $\sigma$ is the standard deviation of the pixel values of an image, and $C_{\{1,2\}}$ are regularization constants. It is symmetric (i.e. $\text{SSIM}\left(x,y\right) = \text{SSIM}\left(y,x\right)$), bounded (i.e. $\text{SSIM}\left(x,y\right) \leq 1$), and has a unique maximum (i.e. $\text{SSIM}\left(x,y\right) = 1$ if and only if $x = y$) \cite{ssim}. A more robust analysis of the mathematical properties of the \gls{ssim} was performed in \cite{6059504}.
+where $x$ and $y$ are the two images to compare, $\mu_{\{x,y\}}$ is the mean pixel value of an image, $\sigma_{\{x,y\}}$ is the standard deviation of the pixel values of an image, $\sigma_{xy}$ is the covariance of two images, and $C_{\{1,2\}}$ are regularization constants. It is symmetric (i.e. $\text{SSIM}\left(x,y\right) = \text{SSIM}\left(y,x\right)$), bounded (i.e. $\text{SSIM}\left(x,y\right) \leq 1$), and has a unique maximum (i.e. $\text{SSIM}\left(x,y\right) = 1$ if and only if $x = y$) \cite{ssim}. A more robust analysis of the mathematical properties of the \gls{ssim} was performed in \cite{6059504}.
 
 \missingfigure{TODO: Maybe add figure showing difference in MSE and SSIM performance, similar to fig. 2 in \cite{ssim}. }
 
@@ -71,14 +70,18 @@ where $x$ and $y$ are the two images to compare, $\mu$ is the mean pixel value o
 A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is from the ID16B beamline at the European Synchrotron Radiation Facility (ESRF)\todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
 \todo[inline]{Motivation for the chosen samples}
 \todo[inline]{Include small images of all datsets}
-\subsection{TomoBank}
+
+\subsection{Borosilicate Glass Spheres and TomoBank}
+\label{sec:method:datasets:tomo00058}
 TomoBank is an X-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
 
 The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset is given in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate artefacting due to undersampling is given in \cref{tab:projectionsubsampling}. The subsampling is done with evenly angular spacing. 
 
+This dataset will be refered to as the borosilicate glass spheres dataset. 
+
 \begin{table}[htbp]
     \centering
-    \caption[[Technical information of the tomo\_00058 dataset]{Technical information of the tomo\_00058 dataset. The dataset was scanned at the Advanced Photon Source (APS) at Argonne National Laboratory, USA. Further details can be found at \cite{datasetglassspheres}. }
+    \caption[[Technical information of the borosilicate glass spheres dataset]{Technical information of the borosilicate glass spheres dataset. The dataset was scanned at the Advanced Photon Source (APS) at Argonne National Laboratory, USA. Further details can be found at \cite{datasetglassspheres}. }
     \label{tab:tomo00058}
     \begin{tabular}{ll}
     \hline
@@ -96,7 +99,7 @@ The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased 
 
 \begin{table}[htbp]
     \centering
-    \caption[Projection subsampling overview tomo\_00058]{Overview of the number of projections for different subsampling factors of tomo\_00058. }
+    \caption[Projection subsampling overview for reconstructions of the borosilicate glass spheres dataset.]{Overview of the number of projections for different subsampling factors of the borosilicate glass spheres dataset. }
     \label{tab:projectionsubsampling}
     \begin{tabular}{ll}
     \hline
@@ -111,33 +114,12 @@ The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased 
     \end{tabular}
 \end{table}
 
-Two datasets of shale from TomoBank were also used, namely tomo\_00001 and tomo\_00002 \cite{datasetshale}. These datasets are two shale samples collected from the North Sea and from the Upper Barnett Formation in Texas. They are both imaged at the Advanced Photon Source (APS) of Argonne National Laboratory, USA. These datasets are only used to train a network for denoising of another shale sample, namely the Pierre shale sample. 
+Two datasets of shale from TomoBank were also used, namely tomo\_00001 and tomo\_00002 \cite{datasetshale}. These datasets are two shale samples collected from the North Sea and from the Upper Barnett Formation in Texas. They are both imaged at the Advanced Photon Source (APS) of Argonne National Laboratory, USA. These datasets are only used to train a network for denoising of another shale sample, namely the Pierre shale sample (see \cref{sec:method:datasets:shale}). 
 
 All datasets used from TomoBank were reconstructed using \gls{fbp} from the TomoPy library \cite{tomopy}. 
 
-\subsection{Pierre Shale}
-\todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018, not in-house}
-\todo[inline]{Get a better name for this dataset and subsection}
-\todo[inline]{Get the technical information of this dataset}
-\begin{table}[htbp]
-    \centering
-    \caption[[Technical information of the Pierre shale dataset]{Technical information of the Pierre shale dataset. The dataset was scanned at the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). }
-    \label{tab:pierreshale}
-    \begin{tabular}{ll}
-    \hline
-    Beamline & ID16B ESRF\\
-    Sample rotation ranges &  \\
-    Number of projections &  \\
-    Energy & \\
-    Exposure time & \\
-    Pixel size & \\
-    Detector dimension x &  \\
-    Detector dimension y &  \\
-    \hline
-    \end{tabular}
-\end{table}
-
 \subsection{Soda Lime Glass Spheres}
+\label{sec:method:datasets:inhouse}
 An in-house captured dataset imaging a sample of soda lime glass spheres in a capillary tube containing a potassium iodide (KI) doped water solution has been used. The soda lime glass spheres have diameters ranging \SIrange{1250}{1650}{\micro \meter}, the capillary tube has an inner diameter of \SI{2.5}{\milli \meter} and an outer diameter of \SI{4.0}{\milli \meter}, and the potassium iodide doped water has a concentration of \SI{0.5}{\molar} KI. The sample was imaged twice: one slow \acrlong{hq} imaging, and one fast \acrlong{lq} imaging. The technical information of the two imagings of the in-house dataset is given in \cref{tab:inhousehq,tab:inhouselq}.
 
 \begin{table}[htbp]
@@ -198,17 +180,39 @@ A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ih
       \includegraphics[width=\linewidth]{figures/kimrobertPICCS.png}
       \caption{\gls{ihlq} \gls{piccs}. }
     \end{subfigure}
-    \caption[Different reconstructions of the IHHQ and IHLQ soda lime glass spheres dataset]{Different reconstructions of the \gls{ihhq} and the \gls{ihlq} soda lime glass spheres datasets. The three images are of the same arbitrary slice from the datasets.  }
+    \caption[Different reconstructions of the IHHQ and IHLQ soda lime glass spheres dataset]{Different reconstructions of the \gls{ihhq} and \gls{ihlq} soda lime glass spheres datasets. The three images are of the same arbitrary slice from the datasets. }
     \label{fig:kimrobertdatasets}
 \end{figure}
 
+\subsection{Pierre Shale}
+\label{sec:method:datasets:shale}
+\todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018, not in-house}
+\todo[inline]{Get a better name for this dataset and subsection}
+\todo[inline]{Get the technical information of this dataset}
+\begin{table}[htbp]
+    \centering
+    \caption[[Technical information of the Pierre shale dataset]{Technical information of the Pierre shale dataset. The dataset was scanned at the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). }
+    \label{tab:pierreshale}
+    \begin{tabular}{ll}
+    \hline
+    Beamline & ID16B ESRF\\
+    Sample rotation ranges &  \\
+    Number of projections &  \\
+    Energy & \\
+    Exposure time & \\
+    Pixel size & \\
+    Detector dimension x &  \\
+    Detector dimension y &  \\
+    \hline
+    \end{tabular}
+\end{table}
 
 
 \section{Compiling a Dataset for Training}
 \label{sec:method:compilingdataset}
 In this section, an explanation of how to compile a set of images into a suitable dataset for training the TomoGAN network, or to denoise with an already trained network, will be presented. 
 
-The process of preparing a dataset for either training or inferrence (i.e. denoising using an already trained network) consists of a few steps. A flowchart visualizing this process is provided in \cref{fig:compilingdatasetflowchart}. The detailed steps are as follows:
+The process of preparing a dataset for either training or inference (i.e. denoising using an already trained network) consists of a few steps. A flowchart visualizing this process is provided in \cref{fig:compilingdatasetflowchart}. The detailed steps are as follows:
 
 \begin{enumerate}
     \item Begin with a full stack of reconstructed images. If the dataset is ment to be used to train the network, both a set of \gls{hq} reconstructions as well as a corresponding set (of the same dataset) of \gls{lq} reconstructions are needed. They must be sorted the same way so that image 0 of the \gls{hq} dataset corresponds to image 0 of the \gls{lq} dataset. If it is a datset that is to be denoised, only the \gls{lq} dataset is needed. 

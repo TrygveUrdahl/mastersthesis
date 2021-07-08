@@ -1,64 +1,14 @@
 \chapter{Results and Discussion}
 \label{sec:results}
-This chapter will present the results of denoising the different datasets, and discus the quality of the results. The effect of the pre-processing steps introduced in \cref{sec:method:compilingdataset}, how the changes in loss function by including a log-cosh term affect the denoising, and the importance of the depth parameter in TomoGAN will be presented and discussed. Furthermore, some of the limitations of this method will be explored and discussed. 
+This chapter will present the results of denoising the different datasets, and discus the quality of the results. The effect of the pre-processing steps introduced in \cref{sec:method:compilingdataset}, how the changes in loss function by including a log-cosh term affect the denoising, and the importance of the depth parameter in TomoGAN will be presented and discussed. Furthermore, some of the limitations of this method will be explored and discussed. \todo[]{Update description of contents of chapter. }
 
-\section{Effect of Pre-processing Images}
-Attempting to denoise tomo\_00058 without cropping the reconstructed images yielded poor results, as is given in \cref{fig:uncroppeddenoising}. The network does not seem to have managed to converge properly, and the results look to simply be bluring the images. The use of an \gls{mse} based loss function may be part of the cause of the blurring, as this loss has been shown to cause blurring in image processing related tasks such as this. 
+\section{Borosilicate Glass Spheres}
+\todo[inline]{Brief intro to this section. }
 
-When the images are all cropped, with no other changes being made, the network performs better. This is given in \cref{fig:croppeddenoising}. While there is artefacting from the denoising (especially when looking at shapes that differ from the common shapes in the dataset, such as non-circular shapes), when comparing the \gls{hq} and \gls{dn} images it is evident that a majority of the features have been preserved with the noise being drastically reduced. 
+\subsection{Denoising with Different Amounts of Noise}
+To explore the efficiency of the denoising method, the borosilicate glass spheres dataset was recreated with four different levels of projection undersampling. By using subsampling factors of $8$, $16$, $32$, and $48$ (see \cref{tab:projectionsubsampling}), four datasets with different levels of artefacting were simulated. They are given alongside the \gls{hq} reconstruction in \cref{fig:tomo00058missingwedgecomparison}. 
 
-Comparing the non-cropped denoising with a denoising only run with a few iterations, not reaching full convergence, as seen in \cref{fig:croppednoncroppedearly}, the results are similar indicating that the non-cropped denoising may have struggled to converge properly. 
-
-Note that the images in \cref{fig:uncroppeddenoising,fig:croppeddenoising} have different intensity scales because of the scaling step of the preprocessing (see \cref{sec:method:compilingdataset}). 
-
-This denoising was performed with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for 100000 iterations with a mini batch size of 16 (see \cref{sec:ml}). 
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/uncroppeddenoising.pdf}
-  \caption[Non-cropped image denoising]{Denoising of non-cropped dataset tomo\_00058. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
-  \label{fig:uncroppeddenoising}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/croppeddenoising.pdf}
-  \caption[Cropped image denoising]{Denoising of cropped dataset tomo\_00058. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
-  \label{fig:croppeddenoising}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/croppednoncroppedearly.pdf}
-  \caption[Non-cropped image denoising compared to non-converged cropped image denoising]{Non-cropped image denoising compared to non-converged cropped image denoising. The cropped denoising is after merely $500$ iterations of the same denoising as in \cref{fig:croppeddenoising}. The non-cropped denoising has been cropped after denoising for easier comparison. The two images are of different slices of the same dataset. }
-  \label{fig:croppednoncroppedearly}
-\end{figure}
-
-\section{Hyperparameter and Loss Function Changes}
-How the change in the loss function affected the denoising operation was explored for the dataset of the glass beads acquired from TomoBank (\cref{sec:method:datasets}). A log-cosh term (\cref{sec:ml:training:lossfunctions}) was added to the loss function, and the resulting denoised images obtained using different loss functions were compared. All other hyperparameters were kept constant, only the composition of the loss function was changed (i.e. adding log-cosh loss and reducing $\lambda_{\text{MSE}}$). The resulting two denoisings for an arbitrary slice is given in \cref{fig:losschangedenoisingcomparison}. 
-
-While there is little visual difference in the two denoisings, the denoising containing a log-cosh based loss achieves a slight improvement in the \gls{ssim} score compared to the one without ($0.789$ vs. $0.788$). There is also no measurable difference in the training time of the network when incorporating another loss function. Because of this minor improvement with no discernable drawback, the loss function containing a log-cosh component is chosen as the default loss function for denoising in this thesis. It is possible that a larger improvement may be achievable by further tuning the weights of the different loss functions, as this has not been thoroughly explored. 
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.9\textwidth]{figures/losschangedenoisingcomparison.pdf}
-  \caption[Effect on denoising of changing loss function]{Effect of denoising of changing loss function. Both denoisings are of tomo\_00058 with a subsampling factor of 32. The loss functions contain \gls{mse}, VGG, and adversarial loss components (and log-cosh for the rightmost column), and the network was trained with a depth of 1 and $100000$ iterations with a mini batch size of 16. Two \gls{roi}s have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. }
-  \label{fig:losschangedenoisingcomparison}
-\end{figure}
-
-
-
-\section{Different Amounts of Noise}
-To explore the efficiency of the denoising method, the tomo\_00058 dataset was recreated with four different levels of projection undersampling. By using subsampling factors of $8$, $16$, $32$, and $48$ (see \cref{tab:projectionsubsampling}), four datasets with different levels of artefacting were simulated. They are given alongside the \gls{hq} reconstruction in \cref{fig:tomo00058missingwedgecomparison}. 
-
-Once again the TomoGAN network was used with a loss function containing \gls{mse}, log-cosh, VGG, and adversarial components, a depth of 1 was used, and the network was trained for 100000 iterations with a mini batch size of 16. The resulting denoised images are given in \cref{fig:tomo00058missingwedgecomparisondenoised}\todo[]{Do I need scale bars on all these images, or is it enough that there is a scale bar on the 1st image of \cref{fig:tomo00058missingwedgecomparison}? }. 
-
-It is evident that a subsampling factor of 48, corresponding to merely 31 projections, leads to too much noise to recover any usable denoised image. This is further confirmed by looking at plots of the pixel values along two different lines on the denoised images and comparing them with the noisy and the \gls{hq} image, as can be seen in \cref{fig:differentnoiselineplot1,fig:differentnoiselineplot2}. For the other three datasets the denoising seems to result in images sufficiently similar to the \gls{hq} image, especially for subsampling factors $8$ and $16$. 
-
-\cref{tab:missingwedgessim} contains \gls{ssim} and \gls{mse} values for the noisy and denoised images shown in \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised}. We see here that for subsampling factors $8$, $16$, and $32$, the \gls{mse} is improved by denoising, however for subsampling factor $48$ it is drastically worsened. All denoisings achieve, to varying degrees, \gls{ssim} improvements. The fact that the poor denoising of the subsampling factor of $48$ achieves an improvement in \gls{ssim} from $0.193$ to $0.657$ indicates that \gls{ssim} is not a perfect image comparison metric for this use case. 
-
-It is worth noting that a subsampling factor of $32$ corresponds to $46$ projections, which is similar to the $64$ projections used in the noisiest simulated dataset in the original article by Liu \textit{et al.} \cite{liu2020tomogan}. The achieved \gls{ssim} score on a real dataset of $0.789$ in this thesis is similar to their results on a simulated phantom. 
-
+The TomoGAN network was trained with a loss function containing \gls{mse}, log-cosh, VGG, and adversarial components, a depth of 1 was used, and the network was trained for 100000 iterations with a mini batch size of 16. The resulting denoised images are given in \cref{fig:tomo00058missingwedgecomparisondenoised}
 
 \begin{figure}
   \begin{subfigure}[t]{\textwidth}
@@ -94,10 +44,9 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
     \includegraphics[width=\linewidth]{figures/ns48.png}
     \caption{Subsampling factor 48 (31 projections). }
   \end{subfigure}
-  \caption[Four different levels of projection undersampling]{Comparison of different levels of projection undersampling on the tomo\_00058 dataset by reconstructing the images with the \gls{fbp} algorithm. The same cross-section is displayed for different reconstructions made by varying the number of projections used.  }
+  \caption[Four different levels of projection undersampling]{Comparison of different levels of projection undersampling on the borosilicate glass spheres dataset by reconstructing the images with the \gls{fbp} algorithm. The same cross-section is displayed for different reconstructions made by varying the number of projections used.  }
   \label{fig:tomo00058missingwedgecomparison}
 \end{figure}
-
 
 \begin{figure}
   \begin{subfigure}[t]{.45\textwidth}
@@ -125,87 +74,126 @@ It is worth noting that a subsampling factor of $32$ corresponds to $46$ project
     \includegraphics[width=\linewidth]{figures/ns48it100000itd4mse035logcosh3.png}
     \caption{Subsampling factor 48 (31 projections). }
   \end{subfigure}
-  \caption[Denoising of four different levels of projection undersampling]{Comparison of denoising of different levels of projection undersampling on the tomo\_00058 dataset, where the corresponding noisy images are given in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
+  \caption[Denoising of four different levels of projection undersampling]{Comparison of denoising of different levels of projection undersampling on the borosilicate glass spheres dataset, where the corresponding noisy images are given in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:tomo00058missingwedgecomparisondenoised}
 \end{figure}
 
-
-\begin{table}[htbp]
-  \centering
-  \caption[SSIM for different levels of simulated projection undersampling and corresponding values after denoising]{Overview of \gls{ssim} for different levels of simulated projection undersampling on the tomo\_00058 dataset. The projection undersampling was simulated by subsampling the number of projections by a factor as given in the subsampling factor column, which results in a number of projections as given in \cref{tab:projectionsubsampling}. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
-  \label{tab:missingwedgessim}
-  \begin{tabular}{lllll}
-  \hline
-  \multirow{2}{*}{Subsampling Factor} & \multicolumn{2}{c}{\gls{ssim}} & \multicolumn{2}{c}{\gls{mse}}  \\
-  {} & Noisy & Denoised & Noisy & Denoised \\
-  \hhline{=====}
-  %\hline 
-  $1$  & $1.0$ & $-$ & $0.0$ & $-$ \\
-  $8$  & $0.492$ & $0.842$ & $148.3$ & $33.3$ \\
-  $16$ & $0.335$ & $0.816$ & $348.5$ & $74.9$ \\
-  $32$ & $0.233$ & $0.789$ & $704.4$ & $210.8$ \\
-  $48$ & $0.193$ & $0.657$ & $976.6$ & $2362.6$ \\
-  \hline
-  \end{tabular}
-\end{table}
+It is evident that a subsampling factor of 48, corresponding to merely 31 projections, leads to too much noise to recover any usable denoised image. This is further confirmed by looking at plots of the pixel values along two different lines on the denoised images and comparing them with the noisy and the \gls{hq} image, as can be seen in \cref{fig:differentnoiselineplot1,fig:differentnoiselineplot2}. For the other three datasets the denoising seems to result in images sufficiently similar to the \gls{hq} image, especially for subsampling factors $8$ and $16$. 
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot1.pdf}
-  \caption[Pixel value plot of denoising of different levels of projection undersampling on tomo\_00058]{The plots show pixel values for 150 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of projection undersampling. \gls{hq} corresponds to the \gls{hq} image, NS to the \gls{lq} image, and \gls{dn} to the denoised image. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
+  \caption[Pixel value plot of denoising of different levels of projection undersampling on the borosilicate glass spheres dataset]{The plots show pixel values for 150 pixels on a horizontal line on the borosilicate glass spheres dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of projection undersampling. \gls{hq} corresponds to the \gls{hq} image, NS to the \gls{lq} image, and \gls{dn} to the denoised image. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:differentnoiselineplot1}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/differentnoiselineplot2.pdf}
-  \caption[Pixel value plot of denoising of different levels of projection undersampling on tomo\_00058]{The plots show pixel values for 400 pixels on a horizontal line on the tomo\_00058 dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of projection undersampling. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
+  \caption[Pixel value plot of denoising of different levels of projection undersampling on the borosilicate glass spheres dataset]{The plots show pixel values for 400 pixels on a horizontal line on the borosilicate glass spheres dataset, as shown by the red line on the \gls{hq} image above, for denoising of four different levels of projection undersampling. Figure elements are as in \cref{fig:differentnoiselineplot1}. }
   \label{fig:differentnoiselineplot2}
 \end{figure}
 
-\section{Loss Function Evolution}
+\cref{tab:missingwedgessim} contains \gls{ssim} and \gls{mse} values for the noisy and denoised images shown in \cref{fig:tomo00058missingwedgecomparison,fig:tomo00058missingwedgecomparisondenoised}. We see here that for subsampling factors $8$, $16$, and $32$, the \gls{mse} is improved by denoising, however for subsampling factor $48$ it is drastically worsened. All denoisings achieve, to varying degrees, \gls{ssim} improvements. The fact that the poor denoising of the subsampling factor of $48$ achieves an improvement in \gls{ssim} from $0.193$ to $0.657$ indicates that \gls{ssim} is not able to sufficiently gauge the image quality in this case. 
+
+It is worth noting that a subsampling factor of $32$ corresponds to $46$ projections, which is similar to the $64$ projections used in the noisiest simulated dataset in the original article by Liu \textit{et al.} \cite{liu2020tomogan}. The achieved \gls{ssim} score on a real dataset of $0.789$ in this thesis is similar to their results on a simulated phantom. 
+
+\begin{table}[htbp]
+  \centering
+  \caption[SSIM for different levels of simulated projection undersampling and corresponding values after denoising]{Overview of \gls{ssim} for different levels of simulated projection undersampling on the borosilicate glass spheres dataset. The projection undersampling was simulated by subsampling the number of projections by a factor as given in the subsampling factor column. All denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
+  \label{tab:missingwedgessim}
+  \begin{tabular}{llllll}
+  \hline
+  \multirow{2}{*}{Subsampling factor} & \multirow{2}{*}{Projections} & \multicolumn{2}{c}{\gls{ssim}} & \multicolumn{2}{c}{\gls{mse}}  \\
+  {} & {} & Noisy & Denoised & Noisy & Denoised \\
+  \hhline{======}
+  %\hline 
+  $1$  & $1500$ & $1.0$ & $-$ & $0.0$ & $-$ \\
+  $8$  & $187$ & $0.492$ & $0.842$ & $148.3$ & $33.3$ \\
+  $16$ & $93$ & $0.335$ & $0.816$ & $348.5$ & $74.9$ \\
+  $32$ & $46$ & $0.233$ & $0.789$ & $704.4$ & $210.8$ \\
+  $48$ & $31$ & $0.193$ & $0.657$ & $976.6$ & $2362.6$ \\
+  \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Effect of Pre-processing Images}
+Attempting to denoise the borosilicate glass spheres dataset without cropping the reconstructed images yielded poor results, as is given in \cref{fig:uncroppeddenoising}. The network does not seem to have managed to converge properly, and the results look to simply be bluring the images. The use of an \gls{mse} based loss function may be part of the cause of the blurring, as this loss has been shown to cause blurring in image processing related tasks such as this. 
+
+When the images are all cropped, with no other changes being made, the network performs better. This is given in \cref{fig:croppeddenoising}. While there is artefacting from the denoising (especially when looking at shapes that differ from the common shapes in the dataset, such as non-circular shapes), when comparing the \gls{hq} and \gls{dn} images it is evident that a majority of the features have been preserved with the noise being drastically reduced. 
+
+Comparing the non-cropped denoising with a denoising only run with a few iterations, not reaching full convergence, as seen in \cref{fig:croppednoncroppedearly}, the results are similar indicating that the non-cropped denoising may have struggled to converge properly. 
+
+Note that the images in \cref{fig:uncroppeddenoising,fig:croppeddenoising} have different intensity scales because of the scaling step of the preprocessing (see \cref{sec:method:compilingdataset}). 
+
+This denoising was performed with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for 100000 iterations with a mini batch size of 16 (see \cref{sec:ml}). 
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/uncroppeddenoising.pdf}
+  \caption[Non-cropped image denoising]{Denoising of non-cropped borosilicate glass spheres dataset. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
+  \label{fig:uncroppeddenoising}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/croppeddenoising.pdf}
+  \caption[Cropped image denoising]{Denoising of cropped borosilicate glass spheres dataset. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
+  \label{fig:croppeddenoising}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/croppednoncroppedearly.pdf}
+  \caption[Non-cropped image denoising compared to non-converged cropped image denoising]{Non-cropped image denoising compared to non-converged cropped image denoising. The cropped denoising is after merely $500$ iterations of the same denoising as in \cref{fig:croppeddenoising}. The non-cropped denoising has been cropped after denoising for easier comparison. The two images are of different slices of the same dataset. }
+  \label{fig:croppednoncroppedearly}
+\end{figure}
+
+\subsection{Hyperparameter and Loss Function Changes}
+How the change in the loss function affected the denoising operation was explored for the dataset of the glass beads acquired from TomoBank (\cref{sec:method:datasets}). A log-cosh term (\cref{sec:ml:training:lossfunctions}) was added to the loss function, and the resulting denoised images obtained using different loss functions were compared. All other hyperparameters were kept constant, only the composition of the loss function was changed (i.e. adding log-cosh loss and reducing $\lambda_{\text{MSE}}$). The resulting two denoisings for an arbitrary slice is given in \cref{fig:losschangedenoisingcomparison}. 
+
+While there is little visual difference in the two denoisings, the denoising containing a log-cosh based loss achieves a slight improvement in the \gls{ssim} score compared to the one without ($0.789$ vs. $0.788$). There is also no measurable difference in the training time of the network when incorporating another loss function. Because of this minor improvement with no discernable drawback, the loss function containing a log-cosh component is chosen as the default loss function for denoising in this thesis. It is possible that a larger improvement may be achievable by further tuning the weights of the different loss functions, as this has not been thoroughly explored. 
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\textwidth]{figures/losschangedenoisingcomparison.pdf}
+  \caption[Effect on denoising of changing loss function]{Effect on denoising of changing loss function. Both denoisings are of the borosilicate glass spheres dataset with a subsampling factor of 32. Two \gls{roi}s have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. }
+  \label{fig:losschangedenoisingcomparison}
+\end{figure}
+
+\subsection{Loss Function Evolution}
 To try and understand how the TomoGAN network is performing during training, the evolution of the loss function and its components was plotted. This is given in \cref{fig:losstomo00058noadv}. We see that the main reduction in the loss of the network happens during early stages of training, especially the first few iterations. In the first $500$ iterations the loss changes from $\approx 7000$ to $\approx 100$, however a denoising after $500$ iterations does not perform well (as is given in \cref{fig:croppednoncroppedearly}a). At $100000$ iterations, the loss is $\approx 70$. In the early iterations the denoising solves for low spatial-frequency features which result in large decreases in the loss function. In later iterations high frequency information is captured, which has a smaller impact on the loss as these are finer details. 
 
-If denoising performance could be gauged based solely on \cref{fig:losstomo00058noadv}, the denoised image after $20000$ iterations should be very similar to after $100000$ iterations. Looking at \cref{fig:iterationdenoisingcomparison} it is evident that this is not correct. The denoising after $20000$ iterations achieves an \gls{ssim} of $0.778$ compared to $0.789$ after $100000$ iterations. After $20000$ iterations, the spheres in tomo\_00058 are less sharp and more artefacts have been introduced. How the \gls{ssim} and \gls{mse} of an arbitrary slice of tomo\_00058 evolve through training is given in \cref{fig:ssimmseevolution}.
+If denoising performance could be gauged based solely on \cref{fig:losstomo00058noadv}, the denoised image after $20000$ iterations should be very similar to after $100000$ iterations. Looking at \cref{fig:iterationdenoisingcomparison} it is evident that this is not correct. The denoising after $20000$ iterations achieves an \gls{ssim} of $0.778$ compared to $0.789$ after $100000$ iterations. After $20000$ iterations, the spheres in the borosilicate glass spheres dataset are less sharp and more artefacts have been introduced. This is consistent with high frequency information being captured at later iterations. How the \gls{ssim} and \gls{mse} of an arbitrary slice of the dataset evolve through training is given in \cref{fig:ssimmseevolution}.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/losstomo00058ns32itd4mse035logcosh3depth1.pdf}
-  \caption[Loss function evolution during training]{Plot showing how the loss function evolves during $100000$ iterations of training on the tomo\_00058 dataset with a subsampling factor of 32. The adversarial loss has been omitted from the plot. The inset axis shows the final $20000$ iterations. Note that the main axis is logarithmic, with the inset axis being linear. The unit of the loss is arbitrary. The running mean is the mean of the previous $50$ values. }
+  \caption[Loss function evolution during training]{Plot showing how the loss function evolves during $100000$ iterations of training on the borosilicate glass spheres dataset with a subsampling factor of 32. The adversarial loss has been omitted from the plot. The inset axis shows the final $20000$ iterations. Note that the main axis is logarithmic, with the inset axis being linear. The unit of the loss is arbitrary. The running mean is the mean of the previous $50$ values. }
   \label{fig:losstomo00058noadv}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/iterationdenoisingcomparison.pdf}
-  \caption[Effect on denoising of number of iterations]{Effect on denoising of number of iterations. Both denoisings are of tomo\_00058 with a subsampling factor of 32. The loss functions contain \gls{mse}, log-cosh, VGG, and adversarial loss components, and the network was trained with a depth of 1 and a mini batch size of 16. Two \gls{roi}s have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. The scale bar for \textbf{(a)} applies to \textbf{(b)} and \textbf{(c)}, the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}, and the scale bar for \textbf{(g)} applies to \textbf{(h)} and \textbf{(i)}. }
+  \caption[Effect on denoising of number of iterations]{Effect on denoising of number of iterations. Both denoisings are of the borosilicate glass spheres dataset with a subsampling factor of 32. Two \gls{roi}s have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. The scale bar for \textbf{(a)} applies to \textbf{(b)} and \textbf{(c)}, the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}, and the scale bar for \textbf{(g)} applies to \textbf{(h)} and \textbf{(i)}. }
   \label{fig:iterationdenoisingcomparison}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/ssimns32logcosh.pdf}
-  \caption[SSIM and MSE evolution during training]{Plot showing how the \gls{ssim} and \gls{mse} of an arbitrary slice evolve during $100000$ iterations of training on the tomo\_00058 dataset with a subsampling factor of 32. The network was trained with a depth of 1 and a mini batch size of 16. }
+  \caption[SSIM and MSE evolution during training]{Plot showing how the \gls{ssim} and \gls{mse} of an arbitrary slice evolve during $100000$ iterations of training on the borosilicate glass spheres dataset with a subsampling factor of 32. }
   \label{fig:ssimmseevolution}
 \end{figure}
 
+\section{Soda Lime Glass Spheres}
+The in-house captured dataset \gls{ihlq} (see \cref{sec:method:datasets:inhouse}) has been denoised using TomoGAN. The network has been trained to try and map the \gls{ihlq} dataset to the \gls{ihhq} dataset. As a comparison, two different reconstruction methods for the \gls{ihlq} dataset have been included: the \gls{fdk} direct reconstruction method and the \gls{piccs} iterative reconstruction method. 
 
-\section{TomoGAN Compared to PICCS}
-\todo[]{Change section name?}
-The in-house captured dataset \gls{ihlq} has been denoised using TomoGAN. The network has been trained to try and map the \gls{ihlq} dataset to the \gls{ihhq} dataset. As a comparison, two different reconstruction methods for the \gls{ihlq} dataset have been included: the \gls{fdk} direct reconstruction method and the \gls{piccs} iterative reconstruction method. 
-
-For this dataset, the 3D stability of the denoising method has been explored. 
-
-
-\todo[inline]{Maybe make 3D model plot of this dataset. }
-\cref{fig:bigfigure,fig:kimrobertline,fig:kimroberthist}. 
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.8\textwidth]{figures/bigfigure.pdf}
-  \caption[Different reconstructions and denoisings of the IHLQ and IHHQ datasets]{Different reconstructions and denoisings of the \gls{ihhq} and \gls{ihlq} datasets. The top three images are full views of the \gls{ihhq} dataset. The red horizontal line in the top left figure corresponds to the sagittal view in the top middle figure, and the red vertical line corresponds to the coronal view in the top right figure. Four \glspl{roi} have been marked in the top figures and have been zoomed in for the different reconstructions and denoisings. All zoomed in figures have the same scale bar. }
-  \label{fig:bigfigure}
-\end{figure}
+\subsection{TomoGAN Compared to PICCS}
+\todo[inline]{Clear boundaries, segmentation}
+\todo[inline]{Compare with PICCS}
+\cref{fig:kimrobertline,fig:kimroberthist}. 
 
 \begin{figure}[htbp]
   \centering
@@ -222,8 +210,25 @@ For this dataset, the 3D stability of the denoising method has been explored.
 \end{figure}
 
 
+\subsection{Effect of Depth Parameter on 3D Denoising}
+For this dataset, the 3D stability of the denoising method has been explored. Because the TomoGAN network uses 2D convolutions (see \cref{sec:method:tomogan}), it is primarily a 2D denoising method. The network allows for 3D information to be included in the denoising by adjusting a depth parameter, which looks at adjacent slices and performs a $1\times1$ convolution across them, however by inspecting the structure of the network (see \cref{fig:tomoganstructure}) it is evident that this 3D information is only used at early stages of the denoising. Only the initial $1\times1$ convolutional layer, before the down sampling part of the network, looks at the depth. 
 
-\section{Attempted Shale Denoising}
+The result of the limited use of 3D information is that the network has a plane that is the primary focus of the denoising. By inspecting \cref{fig:bigfigure} it is evident that the denoising is done on the axial plane. For a denoising with a depth of 1, it is very clear that there is a lack of consistency between axial planes. Looking at the yellow \gls{roi} there is banding artefacts introduced between the axial layers. The same denoising with a depth of 7 still contains some of this banding artefacting, however the introduction of some 3D knowledge reduces the artefacting. When instead looking at the blue \gls{roi}, which is of the axial plane, there is no such banding artefacts. By visual inspection we see that the banding artefacting is reduced when the depth is increased. The specific depth that yields the best results is dependent on dataset characteristics, such as feature resolution \cite{liu2020tomogan}. 
+
+In the green \gls{roi} in \cref{fig:bigfigure} we see details that were indiscernible in the low-quality \gls{ihlq} \gls{fdk} reconstruction, and not properly visible in the \gls{ihlq} \gls{piccs} reconstruction, are captured by TomoGAN. These details are clearly visible even when only a depth of 1 is used, however they are highly prone to banding artefacts between layers, and increasing the depth helps on this. 
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.77\textwidth]{figures/bigfigure.pdf}
+  \caption[Different reconstructions and denoisings of the IHLQ and IHHQ datasets]{Different reconstructions and denoisings of the \gls{ihhq} and \gls{ihlq} datasets. The top three images are full views of the \gls{ihhq} dataset. The red horizontal line in the top left figure corresponds to the sagittal view in the top middle figure, and the red vertical line corresponds to the coronal view in the top right figure. Four \glspl{roi} have been marked in the top figures and have been zoomed in for the different reconstructions and denoisings. All zoomed in figures have the same scale bar. }
+  \label{fig:bigfigure}
+\end{figure}
+
+
+
+
+\section{Pierre Shale}
+\subsection{Denoising Without High-quality Dataset}
 \todo[inline]{Shows limitations of method: requires a high-quality similar dataset (i.e. some ground truth) to work properly. Any given trained network doesn't work for all other dataset. }
 \cref{fig:shale}
 
