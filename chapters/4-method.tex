@@ -63,11 +63,10 @@ The \gls{ssim} takes into account three metrics of the image, namely: luminance,
 \end{equation}
 where $x$ and $y$ are the two images to compare, $\mu_{\{x,y\}}$ is the mean pixel value of an image, $\sigma_{\{x,y\}}$ is the standard deviation of the pixel values of an image, $\sigma_{xy}$ is the covariance of two images, and $C_{\{1,2\}}$ are regularization constants. It is symmetric (i.e. $\text{SSIM}\left(x,y\right) = \text{SSIM}\left(y,x\right)$), bounded (i.e. $\text{SSIM}\left(x,y\right) \leq 1$), and has a unique maximum (i.e. $\text{SSIM}\left(x,y\right) = 1$ if and only if $x = y$) \cite{ssim}. A more robust analysis of the mathematical properties of the \gls{ssim} was performed in \cite{6059504}.
 
-\missingfigure{TODO: Maybe add figure showing difference in MSE and SSIM performance, similar to fig. 2 in \cite{ssim}. }
 
 \section{Datasets}
 \label{sec:method:datasets}
-A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is from the ID16B beamline at the European Synchrotron Radiation Facility (ESRF)\todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
+A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is from the ID16B beamline at the European Synchrotron Radiation Facility (ESRF) \todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
 \todo[inline]{Motivation for the chosen samples}
 \todo[inline]{Include small images of all datsets}
 
@@ -77,11 +76,11 @@ TomoBank is an X-ray tomography data bank providing experimental and simulated d
 
 The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset is given in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate artefacting due to undersampling is given in \cref{tab:projectionsubsampling}. The subsampling is done with evenly angular spacing. 
 
-This dataset will be refered to as the borosilicate glass spheres dataset. 
+This dataset will be refered to as the borosilicate glass spheres dataset. An arbitrary slice of this datset, with and without simulated undersampling artefacts, is provided in \cref{fig:tomo00058datasetexample}. 
 
 \begin{table}[htbp]
     \centering
-    \caption[[Technical information of the borosilicate glass spheres dataset]{Technical information of the borosilicate glass spheres dataset. The dataset was scanned at the Advanced Photon Source (APS) at Argonne National Laboratory, USA. Further details can be found at \cite{datasetglassspheres}. }
+    \caption[Technical information of the borosilicate glass spheres dataset]{Technical information of the borosilicate glass spheres dataset. The dataset was scanned at the Advanced Photon Source (APS) at Argonne National Laboratory, USA. Further details are available from \cite{datasetglassspheres}. }
     \label{tab:tomo00058}
     \begin{tabular}{ll}
     \hline
@@ -114,6 +113,22 @@ This dataset will be refered to as the borosilicate glass spheres dataset.
     \end{tabular}
 \end{table}
 
+\begin{figure}
+    \begin{subfigure}[t]{.45\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/gt32.png}
+      \caption{High-quality reconstruction (1500 projections)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.45\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/ns32.png}
+      \caption{Undersampled projections (46 projections)}
+    \end{subfigure}
+    \caption[Borosilicate glass spheres dataset]{Different reconstructions of the borosilicate glass spheres dataset. The two images are of the same arbitrary slice from the datasets. }
+    \label{fig:tomo00058datasetexample}
+\end{figure}
+
 Two datasets of shale from TomoBank were also used, namely tomo\_00001 and tomo\_00002 \cite{datasetshale}. These datasets are two shale samples collected from the North Sea and from the Upper Barnett Formation in Texas. They are both imaged at the Advanced Photon Source (APS) of Argonne National Laboratory, USA. These datasets are only used to train a network for denoising of another shale sample, namely the Pierre shale sample (see \cref{sec:method:datasets:shale}). 
 
 All datasets used from TomoBank were reconstructed using \gls{fbp} from the TomoPy library \cite{tomopy}. 
@@ -124,7 +139,7 @@ An in-house captured dataset imaging a sample of soda lime glass spheres in a ca
 
 \begin{table}[htbp]
     \centering
-    \caption[Technical information of the IHHQ dataset]{Technical information of the \acrlong{hq} imaging of the in-house dataset. }
+    \caption[Technical information of the IHHQ soda lime glass spheres dataset]{Technical information of the \acrlong{hq} imaging of the in-house dataset. }
     \label{tab:inhousehq}
     \begin{tabular}{ll}
     \hline
@@ -141,7 +156,7 @@ An in-house captured dataset imaging a sample of soda lime glass spheres in a ca
 
 \begin{table}[htbp]
     \centering
-    \caption[Technical information of the IHLQ dataset]{Technical information of the fast scan of the in-house dataset. }
+    \caption[Technical information of the IHLQ soda lime glass spheres dataset]{Technical information of the fast scan of the in-house dataset. }
     \label{tab:inhouselq}
     \begin{tabular}{ll}
     \hline
@@ -163,24 +178,24 @@ Because the used \gls{ct} instrument has a conical beam, the \gls{fdk} reconstru
 A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ihlq} \gls{piccs} datasets is provided in \cref{fig:kimrobertdatasets}.
 
 \begin{figure}
-    \begin{subfigure}[t]{.3\textwidth}
+    \begin{subfigure}[t]{.31\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertgt.png}
       \caption{\gls{ihhq}. }
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{.3\textwidth}
+    \begin{subfigure}[t]{.31\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertFDK.png}
       \caption{\gls{ihlq} \gls{fdk}.}
     \end{subfigure}
     \hfill  
-    \begin{subfigure}[t]{.3\textwidth}
+    \begin{subfigure}[t]{.31\textwidth}
       \centering
       \includegraphics[width=\linewidth]{figures/kimrobertPICCS.png}
       \caption{\gls{ihlq} \gls{piccs}. }
     \end{subfigure}
-    \caption[Different reconstructions of the IHHQ and IHLQ soda lime glass spheres dataset]{Different reconstructions of the \gls{ihhq} and \gls{ihlq} soda lime glass spheres datasets. The three images are of the same arbitrary slice from the datasets. }
+    \caption[IHHQ and IHLQ soda lime glass spheres dataset]{Different reconstructions of the \gls{ihhq} and \gls{ihlq} soda lime glass spheres datasets. The three images are of the same arbitrary slice from the datasets. }
     \label{fig:kimrobertdatasets}
 \end{figure}
 
@@ -191,11 +206,11 @@ A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ih
 \todo[inline]{Get the technical information of this dataset}
 \begin{table}[htbp]
     \centering
-    \caption[[Technical information of the Pierre shale dataset]{Technical information of the Pierre shale dataset. The dataset was scanned at the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). }
+    \caption[Technical information of the Pierre shale dataset]{Technical information of the Pierre shale dataset. The dataset was scanned at the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). }
     \label{tab:pierreshale}
     \begin{tabular}{ll}
     \hline
-    Beamline & ID16B ESRF\\
+    Beamline & ESRF ID16B \\
     Sample rotation ranges &  \\
     Number of projections &  \\
     Energy & \\
@@ -206,6 +221,13 @@ A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ih
     \hline
     \end{tabular}
 \end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.45\textwidth]{figures/shale/shale_ns/0.png}
+    \caption[Pierre shale dataset]{View of the Pierre shale dataset. No high-quality reconstruction is available. }
+    \label{fig:shaledataset}
+  \end{figure}
 
 
 \section{Compiling a Dataset for Training}
@@ -236,6 +258,6 @@ The process of preparing a dataset for either training or inference (i.e. denois
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.95\textwidth]{figures/compilingdatasetflowchart.pdf}
-    \caption[Dataset creation flowchart]{Flowchart showing the process of compiling a dataset for training the TomoGAN denoising network. See \cref{sec:method:compilingdataset} for a thorough explanation. }
+    \caption[Dataset creation flowchart for TomoGAN]{Flowchart showing the process of compiling a dataset for training the TomoGAN denoising network. See \cref{sec:method:compilingdataset} for a thorough explanation. }
     \label{fig:compilingdatasetflowchart}
 \end{figure}

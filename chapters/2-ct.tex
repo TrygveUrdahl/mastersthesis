@@ -56,7 +56,7 @@ Electronic noise is related to the electronics of the X-ray detector, and it is 
 \end{equation}
 which corresponds to a normal distribution with mean signal value of $0$ and standard deviation $\sigma$.
 
-If an insufficient number of projections of the attenuation coefficient are available, it is known as a \textit{missing wedge problem} or an \textit{undersampling problem}. Missing wedge measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to artefacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). An illustration of undersampling and missing wedge in Fourier space is provided in \cref{fig:undersampling}. Several different reconstruction methods removing these artefacts have been attempted, also including \gls{ml} based approaches \cite{liu2020tomogan,GANrec}. Missing wedge artefacts will be refered to as noise in this thesis\todo[]{Not actually noise, change?}. 
+If an insufficient number of projections of the attenuation coefficient are available, it is known as a \textit{missing wedge problem} or an \textit{undersampling problem}. Missing wedge measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to artefacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). An illustration of undersampling and missing wedge in Fourier space is provided in \cref{fig:undersampling}. Several different reconstruction methods removing these artefacts have been attempted, also including \gls{ml} based approaches \cite{liu2020tomogan,GANrec}. 
 
 \begin{figure}[htbp]  
     \centering
@@ -65,18 +65,21 @@ If an insufficient number of projections of the attenuation coefficient are avai
     \label{fig:undersampling}
 \end{figure}
 
-A comparison of quantum noise and undersampling artefacting on a dataset imaging borosilicate glass beads is given in \cref{fig:noisecomparison}. More details on the dataset are provided in \cref{sec:method:datasets}. 
+A comparison of quantum noise and undersampling artefacting on a dataset imaging borosilicate glass beads is given in \cref{fig:noisecomparison}. More details on the dataset are provided in \cref{sec:method:datasets:tomo00058}. 
 
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.9\textwidth]{figures/noisecomparison.pdf}
-    \caption[Reconstruction noise and artefacting comparison]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and an undersampled reconstruction. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the undersampled reconstruction is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction (i.e. uniformly subsampled projections). The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
+    \caption[Illustration of reconstruction noise and artefacting]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and an undersampled reconstruction. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the undersampled reconstruction is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction (i.e. uniformly subsampled projections). The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
     \label{fig:noisecomparison}
 \end{figure}
 
 \section{Imaging Method}
+\label{sec:ct:imagingmethod}
+In this section, the process of collecting x-ray \gls{ct} images will be presented briefly.
 
 \subsection{Imaging Setup}
+\label{sec:ct:imagingmethod:setup}
 There are different types of \gls{ct} imaging systems. In \cref{fig:ctsetup}, a simple schematic of a \textit{micro-\gls{ct}} system is provided, where the object itself is the part of the system that is rotated. Other types of \gls{ct} systems may instead rotate the x-ray source and/or detector around the object \cite[126-129]{KakSlaney98}. 
 \begin{figure}[htbp]  
     \centering
@@ -87,7 +90,10 @@ There are different types of \gls{ct} imaging systems. In \cref{fig:ctsetup}, a 
 
 There are typically three different detector types used. The detector output may be proportional to the total number of photons incident on it, it may be proportional to the total photon energy, or it may be dependant on energy deposition per unit mass. These three different measurement types typically correspond to counting-type detectors, scintillation-type detectors, and ionization detectors, respectively \cite[118]{KakSlaney98}. 
 
+The projections of a slice of the object correspond to one line on the detector for several angles of rotation. By collecting this projection along the same line on the detector while rotating the object, a \textit{sinogram} of a slice of the object can be formed. 
+
 \subsection{Sinograms}
+\label{sec:ct:imagingmethod:sinograms}
 The captured projections form a \textit{sinogram}. The sinogram of an image consists of several projections corresponding to the Radon transform of the image (see \cref{sec:ct:reconstruction}) from different angles, where each projection is one line in the sinogram. An example is provided in \cref{fig:sinogramshepplogan}. 
 \begin{figure}[htbp]  
     \centering
