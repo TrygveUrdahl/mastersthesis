@@ -5,7 +5,7 @@ While this thesis is primarily focused on noise reduction using \glsfirst{gan}s,
 
 \section{X-ray Attenuation in a Sample}
 \label{sec:ct:theoreticalfoundation}
-X-ray \gls{ct} imaging is based on interaction between X-rays and matter. This interaction will attenuate X-rays that propagate through a sample according to the Beer-Lambert law, which is given as \cite{doi:10.1063/1.4950807} \todo[]{Mention photon scattering}
+X-ray \gls{ct} imaging is based on interaction between X-rays and matter. This interaction will attenuate X-rays that propagate through a sample according to the Beer-Lambert law, which is given as \cite{doi:10.1063/1.4950807} \footnote{Photons will not only attenuate, but also scatter as they propagate through the object. This effect is generally seen as a source of noise in \gls{ct} imaging, and the effect of the x-ray scattering is often removed through modifying the setup or using correction algorithms \cite{10.1118/1.1711475}.}
 \begin{equation}
     \label{eq:beerlambert}
     I = I_0 \rm{e}^{-\int_{l_0}^{l}\mu\left(x,y,E\right)dl},
@@ -65,12 +65,12 @@ If an insufficient number of projections of the attenuation coefficient are avai
     \label{fig:undersampling}
 \end{figure}
 
-A comparison of quantum noise and undersampling artefacting on a dataset imaging borosilicate glass beads is given in \cref{fig:noisecomparison}. More details on the dataset are provided in \cref{sec:method:datasets:tomo00058}. 
+A comparison of quantum noise and undersampling artifacting on a dataset imaging borosilicate glass beads is given in \cref{fig:noisecomparison}. More details on the dataset are provided in \cref{sec:method:datasets:tomo00058}. 
 
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.9\textwidth]{figures/noisecomparison.pdf}
-    \caption[Illustration of reconstruction noise and artefacting]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and an undersampled reconstruction. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the undersampled reconstruction is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction (i.e. uniformly subsampled projections). The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
+    \caption[Illustration of reconstruction noise and artifacting]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and an undersampled reconstruction. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the undersampled reconstruction is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction (i.e. uniformly subsampled projections). The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
     \label{fig:noisecomparison}
 \end{figure}
 
@@ -88,7 +88,7 @@ There are different types of \gls{ct} imaging systems. In \cref{fig:ctsetup}, a 
     \label{fig:ctsetup}
 \end{figure}
 
-There are typically three different detector types used. The detector output may be proportional to the total number of photons incident on it, it may be proportional to the total photon energy, or it may be dependant on energy deposition per unit mass. These three different measurement types typically correspond to counting-type detectors, scintillation-type detectors, and ionization detectors, respectively \cite[118]{KakSlaney98}. 
+There are typically three different detector types used. The detector output may be proportional to the total number of photons incident on it, it may be proportional to the total photon energy, or it may be dependent on energy deposition per unit mass. These three different measurement types typically correspond to counting-type detectors, scintillation-type detectors, and ionization detectors, respectively \cite[118]{KakSlaney98}. 
 
 The projections of a slice of the object correspond to one line on the detector for several angles of rotation. By collecting this projection along the same line on the detector while rotating the object, a \textit{sinogram} of a slice of the object can be formed. 
 

@@ -5,12 +5,9 @@ X-ray \gls{ct} allows for non-destructive imaging of internal structures of mate
 In recent years, the use of \gls{ml} has increased drastically. With an ever-increasing amount of data available, \gls{ml} opens up opportunities of getting more from this data than what used to be possible. The field of \gls{ml} is sufficiently young that it is still rapidly expanding, and new techniques are discovered regularly \cite{Jordan255}. Among these recent discoveries is the \gls{gan}, first introduced in \citeyear{goodfellow2014gan} \cite{goodfellow2014gan}. This class of neural networks has been used to synthesize images from specific categories (e.g. "image of bird", or "image of sunflower") \cite{Bao_2017_ICCV}, perform photo-realistic image super-resolution \cite{Ledig_2017_CVPR}, and much more. In recent years it has also been used to reconstruct and denoise \gls{ct} images \cite{GANrec,liu2020tomogan}. 
 
 \section{Motivation}
-\todo[inline]{Reduce radiation doses}
-\todo[inline]{Improve image quality}
-\todo[inline]{Perhaps speed up reconstruction process}
-\todo[inline]{Enable time-resolved CT (4D CT)}
+The process of collecting high-quality \gls{ct} images takes a long time and may cause unnecessarily large radiation doses. Some objects may need to be imaged quickly (e.g. dynamic \gls{ct} where moving objects are studied), and high radiation doses have been linked to increased risks of later developing cancer \cite{doi:10.1056/NEJMra072149,PEARCE2012499}. Unfortunately, reducing the radiation dose also leads to increased noise in the final images. The possibility of reducing both the capture time and radiation dose for \gls{ct} imaging while keeping a sufficiently good image quality is therefore a topic of interest. 
 
-% Increasing the radiation dose has raised concerns about potential health risks \cite{doi:10.1056/NEJMra072149,PEARCE2012499}. 
+Furthermore, the possibility of quickly capturing several time frames of an object allows for time-resolved \gls{ct}, also known as dynamic \gls{ct}. Because the scans must be performed quickly to capture the time evolution of an object, they are highly prone to noise. Better denoising techniques may allow for improvements in dynamic \gls{ct}. 
 
 \section{Goal of Work}
 The goal of this thesis is to use \gls{gan} based image denoising to improve the image quality in \gls{ct}, in cases where the experimental datasets are noisy and/or undersampled. The TomoGAN \cite{liu2020tomogan} denoising neural network will be tested, and its limitations will be explored. An analysis of when this denoising technique is suited will be given. This thesis will focus on undersampling artefacts, and not quantum noise (see \cref{sec:ct:theory:noise}). 

@@ -11,7 +11,7 @@ The denoising neural network used in this thesis is called TomoGAN \cite{liu2020
     \item All convolutions have zero-padding to keep image dimensions unchanged during convolutions.
     \item The generator input is a stack of $d$ adjacent slices where eight $1\times1$ convolutions are applied. 
 \end{itemize}
-In the down sampling part of the generator, three sets of two $3\times3$ convolutional layers with ReLU activation functions extract feature maps. Between each set of convolutional layers there is a $2\times2$ max pooling layer, for a total down sampling of $8$ leading to a feature map of size $1/8$ of the original image in either dimension (e.g. images of dimensions $1024\times1024$ will result in a feature map of dimensions $128\times128$). The number of channels in a convolutional layer changes throughout the network begining with $8$ channels, and the feature map after the down sampling process has $128$ channels. 
+In the down sampling part of the generator, three sets of two $3\times3$ convolutional layers with ReLU activation functions extract feature maps. Between each set of convolutional layers there is a $2\times2$ max pooling layer, for a total down sampling of $8$ leading to a feature map of size $1/8$ of the original image in either dimension (e.g. images of dimensions $1024\times1024$ will result in a feature map of dimensions $128\times128$). The number of channels in a convolutional layer changes throughout the network beginning with $8$ channels, and the feature map after the down sampling process has $128$ channels. 
 
 The up sampling part of the generator is symmetric to the down sampling part, containing three sets of two $3\times3$ convolutional layers. The max pooling layers are replaced by bi-linear interpolation layers that instead of reducing the size of the feature map, increase it. Again, all the convolutional kernels have kernels of size $3\times3$ and use ReLU activation functions. At each of the three sets of convolutional layers, the feature maps from the corresponding set in the down sampling section are concatenated to the feature maps outputted from the previous set of convolutional layers.\footnote{These skip-connections, as they are often called, are what make this structure a U-net style network and not simply an encoder-decoder network \cite{unet}. } Finally, a $1\times1$ convolutional layer with a ReLU activation function followed by a $1\times1$ convolutional layer with a linear activation function is used to combine all the channels into a final output image. 
 
@@ -38,18 +38,15 @@ Based on articles citing the log-cosh loss function as a good candidate for imag
 \end{equation}
 The weights for the different loss functions were mostly unchanged, with only $\lambda_\text{MSE}$ being slightly reduced to account for the fact that $L_\text{Log-cosh}$ covers a similar role (as they have similar activations). 
 
+The TomoGAN network performs what is known as \textit{image-to-image translation}, meaning it translates one possible representation of an image into another \cite{pang2021imagetoimage,isola2018imagetoimage}.
+
 \section{Image Comparison Metrics}
 \label{sec:method:metrics}
 To quantify the performance of the denoising method, some metrics must be defined. While there are some standards to doing this, not all methods perform equally well. 
 
 \subsection{Mean Squared Error}
 \label{sec:method:metrics:mse}
-The most commonly used \textit{full-reference} image quality metric is the \glsfirst{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is easy to calculate and physically understand, a low (i.e. good) \gls{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \gls{psnr}, which is another very commonly used metric, does not correspond to visual similarity. The \gls{psnr} can be defined from the \gls{mse}, and is given as \cite{477498}
-\begin{equation}
-    \label{eq:psnr}
-    \text{PSNR} = 10 \cdot \log_{10} \left( \frac{\text{MAX}_Y}{MSE^2} \right),
-\end{equation}
-where $\text{MAX}_Y$ is the maximal pixel value possible in the image (e.g. for an 8-bit image it is $2^8-1=255$), and $MSE$ is the \gls{mse} of the image. The \gls{psnr} is not used in thesis.
+The most commonly used \textit{full-reference} image quality metric is the \glsfirst{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is easy to calculate and physically understand, a low (i.e. good) \gls{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \gls{psnr}, which is another very commonly used metric, does not correspond to visual similarity \cite{477498}. 
 
 \missingfigure{Figure showing how images with same MSE are qualitatively different}
 
@@ -66,17 +63,17 @@ where $x$ and $y$ are the two images to compare, $\mu_{\{x,y\}}$ is the mean pix
 
 \section{Datasets}
 \label{sec:method:datasets}
-A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is from the ID16B beamline at the European Synchrotron Radiation Facility (ESRF) \todo[]{write about ASM\_ID16B dataset}. This section will give a description of each used dataset. 
-\todo[inline]{Motivation for the chosen samples}
-\todo[inline]{Include small images of all datsets}
+A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is from the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). This section will give a description of each used dataset. 
+
+The chosen datasets have been selected to represent several different \gls{ct} imaging challenges and situations. The borosilicate glass spheres dataset was chosen as an ideal beamline dataset where there is access to a high-quality dataset to properly train TomoGAN. The soda lime glass spheres dataset was chosen to examine the feasibility of using TomoGAN for dynamic \gls{ct} datasets, and to compare TomoGAN to a reconstruction based denoising technique, namely \gls{piccs}. Finally, the Pierre shale dataset was chosen because shale samples are in general hard to study with \gls{ct}, as they are composed of several minerals with similar attenuation values, making segmentation and further analysis hard. Furthermore, the Pierre shale dataset does not have a corresponding high-quality dataset to train TomoGAN, instead requiring other datasets to be used to attempt denoising. 
 
 \subsection{Borosilicate Glass Spheres and TomoBank}
 \label{sec:method:datasets:tomo00058}
 TomoBank is an X-ray tomography data bank providing experimental and simulated datasets with the aim to foster collaboration among computational scientists, beamline scientists, and experimentalists \cite{TomoBank}. It provides several types of datasets imaging different samples as well as simulated phantoms. Some of these datasets have been used in this thesis.
 
-The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset is given in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate artefacting due to undersampling is given in \cref{tab:projectionsubsampling}. The subsampling is done with evenly angular spacing. 
+The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset is given in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate artifacting due to undersampling is given in \cref{tab:projectionsubsampling}. The subsampling is done with evenly angular spacing. 
 
-This dataset will be refered to as the borosilicate glass spheres dataset. An arbitrary slice of this datset, with and without simulated undersampling artefacts, is provided in \cref{fig:tomo00058datasetexample}. 
+This dataset will be referred to as the borosilicate glass spheres dataset. An arbitrary slice of this dataset, with and without simulated undersampling artefacts, is provided in \cref{fig:tomo00058datasetexample}. 
 
 \begin{table}[htbp]
     \centering
@@ -171,7 +168,7 @@ An in-house captured dataset imaging a sample of soda lime glass spheres in a ca
     \end{tabular}
 \end{table}
 
-For the sake of simplicity, the two datasets will be refered to as the \gls{ihhq} and the \gls{ihlq} datasets. 
+For the sake of simplicity, the two datasets will be referred to as the \gls{ihhq} and the \gls{ihlq} datasets. 
 
 Because the used \gls{ct} instrument has a conical beam, the \gls{fdk} reconstruction algorithm was used to reconstruct these datasets. A \gls{piccs} reconstruction of the \gls{ihlq} dataset is also included as an alternative denoising method for comparison. 
 
@@ -201,9 +198,8 @@ A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ih
 
 \subsection{Pierre Shale}
 \label{sec:method:datasets:shale}
-\todo[inline]{ASM\_ID16B\_phaseContrast\_Shale\_2018, not in-house}
-\todo[inline]{Get a better name for this dataset and subsection}
 \todo[inline]{Get the technical information of this dataset}
+
 \begin{table}[htbp]
     \centering
     \caption[Technical information of the Pierre shale dataset]{Technical information of the Pierre shale dataset. The dataset was scanned at the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). }
@@ -237,12 +233,12 @@ In this section, an explanation of how to compile a set of images into a suitabl
 The process of preparing a dataset for either training or inference (i.e. denoising using an already trained network) consists of a few steps. A flowchart visualizing this process is provided in \cref{fig:compilingdatasetflowchart}. The detailed steps are as follows:
 
 \begin{enumerate}
-    \item Begin with a full stack of reconstructed images. If the dataset is ment to be used to train the network, both a set of \gls{hq} reconstructions as well as a corresponding set (of the same dataset) of \gls{lq} reconstructions are needed. They must be sorted the same way so that image 0 of the \gls{hq} dataset corresponds to image 0 of the \gls{lq} dataset. If it is a datset that is to be denoised, only the \gls{lq} dataset is needed. 
+    \item Begin with a full stack of reconstructed images. If the dataset is meant to be used to train the network, both a set of \gls{hq} reconstructions as well as a corresponding set (of the same dataset) of \gls{lq} reconstructions are needed. They must be sorted the same way so that image 0 of the \gls{hq} dataset corresponds to image 0 of the \gls{lq} dataset. If it is a dataset that is to be denoised, only the \gls{lq} dataset is needed. 
     \item The images must then be cropped to remove unnecessary empty space and to help the network pick up on the important parts of the image. For a dataset that has not been properly cropped, the network may struggle to converge to a good solution, yielding poor results. This cropping step is done by visually inspecting the dataset and cropping an appropriate part of the images. If the dimensions of the images are very large, it may be too large to properly fit in memory during training or denoising. The images must then be resized to an appropriate smaller size. The dimensions must also be divisible by $8$ (see \cref{sec:method:tomogan}).
-    \item Once the images are cropped, they must be converted to the datatype uint8, as that is best suited for use in the network.\footnote{Using uint8 instead of e.g. float32 reduces the memory footprint drastically, and the hardware used to perform the caluclations needed to train a neural network is often optimized for this type of calculations using uint8. } This process consists of several steps. For each image in the dataset do the following:
+    \item Once the images are cropped, they must be converted to the datatype uint8, as that is best suited for use in the network.\footnote{Using uint8 instead of e.g. float32 reduces the memory footprint drastically, and the hardware used to perform the calculations needed to train a neural network is often optimized for this type of calculations using uint8. } This process consists of several steps. For each image in the dataset do the following:
     \begin{enumerate}
         \item First, find the minimum and maximum pixel values of an image. This can be the absolute minimum and maximum, but ideally it should be a lower and upper percentile of the pixel values to avoid single extreme pixel values causing a loss of dynamic range in the image, as the pixel values will be limited to 256 distinct values. 
-        \item Once the minimum and maximum values are determined, the image pixel values should be clipped to the previosly determined minimum and maximum values. This is necessary when the minimum and maximum values are percentiles to ensure all pixel values are within the new value range set by the percentiles.
+        \item Once the minimum and maximum values are determined, the image pixel values should be clipped to the previously determined minimum and maximum values. This is necessary when the minimum and maximum values are percentiles to ensure all pixel values are within the new value range set by the percentiles.
         \item After clipping the pixel values, all pixel values can be scaled linearly between 0 and 255 according to the formula 
         \begin{equation}
             \label{eq:scaleimages}
@@ -250,7 +246,7 @@ The process of preparing a dataset for either training or inference (i.e. denois
         \end{equation}
         where $\hat{x}$ is the updated scaled pixel value, $x$ is the old pixel value, and $I$ is the whole image.
     \end{enumerate}
-    \item Once all images are scaled and converted to uint8, they can be filled into an HDF5-file containing one dataset for the \gls{hq} images, and if the dataset is to be used to train the network, one datset for the \gls{lq} images. The dimensions of the datasets should be $(N,H,W)$, where $N$ is the number of images, and $(H,W)$ are the dimensions of the images. 
+    \item Once all images are scaled and converted to uint8, they can be filled into an HDF5-file containing one dataset for the \gls{hq} images, and if the dataset is to be used to train the network, one dataset for the \gls{lq} images. The dimensions of the datasets should be $(N,H,W)$, where $N$ is the number of images, and $(H,W)$ are the dimensions of the images. 
     \item When the dataset is to be used to train the network, both the \gls{hq} and the \gls{lq} datasets must be split into two datasets: one for training, and one for testing. About $15\%$ of the total dataset should be set aside for testing. If the depth parameter of TomoGAN is to be used, both the training and test datasets need to be sorted (i.e. adjacent slices are adjacent in the dataset). 
 \end{enumerate}
 
