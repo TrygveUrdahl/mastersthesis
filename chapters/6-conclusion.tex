@@ -1,10 +1,21 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
-\todo[inline]{Network performs well, however without depth it does not properly capture 3D information. It is just denoising separate 2D images then (which can be used for many other cases than \acrshort{ct} denoising). }
-\todo[inline]{Without proper pre-processing of the dataset the network does not manage to produce usable denoising. }
-\todo[inline]{No reason this network has to be limited to denoising, may be usable for image super resoluton and other tasks? }
+In this thesis, \gls{ct} images have been denoised using the TomoGAN denoising neural network. TomoGAN is able to achieve vast improvements in image quality for situations where a corresponding high-quality dataset is available to train the network on. 
+
+A change to the loss function used to train TomoGAN, namely including a log-cosh loss term, was proposed and tested. It yielded minor improvements to the achieved SSIM score for denoising. without introducing any discernible drawbacks. 
+
+The 3D denoising capabilities of TomoGAN have been explored. The use of the depth parameter of TomoGAN allows the denoising to utilize 3D spatial information when denoising, reducing the interaxial artifacting introduced by denoising single axial slices of a 3D object. Denoising of a dynamic \gls{ct} dataset imaging soda lime glass spheres achieves comparable image quality to \gls{piccs} based reconstruction. 
+
+The method is highly dependent on having access to good training data. For denoising where there is no available dataset to train the network, the method is unable to produce usable denoisings. This method is therefore not suited for general-purpose denoising of arbitrary datasets.
+
+Furthermore, the network has been shown to require the training data to be pre-processed to a suitable format in order to achieve usable results. 
+
 
 \section{Further Work}
-\todo[inline]{Experiment with changing the structure of the network (e.g. depth of network, or use of 3D convolutions). Currently there is an obvious favored dimension (axial per-slice) in the denoising. }
-\todo[inline]{TomoGAN with depth 1 can be used to denoise, and generally transform, other images than \acrshort{ct} images. Would be interesting to see other image processing tasks tackled.} 
-\todo[inline]{Image augmentation to increase size of training dataset (e.g. image rotation, vertical/horizontal shift, zoom?, flip, )}
+When 3D datasets are denoised, the TomoGAN denoising neural network is only able to capture 3D information through the use of the depth parameter. The transformation from noisy to noiseless images itself is a 2D transformation (through the use of 2D convolutions). Implementing the same network with 3D convolutions to truly be a 3D denoising method may yield vast improvements to the results. \Gls{ct} imaging is a 3D technique, and the denoising method should utilize that fact.
+
+Furthermore, altering the structure of the network has not been explored in this thesis. The field of \glspl{gan} is in rapid development, and altering the structure of the generator in TomoGAN to utilize new discoveries that may arise, may further improve results. 
+
+Image augmentation (e.g. rotation, zoom, flips) may be used to increase the size of the training dataset in situations where a limited training dataset is available, however this will still require access to a suitable training dataset for a given noisy dataset. Unfortunately, this is a limitation of this method. 
+
+There is no inherent feature of TomoGAN currently making it only usable for \gls{ct} images. When the depth parameter is unused, it is merely performing image-to-image translation. Some other denoising techniques use the Radon transform to include the reconstruction process itself in the denoising. Altering the TomoGAN method to utilize the full extent of the information available from \gls{ct} imaging (e.g. a sinogram-based loss) may further improve the method. 

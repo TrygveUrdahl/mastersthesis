@@ -48,8 +48,6 @@ To quantify the performance of the denoising method, some metrics must be define
 \label{sec:method:metrics:mse}
 The most commonly used \textit{full-reference} image quality metric is the \glsfirst{mse}, as defined (as a loss function) in \cref{eq:lossmse}. While it provides some sense of similarity and is easy to calculate and physically understand, a low (i.e. good) \gls{mse} does not necessarily correspond to a high degree of visual similarity and it is therefore not a good metric to compare visual similarities in images \cite{413502,477498}. Likewise, the \gls{psnr}, which is another very commonly used metric, does not correspond to visual similarity \cite{477498}. 
 
-\missingfigure{Figure showing how images with same MSE are qualitatively different}
-
 \subsection{Structural Similarity Index Measure}
 The \gls{ssim} is a metric to measure similarity between images \cite{ssim}. It is a full-reference image quality assessment, meaning it compares a reference image to a low-quality image.\footnote{Other types of image quality assessments are either \textit{no-reference} where there is no reference image to compare to, or \textit{reduced-reference} where there is some partial information from a reference image to compare to (e.g. a set of extracted features)\cite{ssim}. }
 
@@ -65,7 +63,7 @@ where $x$ and $y$ are the two images to compare, $\mu_{\{x,y\}}$ is the mean pix
 \label{sec:method:datasets}
 A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is from the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). This section will give a description of each used dataset. 
 
-The chosen datasets have been selected to represent several different \gls{ct} imaging challenges and situations. The borosilicate glass spheres dataset was chosen as an ideal beamline dataset where there is access to a high-quality dataset to properly train TomoGAN. The soda lime glass spheres dataset was chosen to examine the feasibility of using TomoGAN for dynamic \gls{ct} datasets, and to compare TomoGAN to a reconstruction based denoising technique, namely \gls{piccs}. Finally, the Pierre shale dataset was chosen because shale samples are in general hard to study with \gls{ct}, as they are composed of several minerals with similar attenuation values, making segmentation and further analysis hard. Furthermore, the Pierre shale dataset does not have a corresponding high-quality dataset to train TomoGAN, instead requiring other datasets to be used to attempt denoising. 
+The chosen datasets have been selected to represent several different \gls{ct} imaging challenges and situations. The borosilicate glass spheres dataset was chosen as an ideal beamline dataset where there is access to a high-quality dataset to properly train TomoGAN. The soda lime glass spheres dataset was chosen to examine the feasibility of using TomoGAN for dynamic \gls{ct} datasets, and to compare TomoGAN to a reconstruction based denoising technique, namely \gls{piccs}. Finally, the Pierre shale dataset was chosen because shale samples are in general hard to study with \gls{ct}, as they are composed of several minerals with similar attenuation values, making segmentation and further analysis hard. Furthermore, the Pierre shale dataset does not have a corresponding high-quality dataset to train TomoGAN, instead requiring other datasets to be used to train TomoGAN to attempt denoising. 
 
 \subsection{Borosilicate Glass Spheres and TomoBank}
 \label{sec:method:datasets:tomo00058}
@@ -199,6 +197,7 @@ A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ih
 \subsection{Pierre Shale}
 \label{sec:method:datasets:shale}
 \todo[inline]{Get the technical information of this dataset}
+This sample is a piece of Pierre shale, measured with phase-contrast \gls{ct} at the beamline ID16 at the European Synchrotron Radiation Facility (ESRF). 
 
 \begin{table}[htbp]
     \centering
@@ -206,7 +205,7 @@ A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ih
     \label{tab:pierreshale}
     \begin{tabular}{ll}
     \hline
-    Beamline & ESRF ID16B \\
+    Beamline & ESRF ID16 \\
     Sample rotation ranges &  \\
     Number of projections &  \\
     Energy & \\
