@@ -196,7 +196,7 @@ If denoising performance could be gauged based solely on \cref{fig:losstomo00058
 \section{Soda Lime Glass Spheres}
 The in-house captured dataset \gls{ihlq} of soda lime glass spheres (see \cref{sec:method:datasets:inhouse}) has been denoised using TomoGAN. The network has been trained to try and map the \gls{ihlq} dataset to the \gls{ihhq} dataset. As a comparison, two different reconstruction methods for the \gls{ihlq} dataset have been included: the \gls{fdk} direct reconstruction method and the \gls{piccs} iterative reconstruction method. 
 
-This section focuses on comparing the TomoGAN denoising to using \gls{piccs} for denoising during reconstruction specifically for dynamic \gls{ct} datasets, and also looks at how well 3D information is denoised. 
+This section focuses on comparing the TomoGAN denoising to using \gls{piccs} for denoising during reconstruction, specifically for dynamic \gls{ct} datasets, and also looks at how well 3D information is denoised. 
 
 \subsection{TomoGAN Compared to PICCS}
 To compare the TomoGAN denoising to the \gls{ihlq} \gls{piccs} reconstruction, the pixel values along a line on an arbitrary slice of the soda lime glass spheres dataset have been examined. A plot is provided in \cref{fig:kimrobertline}. We see here that the \gls{ihhq} and \gls{ihlq} \gls{piccs} based reconstructions, as well as the denoised \gls{ihlq} dataset, are similar. The \gls{ihlq} \gls{fdk} reconstruction is noisy, and it is hard to clearly discern boundaries. 
@@ -235,7 +235,7 @@ In the green \gls{roi} in \cref{fig:bigfigure}, we see details that were indisti
   \label{fig:bigfigure}
 \end{figure}
 
-
+% \clearpage
 \section{Pierre Shale}
 The Pierre shale dataset (see \cref{sec:method:datasets:shale}) does not have a corresponding high-quality dataset available. It was therefore denoised using TomoGAN trained on different datasets. 
 
@@ -244,7 +244,7 @@ This section looks at the performance of TomoGAN when a corresponding high-quali
 \subsection{Denoising Without High-quality Dataset}
 Because a high-quality imaging of the same dataset is unavailable, four different datasets were used to train TomoGAN to attempt to denoise the Pierre shale dataset. An overview of the datasets used to train for denoising is provided in \cref{tab:pierreshaledenoisingdetails}, and the corresponding denoisings for an arbitrary slice of the dataset are provided in \cref{fig:shale}. 
 
-Denoising A is performed with a network not trained on a shale dataset, and denoisings B-D are performed with a network trained on shale denoising. 
+Denoising A is performed with a network not trained on a shale dataset, and denoisings B-D are performed with a network trained on shale denoising, however for different samples than the Pierre shale sample. 
 
 \begin{table}[htbp]
   \centering
@@ -265,7 +265,7 @@ Denoising A is performed with a network not trained on a shale dataset, and deno
 \begin{figure}
   \begin{subfigure}[t]{\textwidth}
     \centering
-    \includegraphics[width=.45\textwidth]{figures/shale/shale_ns/0.png}
+    \includegraphics[width=.45\textwidth]{figures/shalens.png}
     \caption{Original image. }
   \end{subfigure}
 
@@ -311,4 +311,4 @@ From \cref{fig:shale} we see that none of the four different denoisings perform 
   \label{fig:shalehistogram}
 \end{figure}
 
-Based on these observations, it seems likely that denoising requires finding a similar training dataset. Based on visual inspection of \cref{fig:shale}, the denoising using the network trained on the borosilicate glass spheres dataset performs poorly, and the other three denoisings using shale datasets all achieve better results, though still not of sufficient quality for further analysis. If a training dataset more similar to the Pierre shale dataset were available, the denoising results may be improved significantly. Changing the pre-processing steps may also further improve the denoising results, as indicated by visual inspection of \cref{fig:shale:c,fig:shale:d}, where the latter causes less blurring even though both are trained on the same dataset with only a change in the pre-processing. The TomoGAN network has been reported to work for denoising shale datasets \cite{liu2020tomogan}. 
+Based on these observations, it seems likely that denoising requires finding a similar training dataset. Based on visual inspection of \cref{fig:shale}, the denoising using the network trained on the borosilicate glass spheres dataset performs poorly, and the other three denoisings using shale datasets all achieve better results, though still not of sufficient quality for further analysis. If a training dataset more similar to the Pierre shale dataset were available, the denoising results may be improved significantly. Changing the pre-processing steps may also further improve the denoising results, as indicated by visual inspection of \cref{fig:shale:c,fig:shale:d}, where the latter causes less blurring even though both are trained on the same dataset with only a change in the pre-processing. The TomoGAN network has been reported to work for denoising shale datasets by Liu \textit{et al.} \cite{liu2020tomogan}. 

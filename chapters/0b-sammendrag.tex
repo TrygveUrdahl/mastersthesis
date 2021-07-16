@@ -1,1 +1,10 @@
 \chapter*{Sammendrag}
+Computertomografi (CT) med røntgenstråler åpner opp for ikke-destruktiv bildetaking av interne strukturer til materialer. Prosessen for å ta CT-bilder består av å måle røntgenprojeksjoner av en prøve, for deretter å rekonstruere en 3D-model av prøven fra projeksjonene. Det å måle projeksjonene tar tid, og det brukes en strålingskilde. Dersom man reduserer tiden brukt på å måle projeksjonene og/eller reduserer strålingsdosen, fører det til en økning av støy i de rekonstruerte bildene.
+
+Et generativt adversarielt nettverk (GAN) har blitt trent for å transformere støyfylte CT-bilder til høykvalitets CT-bilder, som i praksis vil si at det fjerner støy. Støyreduksjonen med GAN gir en økning i et strukturelt likhetsmål (SSIM) fra $0.223$ til $0.789$, og reduserer den midlere kvadratiske feilen fra $704.4$ til $210.8$, for en projeksjonsundersamplet rekonstruksjon med $46$ projeksjoner uniformt undersamplet fra en høykvalitets rekonstruksjon med $1500$ projeksjoner. GAN-metoden har blitt testet med en rekke ulike grader av projeksjonsundersampling. 
+
+Et log-cosh-ledd har blitt lagt til i tapsfunksjonen brukt til å trene GANet. Det ga en forbedring i SSIM fra $0.778$ til $0.789$ for det forannevnte datasettet uten å introdusere noen nevneverdige ulemper. 
+
+Støyreduksjonen med GAN har blitt sammenlignet med en \textit{tidligere bilde begrenset komprimert sensing} (PICCS)-rekonstruering av et dynamisk-CT-datasett. GAN-støyreduksjonen oppnår lignende resultater som PICCS-rekonstruksjonen, og noen detaljer som ikke er observerbare i PICCS-rekonstruksjonen kan sees i GAN-støyreduksjonen. 
+
+Artefakter mellom planene oppstår når metoden støyreduserer 2D bilder av et 3D objekt langs et plan. Disse artefaktene kan reduseres ved å bruke en dybdeparameter under treningen av GANet som lar metoden bruke andre nærliggende bilder for å bruke 3D informasjon til støyreduseringen. 
