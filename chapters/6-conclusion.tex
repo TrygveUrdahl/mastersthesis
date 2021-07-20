@@ -1,8 +1,8 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
-In this thesis, \gls{ct} images have been denoised using the TomoGAN denoising neural network. TomoGAN is able to achieve vast improvements in image quality for situations where a corresponding high-quality dataset is available to train the network on. 
+In this thesis, \gls{ct} images have been denoised using the TomoGAN denoising neural network. TomoGAN is able to achieve vast improvements in image quality for cases where a corresponding high-quality dataset is available to train the network on. 
 
-A change to the loss function used to train TomoGAN, namely including a log-cosh loss term, was proposed and tested. It yielded minor improvements to the achieved SSIM score for denoising. without introducing any discernible drawbacks. 
+A change to the loss function used to train TomoGAN, namely including a log-cosh loss term, was proposed and tested. It yielded minor improvements to the achieved SSIM score for denoising without introducing any discernible drawbacks. 
 
 The 3D denoising capabilities of TomoGAN have been explored. The use of the depth parameter of TomoGAN allows the denoising to utilize 3D spatial information when denoising, reducing the interaxial artifacting introduced by denoising single axial slices of a 3D object. Denoising of a dynamic \gls{ct} dataset imaging soda lime glass spheres achieves comparable image quality to \gls{piccs} based reconstruction. 
 

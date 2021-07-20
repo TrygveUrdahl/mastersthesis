@@ -1,6 +1,6 @@
 \chapter{Introduction}
 \label{sec:introduction}
-X-ray \gls{ct} allows for non-destructive imaging of internal structures of materials in many disciplines including material science, medical imaging, and geological studies. The process involves recording x-ray projection images of the entire sample as it is rotated about a common axis and then these images are reconstructed computationally to provide a 3D image of the sample \cite{KakSlaney98}. Such experiments and reconstruction can be a lengthy process depending on the sample complexity. 
+X-ray \gls{ct} allows for non-destructive imaging of internal structures of materials in many disciplines including material science, medical imaging, and geological studies. The process involves recording x-ray projection images of an entire sample as it is rotated about a common axis, and then these images are reconstructed computationally to provide a 3D image of the sample \cite{KakSlaney98}. Such experiments and reconstruction can be a lengthy process depending on the sample complexity. 
 
 In recent years, the use of \gls{ml} has increased drastically. With an ever-increasing amount of data available, \gls{ml} opens up opportunities of getting more from this data than what used to be possible. The field of \gls{ml} is sufficiently young that it is still rapidly expanding, and new techniques are discovered regularly \cite{Jordan255}. Among these recent discoveries is the \gls{gan}, first introduced in \citeyear{goodfellow2014gan} \cite{goodfellow2014gan}. This class of neural networks has been used to synthesize images from specific categories (e.g. "image of bird", or "image of sunflower") \cite{Bao_2017_ICCV}, perform photo-realistic image super-resolution \cite{Ledig_2017_CVPR}, and much more. In recent years it has also been used to reconstruct and denoise \gls{ct} images \cite{GANrec,liu2020tomogan}. 
 
@@ -17,9 +17,11 @@ Based on articles citing a log-cosh based loss function for training neural netw
 The feasibility of using a \gls{gan} based denoising method for dynamic (i.e. time-resolved) \gls{ct} scans will also be explored. 
 
 \section{Thesis Structure}
-This thesis begins with \cref{sec:introduction} containing an introduction to the thesis, including its motivation and goal, and how the thesis is structured. It is then followed by two chapters of theory. \cref{sec:ct} will introduce the necessary theory to understand how \gls{ct} images are captured, what the primary causes of noise in them are, and how the reconstruction process works. Next, \cref{sec:ml} gives a basic introduction to \gls{ml}, and more precisely neural networks and the theory needed to understand how \gls{gan}s work. 
+This thesis begins with \cref{sec:introduction} containing an introduction to the thesis, including its motivation and goals, and how the thesis is structured. It is then followed by two chapters of theory. 
 
-\cref{sec:method} will present the structure of the specific \gls{gan} network used in this thesis, namely TomoGAN \cite{liu2020tomogan}. After that some image comparison metrics that will be used in the discussion are presented. The datasets that are used in this thesis will be presented in this chapter, and the method used for compiling a given dataset into a suitable format for the \gls{gan} to use is given. 
+\cref{sec:ct} will introduce the necessary theory to understand how \gls{ct} images are captured, what the primary causes of noise in them are, and how the reconstruction process works. Next, \cref{sec:ml} gives a basic introduction to \gls{ml}, and more precisely neural networks and the theory needed to understand how \gls{gan}s work. 
+
+\cref{sec:method} will present the structure of the specific \gls{gan} network used in this thesis, namely TomoGAN \cite{liu2020tomogan}. Following that, some image comparison metrics that will be used in the discussion are presented. The datasets that are used in this thesis will be presented in this chapter, and the method used for compiling a given dataset into a suitable format for the \gls{gan} to use is given. 
 
 In \cref{sec:results}, the results of the denoising will be presented and discussed using different visualization methods and image comparison metrics defined in \cref{sec:method:metrics}.
 

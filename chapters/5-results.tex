@@ -168,9 +168,9 @@ How the change in the loss function affected the denoising operation was explore
 While there is little visual difference in the two denoisings, the denoising containing a log-cosh based loss achieves a slight improvement in the \gls{ssim} score compared to the one without ($0.789$ vs. $0.788$). There is also no measurable difference in the training time of the network when incorporating another loss function. Because of this minor improvement with no discernible drawback, the loss function containing a log-cosh component is chosen as the default loss function for denoising in this thesis. It is possible that a larger improvement may be achievable by further tuning the weights of the different loss functions, as this has not been thoroughly explored. 
 
 \subsection{Loss Function Evolution}
-To try and understand how the TomoGAN network is performing during training, the evolution of the loss function and its components was plotted. This is given in \cref{fig:losstomo00058noadv}. We see that the main reduction in the loss of the network happens during early stages of training, especially the first few iterations. In the first $500$ iterations the loss changes from $\approx 7000$ to $\approx 100$, however a denoising after $500$ iterations does not perform well (as is given in \cref{fig:croppednoncroppedearly}a). At $100000$ iterations, the loss is $\approx 70$. In the early iterations the denoising solves for low spatial-frequency features which result in large decreases in the loss function. In later iterations high frequency information is captured, which has a smaller impact on the loss as these are finer details. 
+To try and understand how the TomoGAN network is performing during training, the evolution of the loss function and its components has been plotted. This is given in \cref{fig:losstomo00058noadv}. We see that the main reduction in the loss of the network happens during early stages of training, especially the first few iterations. In the first $500$ iterations the loss changes from $\approx 7000$ to $\approx 100$, however a denoising after $500$ iterations does not perform well (as is given in \cref{fig:croppednoncroppedearly}a). At $100000$ iterations, the loss is $\approx 70$. In the early iterations the denoising solves for low spatial-frequency features which result in large decreases in the loss function. In later iterations high frequency information is captured, which has a smaller impact on the loss as these are finer details. 
 
-If denoising performance could be gauged based solely on \cref{fig:losstomo00058noadv}, the denoised image after $20000$ iterations should be very similar to after $100000$ iterations. Looking at \cref{fig:iterationdenoisingcomparison} it is evident that this is not correct. The denoising after $20000$ iterations achieves an \gls{ssim} of $0.778$ compared to $0.789$ after $100000$ iterations. After $20000$ iterations, the spheres in the borosilicate glass spheres dataset are less sharp and more artefacts have been introduced. This is consistent with high frequency information being captured at later iterations. How the \gls{ssim} and \gls{mse} of an arbitrary slice of the dataset evolve through training is given in \cref{fig:ssimmseevolution}. 
+It is worth noting that the exact values of the loss are of no importance, as the scale can be altered by changing the weighting parameters of the loss function. It is the relative contributions of the different losses as well as how they change that is relevant. 
 
 \begin{figure}[htbp]
   \centering
@@ -178,6 +178,8 @@ If denoising performance could be gauged based solely on \cref{fig:losstomo00058
   \caption[Loss function evolution during training]{Plot showing how the loss function evolves during $100000$ iterations of training on the borosilicate glass spheres dataset with a subsampling factor of 32. The adversarial loss has been omitted from the plot. The inset axis shows the final $20000$ iterations. Note that the main axis is logarithmic, with the inset axis being linear. The unit of the loss is arbitrary. The running mean is the mean of the previous $50$ values. }
   \label{fig:losstomo00058noadv}
 \end{figure}
+
+If denoising performance could be gauged based solely on \cref{fig:losstomo00058noadv}, the denoised image after $20000$ iterations should be very similar to after $100000$ iterations. Looking at \cref{fig:iterationdenoisingcomparison} it is evident that this is not correct. The denoising after $20000$ iterations achieves an \gls{ssim} of $0.778$ compared to $0.789$ after $100000$ iterations. After $20000$ iterations, the spheres in the borosilicate glass spheres dataset are less sharp and more artefacts have been introduced. This is consistent with high frequency information being captured at later iterations. How the \gls{ssim} and \gls{mse} of an arbitrary slice of the dataset evolve through training is given in \cref{fig:ssimmseevolution}. 
 
 \begin{figure}[htbp]
   \centering
@@ -189,10 +191,11 @@ If denoising performance could be gauged based solely on \cref{fig:losstomo00058
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/ssimns32logcosh.pdf}
-  \caption[SSIM and MSE evolution during training]{Plot showing how the \gls{ssim} and \gls{mse} of an arbitrary slice evolve during $100000$ iterations of training on the borosilicate glass spheres dataset with a subsampling factor of 32. }
+  \caption[SSIM and MSE evolution during training]{Plot showing how the \gls{ssim} and \gls{mse} of an arbitrary slice of the borosilicate glass spheres dataset evolve during $100000$ iterations of training on the borosilicate glass spheres dataset with a subsampling factor of 32. }
   \label{fig:ssimmseevolution}
 \end{figure}
 
+% \clearpage
 \section{Soda Lime Glass Spheres}
 The in-house captured dataset \gls{ihlq} of soda lime glass spheres (see \cref{sec:method:datasets:inhouse}) has been denoised using TomoGAN. The network has been trained to try and map the \gls{ihlq} dataset to the \gls{ihhq} dataset. As a comparison, two different reconstruction methods for the \gls{ihlq} dataset have been included: the \gls{fdk} direct reconstruction method and the \gls{piccs} iterative reconstruction method. 
 
@@ -209,7 +212,6 @@ To compare the TomoGAN denoising to the \gls{ihlq} \gls{piccs} reconstruction, t
 \end{figure}
 
 This is further confirmed by looking at the histograms of the four different reconstructions and denoisings, provided in \cref{fig:kimroberthist}. Whereas the \gls{ihlq} \gls{piccs} reconstruction is closely related to the \gls{ihhq} reconstruction, it is evident that the \gls{ihlq} \gls{fdk} reconstruction is a gaussian curve, indicating it is primarily noise. No pixel value peaks can be discerned. The histogram of the denoised \gls{ihlq} dataset has peaks similarly located as the \gls{ihhq} dataset, however the peaks are narrower and the dynamic range of the denoised image is increased.\footnote{Dynamic range refers the ratio between the brightest and darkest parts of the image. } The number of peaks in the pixel values for \gls{ihhq} and \gls{ihlq} \gls{piccs} is the same as for the denoised \gls{ihlq}. 
-
 
 \begin{figure}[htbp]
   \centering

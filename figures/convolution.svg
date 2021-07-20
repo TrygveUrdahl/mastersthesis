@@ -43,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2621,36 +2621,36 @@
     <text
        xml:space="preserve"
        style="font-size:4.9389px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583"
-       x="49.952057"
+       x="48.130116"
        y="98.096291"
        id="text4012"><tspan
          sodipodi:role="line"
          id="tspan4010"
-         x="49.952057"
+         x="48.130116"
          y="98.096291"
-         style="stroke-width:0.264583">a)</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583">(a)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.9389px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583"
-       x="125.62599"
+       x="123.88001"
        y="98.096291"
        id="text4016"><tspan
          sodipodi:role="line"
          id="tspan4014"
-         x="125.62599"
+         x="123.88001"
          y="98.096291"
-         style="stroke-width:0.264583">b)</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583">(b)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.9389px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583"
-       x="195.18468"
+       x="193.36394"
        y="98.096291"
        id="text4020"><tspan
          sodipodi:role="line"
          id="tspan4018"
-         x="195.18468"
+         x="193.36394"
          y="98.096291"
-         style="stroke-width:0.264583">c)</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583">(c)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.9389px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583"
