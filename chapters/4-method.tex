@@ -61,9 +61,9 @@ where $x$ and $y$ are the two images to compare, $\mu_{\{x,y\}}$ is the mean pix
 
 \section{Datasets}
 \label{sec:method:datasets}
-A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house, and one is from the ID16 beamline at the European Synchrotron Radiation Facility (ESRF). This section will give a description of each used dataset. 
+A selection of different datasets have been used to train and test the TomoGAN network. Some of these have been collected from TomoBank \cite{TomoBank}, one is collected in-house at NTNU, and one is from the ID16B beamline at the European Synchrotron Radiation Facility (ESRF). This section will give a description of each used dataset. 
 
-The chosen datasets have been selected to represent several different \gls{ct} imaging challenges and situations. The borosilicate glass spheres dataset was chosen as an ideal beamline dataset where there is access to a high-quality dataset to properly train TomoGAN. The soda lime glass spheres dataset was chosen to examine the feasibility of using TomoGAN for dynamic \gls{ct} datasets, and to compare TomoGAN to a reconstruction based denoising technique, namely \gls{piccs}. Finally, the Pierre shale dataset was chosen because shale samples are in general hard to study with \gls{ct}, as they are composed of several minerals with similar attenuation values, making segmentation and further analysis hard. Furthermore, the Pierre shale dataset does not have a corresponding high-quality dataset to train TomoGAN, instead requiring other datasets to be used to train TomoGAN to attempt denoising. 
+The chosen datasets have been selected to represent several different \gls{ct} imaging challenges and situations. The borosilicate glass spheres dataset, obtained from the TomoBank database \cite{TomoBank}, was chosen as an ideal beamline dataset where there is access to a high-quality dataset to properly train TomoGAN. The soda lime glass spheres dataset, collected in-house at NTNU, was chosen to examine the feasibility of using TomoGAN for dynamic \gls{ct} datasets, and to compare TomoGAN to a reconstruction based denoising technique, namely \gls{piccs}. Finally, the Pierre shale dataset, collected at the ID16B beamline of ESRF, was chosen because the heterogeneity of the shale makes it a challenging sample to study, and it represents a real sample in contrast to the idealized cases in the previous two samples. Furthermore, the Pierre shale dataset does not have a corresponding high-quality dataset to train TomoGAN, instead requiring other datasets to be used to train TomoGAN to attempt denoising. 
 
 \subsection{Borosilicate Glass Spheres and TomoBank}
 \label{sec:method:datasets:tomo00058}
@@ -71,7 +71,7 @@ TomoBank is an X-ray tomography data bank providing experimental and simulated d
 
 The tomo\_00058 dataset is a dataset imaging borosilicate glass spheres encased in a polypropylene matrix \cite{datasetglassspheres}. It contains a $20\%$ concentration of glass spheres. The technical information of the dataset is given in \cref{tab:tomo00058}, and an overview of how many projections are used in different subsamplings to simulate artifacting due to undersampling is given in \cref{tab:projectionsubsampling}. The subsampling is done with evenly angular spacing. 
 
-This dataset will be referred to as the borosilicate glass spheres dataset. An arbitrary slice of this dataset, with and without simulated undersampling artefacts, is provided in \cref{fig:tomo00058datasetexample}. 
+This dataset will be referred to as the borosilicate glass spheres dataset. An arbitrary slice of this dataset, with and without simulated undersampling artifacts, is provided in \cref{fig:tomo00058datasetexample}. 
 
 \begin{table}[htbp]
     \centering
@@ -93,7 +93,7 @@ This dataset will be referred to as the borosilicate glass spheres dataset. An a
 
 \begin{table}[htbp]
     \centering
-    \caption[Projection subsampling overview for reconstructions of the borosilicate glass spheres dataset.]{Overview of the number of projections for different subsampling factors of the borosilicate glass spheres dataset. }
+    \caption[Projection subsampling overview for reconstructions of the borosilicate glass spheres dataset.]{Overview of the number of projections for different subsampling factors of the borosilicate glass spheres dataset for simulating undersampling artifacts. The subsampling is uniformly distributed over the entire range of captured projections (i.e. undersampling and not missing wedge, see \cref{sec:ct:theory:noise}). }
     \label{tab:projectionsubsampling}
     \begin{tabular}{ll}
     \hline
@@ -166,11 +166,11 @@ An in-house captured dataset imaging a sample of soda lime glass spheres in a ca
     \end{tabular}
 \end{table}
 
-For the sake of simplicity, the two datasets will be referred to as the \gls{ihhq} and the \gls{ihlq} datasets. 
+For the sake of simplicity, the two datasets will also be referred to as the \gls{ihhq} and the \gls{ihlq} datasets. 
 
 Because the used \gls{ct} instrument has a conical beam, the \gls{fdk} reconstruction algorithm was used to reconstruct these datasets. A \gls{piccs} reconstruction of the \gls{ihlq} dataset is also included as an alternative denoising method for comparison. 
 
-A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ihlq} \gls{piccs} datasets is provided in \cref{fig:kimrobertdatasets}.
+A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq} \gls{fdk}, and \gls{ihlq} \gls{piccs} datasets is provided in \cref{fig:kimrobertdatasets}.
 
 \begin{figure}
     \begin{subfigure}[t]{.31\textwidth}
@@ -196,7 +196,7 @@ A figure showing an arbitrary slice from the \gls{ihhq}, \gls{ihlq}, and \gls{ih
 
 \subsection{Pierre Shale}
 \label{sec:method:datasets:shale}
-This sample is a piece of Pierre shale from the east of the Rocky Mountains in North America, measured with phase-contrast \gls{ct} at the beamline ID16 at the European Synchrotron Radiation Facility (ESRF). Technical details of the dataset are provided in \cref{tab:pierreshale}, and a slice of the sample is provided in \cref{fig:shaledataset}. 
+This sample is a piece of Pierre shale from the east of the Rocky Mountains in North America, measured with phase-contrast \gls{ct} at the beamline ID16B at the European Synchrotron Radiation Facility (ESRF). Technical details of the dataset are provided in \cref{tab:pierreshale}, and a slice of the sample is provided in \cref{fig:shaledataset}. 
 
 \begin{table}[htbp]
     \centering
@@ -204,7 +204,7 @@ This sample is a piece of Pierre shale from the east of the Rocky Mountains in N
     \label{tab:pierreshale}
     \begin{tabular}{ll}
     \hline
-    Beamline & ESRF ID16 \\
+    Beamline & ESRF ID16B \\
     Sample rotation ranges &  180 degrees\\
     Number of projections &  2160 \\
     Energy & \SI{30}{\kilo \electronvolt} \\
