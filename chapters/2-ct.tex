@@ -56,7 +56,7 @@ Electronic noise is related to the electronics of the X-ray detector, and it is 
 \end{equation}
 which corresponds to a normal distribution with mean signal value of $0$ and standard deviation $\sigma$.
 
-If an insufficient number of projections of the attenuation coefficient are available, it is known as a \textit{missing wedge problem} or an \textit{undersampling problem}. These measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms \cite{10.1111/jmi.12313}. This leads to artifacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). An illustration of undersampling and missing wedge in Fourier space is provided in \cref{fig:undersampling}. Several different reconstruction methods removing these artifacts have been attempted, also including \gls{ml} based approaches \cite{liu2020tomogan,GANrec}. 
+If an insufficient number of projections of the attenuation coefficient are available, it is known as a \textit{missing wedge problem} or an \textit{undersampling problem} \cite{10.1111/jmi.12313}. These measurements are incomplete datasets with respect to standard requirements of established reconstruction algorithms. This leads to artifacts that appear as elongations of reconstructed details along the mean direction (i.e. the symmetry centre of the projections). An illustration of undersampling and missing wedge in Fourier space is provided in \cref{fig:undersampling}. Several different reconstruction methods removing these artifacts have been attempted, also including \gls{ml} based approaches \cite{10.1111/jmi.12313,liu2020tomogan,GANrec}. 
 
 \begin{figure}[htbp]  
     \centering
@@ -70,7 +70,7 @@ A comparison of quantum noise and undersampling artifacting on a dataset imaging
 \begin{figure}[htbp]  
     \centering
     \includegraphics[width=.9\textwidth]{figures/noisecomparison.pdf}
-    \caption[Illustration of reconstruction noise and artifacting]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and an undersampled reconstruction. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the undersampled reconstruction is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction (i.e. uniformly subsampled projections). The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
+    \caption[Illustration of reconstruction noise and artifacting]{Comparison of a high-quality reconstruction, a quantum noise reconstruction, and an undersampled reconstruction. Images d), e), and f) are zoomed in \glspl{roi} of images a), b), and c) respectively. The \gls{roi} is marked in a). The quantum noise is simulated by applying Poisson noise to the sinogram before reconstruction, and the undersampled reconstruction is simulated by selecting a subsampling of every 32nd projection from the high-quality reconstruction (i.e. uniformly subsampled projections). The images are of a central slice from the dataset tomo\_00058 \cite{datasetglassspheres} reconstructed using \gls{fbp} from TomoPy \cite{TomoBank}. }
     \label{fig:noisecomparison}
 \end{figure}
 

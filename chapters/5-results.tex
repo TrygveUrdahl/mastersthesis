@@ -50,7 +50,7 @@ The TomoGAN network was trained with a loss function containing \gls{mse}, log-c
     \includegraphics[width=\linewidth]{figures/ns48.png}
     \caption{Subsampling factor 48 (31 projections). }
   \end{subfigure}
-  \caption[Four different levels of projection undersampling]{Comparison of different levels of projection undersampling on the borosilicate glass spheres dataset by reconstructing the images with the \gls{fbp} algorithm. The same cross-section is displayed for different reconstructions made by varying the number of projections used.  }
+  \caption[Four different levels of projection undersampling on the borosilicate glass spheres dataset]{Comparison of different levels of projection undersampling on the borosilicate glass spheres dataset by reconstructing the images with the \gls{fbp} algorithm. The same cross-section is displayed for different reconstructions made by varying the number of projections used.  }
   \label{fig:tomo00058missingwedgecomparison}
 \end{figure}
 
@@ -80,7 +80,7 @@ The TomoGAN network was trained with a loss function containing \gls{mse}, log-c
     \includegraphics[width=\linewidth]{figures/ns48it100000itd4mse035logcosh3.png}
     \caption{Subsampling factor 48 (31 projections). }
   \end{subfigure}
-  \caption[Denoising of four different levels of projection undersampling]{Comparison of denoising of different levels of projection undersampling on the borosilicate glass spheres dataset, where the corresponding noisy images are given in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
+  \caption[Denoising of four different levels of projection undersampling  on the borosilicate glass spheres dataset]{Comparison of denoising of different levels of projection undersampling on the borosilicate glass spheres dataset, where the corresponding noisy images are given in \cref{fig:tomo00058missingwedgecomparison}. The denoising was done with TomoGAN using a loss function containing \gls{mse}, log-cosh, VGG, and adversarial loss components, a depth of 1, and the network was trained for $100 000$ iterations with a mini batch size of 16. }
   \label{fig:tomo00058missingwedgecomparisondenoised}
 \end{figure}
 
@@ -137,21 +137,21 @@ This denoising was performed with TomoGAN using a loss function containing \gls{
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/uncroppeddenoising.pdf}
-  \caption[Non-cropped image denoising]{Denoising of non-cropped borosilicate glass spheres dataset. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
+  \caption[Non-cropped image denoising on the borosilicate glass spheres dataset]{Denoising of non-cropped borosilicate glass spheres dataset. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
   \label{fig:uncroppeddenoising}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/croppeddenoising.pdf}
-  \caption[Cropped image denoising]{Denoising of cropped borosilicate glass spheres dataset. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
+  \caption[Cropped image denoising on the borosilicate glass spheres dataset]{Denoising of cropped borosilicate glass spheres dataset. Images d), e), and f) are zoomed in \gls{roi}s of images a), b), and c) respectively. The \gls{roi} is marked in a). }
   \label{fig:croppeddenoising}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figures/croppednoncroppedearly.pdf}
-  \caption[Non-cropped image denoising compared to non-converged cropped image denoising]{Non-cropped image denoising compared to non-converged cropped image denoising. The cropped denoising is after merely $500$ iterations of the same denoising as in \cref{fig:croppeddenoising}. The non-cropped denoising has been cropped after denoising for easier comparison. The two images are of different slices of the same dataset. }
+  \caption[Non-cropped image denoising compared to non-converged cropped image denoising on the borosilicate glass spheres dataset]{Non-cropped image denoising compared to non-converged cropped image denoising on the borosilicate glass spheres dataset. The cropped denoising is after merely $500$ iterations of the same denoising as in \cref{fig:croppeddenoising}. The non-cropped denoising has been cropped after denoising for easier comparison. The two images are of different slices of the same dataset. }
   \label{fig:croppednoncroppedearly}
 \end{figure}
 
@@ -184,14 +184,14 @@ If denoising performance could be gauged based solely on \cref{fig:losstomo00058
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/iterationdenoisingcomparison.pdf}
-  \caption[Effect on denoising of number of iterations]{Effect on denoising of number of iterations. Both denoisings are of the borosilicate glass spheres dataset with a subsampling factor of 32. Two \gls{roi}s have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. The scale bar for \textbf{(a)} applies to \textbf{(b)} and \textbf{(c)}, the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}, and the scale bar for \textbf{(g)} applies to \textbf{(h)} and \textbf{(i)}. }
+  \caption[Effect on denoising of number of iterations]{Effect on denoising of number of iterations. Both denoisings are of the borosilicate glass spheres dataset with a subsampling factor of 32. Two \glspl{roi} have been marked in \textbf{(a)}, and can be seen in \textbf{(d)}-\textbf{(i)}. The scale bar for \textbf{(a)} applies to \textbf{(b)} and \textbf{(c)}, the scale bar for \textbf{(d)} applies to \textbf{(e)} and \textbf{(f)}, and the scale bar for \textbf{(g)} applies to \textbf{(h)} and \textbf{(i)}. }
   \label{fig:iterationdenoisingcomparison}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.85\textwidth]{figures/ssimns32logcosh.pdf}
-  \caption[SSIM and MSE evolution during training]{Plot showing how the \gls{ssim} and \gls{mse} of an arbitrary slice of the borosilicate glass spheres dataset evolve during $100000$ iterations of training on the borosilicate glass spheres dataset with a subsampling factor of 32. }
+  \caption[SSIM and MSE evolution during training]{Plot showing how the \gls{ssim} and \gls{mse} of an arbitrary slice of the borosilicate glass spheres dataset evolve during $100000$ iterations of training with a subsampling factor of 32. }
   \label{fig:ssimmseevolution}
 \end{figure}
 
@@ -207,7 +207,7 @@ To compare the TomoGAN denoising to the \gls{ihlq} \gls{piccs} reconstruction, t
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.95\textwidth]{figures/kimrobertline.pdf}
-  \caption[Pixel value plot of IHHQ and IHLQ, noisy and denoised]{The plot shows pixel values for 620 pixels on a horizontal line, as shown by the red line on the \gls{hq} image above, on the \gls{ihhq} and \gls{ihlq} dataset, both noisy and denoised. The denoised values are from denoising the \gls{ihlq} \gls{fdk} reconstruction with TomoGAN. }
+  \caption[Pixel value plot of IHHQ and IHLQ, noisy and denoised]{The plot shows pixel values for 625 pixels on a horizontal line, as indicated by the red line on the \gls{hq} image above, on the \gls{ihhq} and \gls{ihlq} dataset, both noisy and denoised. The denoised values are from denoising the \gls{ihlq} \gls{fdk} reconstruction with TomoGAN. }
   \label{fig:kimrobertline}
 \end{figure}
 
@@ -233,7 +233,7 @@ In the green \gls{roi} in \cref{fig:bigfigure}, we see details that were indisti
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.77\textwidth]{figures/bigfigure.pdf}
-  \caption[Different reconstructions and denoisings of the IHLQ and IHHQ datasets]{Different reconstructions and denoisings of the \gls{ihhq} and \gls{ihlq} datasets. The top three images are full views of the \gls{ihhq} dataset. The red horizontal line in the top left figure corresponds to the horizontal view in the top middle figure, and the red vertical line corresponds to the vertical view in the top right figure. Four \glspl{roi} have been marked in the top figures and have been zoomed in for the different reconstructions and denoisings. All zoomed in figures have the same scale bar. }
+  \caption[Different reconstructions and denoisings of the IHLQ and IHHQ datasets]{Different reconstructions and denoisings of the \gls{ihhq} and \gls{ihlq} datasets. The top three images are full views of the \gls{ihhq} dataset. The two horizontal and vertical images correspond to the horizontal and veritcal red lines in the axial image, and give a view of 3D slices perpendicular to the axial slice in the sample. Four \glspl{roi} have been marked in the top figures and have been zoomed in for the different reconstructions and denoisings. All zoomed in figures have the same scale bar. }
   \label{fig:bigfigure}
 \end{figure}
 

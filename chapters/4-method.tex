@@ -21,8 +21,8 @@ A schematic of the generator of TomoGAN is provided in \cref{fig:tomoganstructur
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/tomoganstructure.png}
-    \caption[Visualization of the structure of TomoGAN]{A visualization of the structure of TomoGAN. Here, an image of size $1024\times1024$ has been used as an example. Every bar corresponds to a multi-channel feature map with the number of channels written above and the dimension of the feature map written on the bottom left. All convolutions use zero-padding. The type of activation function used with a given convolution can be seen in the legend. The copy operations transfer the feature map from a down sampling layer and concatenates it to the corresponding up sampling layer. Figure adapted from \cite{liu2020tomogan}. } 
+    \includegraphics[width=1.\textwidth]{figures/tomoganstructure.png}
+    \caption[Illustration of the structure of TomoGAN]{A visualization of the structure of TomoGAN. Here, an image of size $1024\times1024$ has been used as an example. Every bar corresponds to a multi-channel feature map with the number of channels written above and the dimension of the feature map written on the bottom left. All convolutions use zero-padding. The type of activation function used with a given convolution can be seen in the legend. The copy operations transfer the feature map from a down sampling layer and concatenates it to the corresponding up sampling layer. Figure adapted from \cite{liu2020tomogan}. } 
     \label{fig:tomoganstructure}
 \end{figure}
 
@@ -120,7 +120,7 @@ This dataset will be referred to as the borosilicate glass spheres dataset. An a
       \includegraphics[width=\linewidth]{figures/ns32.png}
       \caption{Undersampled projections (46 projections)}
     \end{subfigure}
-    \caption[Borosilicate glass spheres dataset]{Different reconstructions of the borosilicate glass spheres dataset. The two images are of the same arbitrary slice from the datasets. }
+    \caption[Borosilicate glass spheres dataset]{Different reconstructions of the borosilicate glass spheres dataset. Both reconstructions are made using \gls{fbp} reconstruction. The two images are of the same arbitrary slice from the datasets. }
     \label{fig:tomo00058datasetexample}
 \end{figure}
 
@@ -134,7 +134,7 @@ An in-house captured dataset imaging a sample of soda lime glass spheres in a ca
 
 \begin{table}[htbp]
     \centering
-    \caption[Technical information of the IHHQ soda lime glass spheres dataset]{Technical information of the \acrlong{hq} imaging of the in-house dataset. }
+    \caption[Technical information of the IHHQ soda lime glass spheres dataset]{Technical information of the \acrlong{hq} imaging of the soda lime glass spheres in-house dataset. }
     \label{tab:inhousehq}
     \begin{tabular}{ll}
     \hline
@@ -151,7 +151,7 @@ An in-house captured dataset imaging a sample of soda lime glass spheres in a ca
 
 \begin{table}[htbp]
     \centering
-    \caption[Technical information of the IHLQ soda lime glass spheres dataset]{Technical information of the fast scan of the in-house dataset. }
+    \caption[Technical information of the IHLQ soda lime glass spheres dataset]{Technical information of the fast scan of the soda lime glass spheres in-house dataset. }
     \label{tab:inhouselq}
     \begin{tabular}{ll}
     \hline
